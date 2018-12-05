@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${tableInfo.mapperPackageName}.${tableInfo.mapperClassName}" >
+
+    <!-- **** (Start) This will be covered, please do not modify. **** -->
+    <resultMap id="BaseResultMap" type="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+        <id column="${columnInfo.name}" property="${columnInfo.fieldName}" />
+#else
+        <result column="${columnInfo.name}" property="${columnInfo.fieldName}" />
+#end
+#end
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+#set($temp = 1)
+#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+        ${columnInfo.name}#if($temp < $tableInfo.columnInfoList.size()),
+#set($temp = $temp + 1)#end
+#end
+
+    </sql>
+
+    <sql id="Base_Selective_Where" >
+#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+        <if test="${columnInfo.fieldName} != null" >and ${columnInfo.name} = #{${columnInfo.fieldName}}</if>
+#end
+    </sql>
+
+    <insert id="insert" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        insert into ${tableInfo.name} (
+            <include refid="Base_Column_List" />
+        )
+        values (
+#set($temp = 1)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+            #{${columnInfo.fieldName}}#if($temp < $tableInfo.columnInfoList.size()),
+#set($temp = $temp + 1)
+#end
+#end
+
+        )
+    </insert>
+
+    <insert id="insertBatch" >
+        insert into ${tableInfo.name} (
+            <include refid="Base_Column_List" />
+        )
+        values
+        <foreach collection="recordList" index="index" item="item" separator="," >
+        (
+#set($temp = 1)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+            #{item.${columnInfo.fieldName}}#if($temp < $tableInfo.columnInfoList.size()),
+#set($temp = $temp + 1)
+#end
+#end
+
+        )
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        insert into ${tableInfo.name}
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+            <if test="${columnInfo.fieldName} != null" >${columnInfo.name}, </if>
+#end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+#foreach( ${columnInfo} in ${tableInfo.columnInfoList} )
+            <if test="${columnInfo.fieldName} != null" >#{${columnInfo.fieldName}}, </if>
+#end
+        </trim>
+    </insert>
+
+    <delete id="deleteByPrimaryKey" >
+        delete from ${tableInfo.name}
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+#if($temp > 0)
+
+            and #end#set($temp = $temp + 1)${columnInfo.name} = #{${columnInfo.fieldName}}
+#end
+#end
+    </delete>
+
+    <delete id="deleteByPrimaryKeyList" >
+        delete from ${tableInfo.name}
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+
+            #if($temp > 0)and #end${columnInfo.name} in
+            <foreach collection="${columnInfo.fieldName}List" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+            </foreach>
+#set($temp = $temp + 1)#end
+#end
+    </delete>
+
+    <delete id="deleteSelective" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        delete from ${tableInfo.name}
+        where 1 = 1
+            <include refid="Base_Selective_Where" />
+    </delete>
+
+    <update id="updateByPrimaryKey" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        update ${tableInfo.name}
+        set
+#set($temp = 1)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+            ${columnInfo.name} = #{${columnInfo.fieldName}}#if($temp < $tableInfo.columnInfoList.size()),
+#set($temp = $temp + 1)
+#end
+#end
+
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+#if($temp > 0)
+
+            and #end#set($temp = $temp + 1)${columnInfo.name} = #{${columnInfo.fieldName}}
+#end
+#end
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        update ${tableInfo.name}
+        <set>
+#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+            <if test="${columnInfo.fieldName} != null" >${columnInfo.name} = #{${columnInfo.fieldName}}, </if>
+#end
+        </set>
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+#if($temp > 0)
+
+            and #end#set($temp = $temp + 1)${columnInfo.name} = #{${columnInfo.fieldName}}
+#end
+#end
+    </update>
+
+    <select id="countSelective" resultType="int" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}" >
+        select
+            count(0)
+        from ${tableInfo.name}
+        where 1 = 1
+            <include refid="Base_Selective_Where" />
+    </select>
+
+    <select id="queryByPrimaryKey" resultMap="BaseResultMap" >
+        select
+            <include refid="Base_Column_List" />
+        from ${tableInfo.name}
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+#if($temp > 0)
+
+            and #end#set($temp = $temp + 1)${columnInfo.name} = #{${columnInfo.fieldName}}
+#end
+#end
+    </select>
+
+    <select id="queryByPrimaryKeyList" resultMap="BaseResultMap" >
+        select
+            <include refid="Base_Column_List" />
+        from ${tableInfo.name}
+        where #set($temp = 0)#foreach(${columnInfo} in ${tableInfo.columnInfoList})
+#if($columnInfo.primaryKey)
+#if($temp > 0)
+
+            and #end${columnInfo.name} in
+            <foreach collection="${columnInfo.fieldName}List" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+            </foreach>
+#set($temp = $temp + 1)#end
+#end
+    </select>
+
+    <select id="querySelective" resultMap="BaseResultMap" parameterType="${tableInfo.entityPackageName}.${tableInfo.entityClassName}">
+        select
+            <include refid="Base_Column_List" />
+        from ${tableInfo.name}
+        where 1 = 1
+            <include refid="Base_Selective_Where" />
+    </select>
+    <!-- **** (End) This will be covered, please do not modify. **** -->
+    <!-- Generated by artoria-extend in ${generatedTime}. -->
+
+</mapper>
