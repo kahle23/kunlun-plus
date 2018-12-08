@@ -16,8 +16,8 @@ import artoria.mail.EmailClient;
  */
 @Configuration
 public class EmailAutoConfiguration implements InitializingBean, DisposableBean {
-    private static Logger log = LoggerFactory.getLogger(EmailAutoConfiguration.class);
     private static final String MAIL_CLASS = "javax.mail.Message";
+    private static Logger log = LoggerFactory.getLogger(EmailAutoConfiguration.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {

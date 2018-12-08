@@ -14,8 +14,8 @@ import artoria.spring.InitializingDisposableBean;
  */
 @Configuration
 public class Base64AutoConfiguration implements InitializingDisposableBean {
-    private static Logger log = LoggerFactory.getLogger(Base64AutoConfiguration.class);
     private static final String COMMONS_CODEC_BASE64 = "org.apache.commons.codec.binary.Base64";
+    private static Logger log = LoggerFactory.getLogger(Base64AutoConfiguration.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {

@@ -74,8 +74,8 @@ public class ${tableInfo.serviceImplClassName} implements ${tableInfo.serviceCla
         ValidateUtils.notNull(param, NO_REQUEST_BODY);
         ${tableInfo.dtoClassName} ${tableInfo.dtoObjectName} = param.getData();
         ValidateUtils.notNull(${tableInfo.dtoObjectName}, PARAMETER_REQUIRED);
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)        ValidateUtils.notNull(${tableInfo.dtoObjectName}.${columnInfo.getterName}(), PRIMARY_KEY_REQUIRED);#end
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)        ValidateUtils.notNull(${tableInfo.dtoObjectName}.${columnData.getterName}(), PRIMARY_KEY_REQUIRED);#end
 #end
 
         Result<Boolean> result = new Result<Boolean>();
@@ -90,8 +90,8 @@ public class ${tableInfo.serviceImplClassName} implements ${tableInfo.serviceCla
         ValidateUtils.notNull(param, NO_REQUEST_BODY);
         ${tableInfo.dtoClassName} ${tableInfo.dtoObjectName} = param.getData();
         ValidateUtils.notNull(${tableInfo.dtoObjectName}, PARAMETER_REQUIRED);
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)        ValidateUtils.notNull(${tableInfo.dtoObjectName}.${columnInfo.getterName}(), PRIMARY_KEY_REQUIRED);#end
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)        ValidateUtils.notNull(${tableInfo.dtoObjectName}.${columnData.getterName}(), PRIMARY_KEY_REQUIRED);#end
 #end
 
         Result<Boolean> result = new Result<Boolean>();

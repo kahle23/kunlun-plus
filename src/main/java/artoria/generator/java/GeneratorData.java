@@ -1,6 +1,4 @@
-package artoria.generator.code;
-
-import artoria.jdbc.TableMeta;
+package artoria.generator.java;
 
 import java.util.List;
 import java.util.Set;
@@ -9,7 +7,20 @@ import java.util.Set;
  * Database table necessary information and other information.
  * @author Kahle
  */
-public class TableInfo extends TableMeta {
+public class GeneratorData {
+    /**
+     * "TABLE_NAME"
+     */
+    private String name;
+    /**
+     * "REMARKS"
+     */
+    private String remarks;
+    /**
+     * Table primary keys.
+     * If is Composite Primary Key, use "," separate.
+     */
+    private String primaryKey;
     private String controllerPackageName;
     private String controllerClassName;
     private String voPackageName;
@@ -29,8 +40,41 @@ public class TableInfo extends TableMeta {
     private String entityPackageName;
     private String entityClassName;
     private String entityObjectName;
-    private Set<String> entityImports;
-    private List<ColumnInfo> columnInfoList;
+    /**
+     * Java type import list in java bean.
+     */
+    private Set<String> typeImportList;
+    private List<ColumnData> columnDataList;
+
+    public String getName() {
+
+        return this.name;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
+    }
+
+    public String getRemarks() {
+
+        return this.remarks;
+    }
+
+    public void setRemarks(String remarks) {
+
+        this.remarks = remarks;
+    }
+
+    public String getPrimaryKey() {
+
+        return this.primaryKey;
+    }
+
+    public void setPrimaryKey(String primaryKey) {
+
+        this.primaryKey = primaryKey;
+    }
 
     public String getControllerPackageName() {
 
@@ -222,24 +266,24 @@ public class TableInfo extends TableMeta {
         this.entityObjectName = entityObjectName;
     }
 
-    public Set<String> getEntityImports() {
+    public Set<String> getTypeImportList() {
 
-        return this.entityImports;
+        return this.typeImportList;
     }
 
-    public void setEntityImports(Set<String> entityImports) {
+    public void setTypeImportList(Set<String> typeImportList) {
 
-        this.entityImports = entityImports;
+        this.typeImportList = typeImportList;
     }
 
-    public List<ColumnInfo> getColumnInfoList() {
+    public List<ColumnData> getColumnDataList() {
 
-        return this.columnInfoList;
+        return this.columnDataList;
     }
 
-    public void setColumnInfoList(List<ColumnInfo> columnInfoList) {
+    public void setColumnDataList(List<ColumnData> columnDataList) {
 
-        this.columnInfoList = columnInfoList;
+        this.columnDataList = columnDataList;
     }
 
 }
