@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class JsonAutoConfiguration implements InitializingDisposableBean {
-    private static Logger log = LoggerFactory.getLogger(JsonAutoConfiguration.class);
     private static final String FASTJSON_CLASS = "com.alibaba.fastjson.JSON";
     private static final String GSON_CLASS = "com.google.gson.Gson";
+    private static Logger log = LoggerFactory.getLogger(JsonAutoConfiguration.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {

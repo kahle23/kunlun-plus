@@ -22,17 +22,17 @@ public interface ${tableInfo.mapperClassName} {
     int insertSelective(${tableInfo.entityClassName} record);
 
     int deleteByPrimaryKey(#set($temp = 0)
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)
 #if($temp > 0), #set($temp = $temp + 1)#end#*
-*#@Param("${columnInfo.fieldName}") ${columnInfo.javaType} ${columnInfo.fieldName}#end
+*#@Param("${columnData.fieldName}") ${columnData.javaType} ${columnData.fieldName}#end
 #end);
 
     int deleteByPrimaryKeyList(#set($temp = 0)
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)
 #if($temp > 0), #set($temp = $temp + 1)#end#*
-*#@Param("${columnInfo.fieldName}List") List<${columnInfo.javaType}> ${columnInfo.fieldName}List#end
+*#@Param("${columnData.fieldName}List") List<${columnData.javaType}> ${columnData.fieldName}List#end
 #end);
 
     int deleteSelective(${tableInfo.entityClassName} record);
@@ -44,17 +44,17 @@ public interface ${tableInfo.mapperClassName} {
     int countSelective(${tableInfo.entityClassName} record);
 
     ${tableInfo.entityClassName} queryByPrimaryKey(#set($temp = 0)
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)
 #if($temp > 0), #set($temp = $temp + 1)#end#*
-*#@Param("${columnInfo.fieldName}") ${columnInfo.javaType} ${columnInfo.fieldName}#end
+*#@Param("${columnData.fieldName}") ${columnData.javaType} ${columnData.fieldName}#end
 #end);
 
     List<${tableInfo.entityClassName}> queryByPrimaryKeyList(#set($temp = 0)
-#foreach(${columnInfo} in ${tableInfo.columnInfoList})
-#if($columnInfo.primaryKey)
+#foreach(${columnData} in ${tableInfo.columnDataList})
+#if($columnData.primaryKey)
 #if($temp > 0), #set($temp = $temp + 1)#end#*
-*#@Param("${columnInfo.fieldName}List") List<${columnInfo.javaType}> ${columnInfo.fieldName}List#end
+*#@Param("${columnData.fieldName}List") List<${columnData.javaType}> ${columnData.fieldName}List#end
 #end);
 
     List<${tableInfo.entityClassName}> querySelective(${tableInfo.entityClassName} record);

@@ -1,4 +1,4 @@
-package artoria.generator.code;
+package artoria.generator.java;
 
 import artoria.util.StringUtils;
 

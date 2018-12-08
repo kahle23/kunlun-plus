@@ -1,4 +1,4 @@
-package artoria.generator.code;
+package artoria.generator.java;
 
 import artoria.jdbc.ColumnMeta;
 
@@ -6,7 +6,7 @@ import artoria.jdbc.ColumnMeta;
  * Database table's column necessary information and other information.
  * @author Kahle
  */
-public class ColumnInfo extends ColumnMeta {
+public class ColumnData extends ColumnMeta {
     private String fieldName;
     private String javaType;
     private String getterName;
