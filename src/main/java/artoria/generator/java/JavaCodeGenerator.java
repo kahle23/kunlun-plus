@@ -1,20 +1,22 @@
 package artoria.generator.java;
 
-import artoria.beans.BeanMap;
-import artoria.beans.BeanUtils;
+import artoria.common.AbstractAttributable;
 import artoria.exception.ExceptionUtils;
 import artoria.generator.GenerateException;
 import artoria.generator.Generator;
 import artoria.io.IOUtils;
 import artoria.io.StringBuilderWriter;
+import artoria.jdbc.ColumnMeta;
+import artoria.jdbc.TableMeta;
+import artoria.logging.Logger;
+import artoria.logging.LoggerFactory;
 import artoria.template.Renderer;
 import artoria.time.DateUtils;
 import artoria.util.Assert;
 import artoria.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +28,9 @@ import static artoria.io.IOUtils.EOF;
  * Java code generator.
  * @author Kahle
  */
-public class JavaCodeGenerator implements Generator {
+public class JavaCodeGenerator extends AbstractAttributable implements Generator {
     private static final String CLASSPATH = "classpath:";
     private static Logger log = LoggerFactory.getLogger(JavaCodeGenerator.class);
-    private Map<String, Object> attributes = new HashMap<String, Object>();
     private String templateCharset = DEFAULT_CHARSET_NAME;
     private String outputCharset = DEFAULT_CHARSET_NAME;
     private String templateName;
@@ -43,56 +44,38 @@ public class JavaCodeGenerator implements Generator {
     private String beginCoverMark;
     private String endCoverMark;
     private String templateContent;
-    private List<GeneratorData> generatorDataList;
+    private List<TableMeta> tableList;
 
     public JavaCodeGenerator() {
 
         this.addAttribute("author", "artoria-extend");
     }
 
-    public Map<String, Object> getAttributes() {
-
-        return new HashMap<String, Object>(attributes);
-    }
-
-    public void addAttribute(String attributeName, Object attributeValue) {
-
-        this.attributes.put(attributeName, attributeValue);
-    }
-
-    public void addAttributes(Map<String, Object> attributes) {
-        Assert.notNull(attributes, "Parameter \"attributes\" must not null. ");
-        this.attributes.putAll(attributes);
-    }
-
-    public void removeAttribute(String attributeName) {
-
-        this.attributes.remove(attributeName);
-    }
-
     public String getTemplateCharset() {
 
-        return templateCharset;
+        return this.templateCharset;
     }
 
     public void setTemplateCharset(String templateCharset) {
-
+        Assert.notBlank(templateCharset, "Parameter \"templateCharset\" must not blank. ");
         this.templateCharset = templateCharset;
+        this.addAttribute("templateCharset", templateCharset);
     }
 
     public String getOutputCharset() {
 
-        return outputCharset;
+        return this.outputCharset;
     }
 
     public void setOutputCharset(String outputCharset) {
-
+        Assert.notBlank(outputCharset, "Parameter \"outputCharset\" must not blank. ");
         this.outputCharset = outputCharset;
+        this.addAttribute("outputCharset", outputCharset);
     }
 
     public String getTemplateName() {
 
-        return templateName;
+        return this.templateName;
     }
 
     public void setTemplateName(String templateName) {
@@ -103,21 +86,23 @@ public class JavaCodeGenerator implements Generator {
                 ? templateName.substring(0, templateName.length() - 1)
                 : templateName;
         this.templateName = templateName;
+        this.addAttribute("templateName", templateName);
     }
 
     public String getBaseTemplatePath() {
 
-        return baseTemplatePath;
+        return this.baseTemplatePath;
     }
 
     public void setBaseTemplatePath(String baseTemplatePath) {
-
+        Assert.notBlank(baseTemplatePath, "Parameter \"baseTemplatePath\" must not blank. ");
         this.baseTemplatePath = baseTemplatePath;
+        this.addAttribute("baseTemplatePath", baseTemplatePath);
     }
 
     public String getTemplateExtensionName() {
 
-        return templateExtensionName;
+        return this.templateExtensionName;
     }
 
     public void setTemplateExtensionName(String templateExtensionName) {
@@ -127,31 +112,33 @@ public class JavaCodeGenerator implements Generator {
                 ? templateExtensionName
                 : DOT + templateExtensionName;
         this.templateExtensionName = templateExtensionName.trim();
+        this.addAttribute("templateExtensionName", templateExtensionName);
     }
 
     public String getBaseOutputPath() {
 
-        return baseOutputPath;
+        return this.baseOutputPath;
     }
 
     public void setBaseOutputPath(String baseOutputPath) {
-
+        Assert.notBlank(baseOutputPath, "Parameter \"baseOutputPath\" must not blank. ");
         this.baseOutputPath = baseOutputPath;
+        this.addAttribute("baseOutputPath", baseOutputPath);
     }
 
     public Renderer getRenderer() {
 
-        return renderer;
+        return this.renderer;
     }
 
     public void setRenderer(Renderer renderer) {
-
+        Assert.notNull(renderer, "Parameter \"renderer\" must not null. ");
         this.renderer = renderer;
     }
 
     public String getBasePackageName() {
 
-        return basePackageName;
+        return this.basePackageName;
     }
 
     public void setBasePackageName(String basePackageName) {
@@ -162,11 +149,12 @@ public class JavaCodeGenerator implements Generator {
                 , basePackageName.length() - 1)
                 : basePackageName;
         this.basePackageName = basePackageName.trim();
+        this.addAttribute("basePackageName", basePackageName);
     }
 
     public String getBusinessPackageName() {
 
-        return businessPackageName;
+        return this.businessPackageName;
     }
 
     public void setBusinessPackageName(String businessPackageName) {
@@ -176,37 +164,43 @@ public class JavaCodeGenerator implements Generator {
                 ? businessPackageName
                 : DOT + businessPackageName;
         this.businessPackageName = businessPackageName.trim();
+        this.addAttribute("businessPackageName", businessPackageName);
     }
 
     public Boolean getSkipExisted() {
 
-        return skipExisted;
+        return this.skipExisted;
     }
 
     public void setSkipExisted(Boolean skipExisted) {
         Assert.notNull(skipExisted
                 , "Parameter \"skipExisted\" must not null. ");
         this.skipExisted = skipExisted;
+        this.addAttribute("skipExisted", skipExisted);
     }
 
     public String getBeginCoverMark() {
 
-        return beginCoverMark;
+        return this.beginCoverMark;
     }
 
     public void setBeginCoverMark(String beginCoverMark) {
-
+        Assert.notBlank(beginCoverMark
+                , "Parameter \"beginCoverMark\" must not blank. ");
         this.beginCoverMark = beginCoverMark;
+        this.addAttribute("beginCoverMark", beginCoverMark);
     }
 
     public String getEndCoverMark() {
 
-        return endCoverMark;
+        return this.endCoverMark;
     }
 
     public void setEndCoverMark(String endCoverMark) {
-
+        Assert.notBlank(endCoverMark
+                , "Parameter \"endCoverMark\" must not blank. ");
         this.endCoverMark = endCoverMark;
+        this.addAttribute("endCoverMark", endCoverMark);
     }
 
     public String getTemplateContent() {
@@ -231,17 +225,20 @@ public class JavaCodeGenerator implements Generator {
     }
 
     public void setTemplateContent(String templateContent) {
-
+        Assert.notBlank(templateContent
+                , "Parameter \"templateContent\" must not blank. ");
         this.templateContent = templateContent;
     }
 
-    public List<GeneratorData> getGeneratorDataList() {
+    public List<TableMeta> getTableList() {
 
-        return generatorDataList;
+        return this.tableList;
     }
 
-    public void setGeneratorDataList(List<GeneratorData> generatorDataList) {
-        this.generatorDataList = generatorDataList;
+    public void setTableList(List<TableMeta> tableList) {
+        Assert.notNull(tableList
+                , "Parameter \"tableList\" must not null. ");
+        this.tableList = tableList;
     }
 
     protected String getTemplatePath() {
@@ -261,9 +258,9 @@ public class JavaCodeGenerator implements Generator {
         return new File(baseOutputPath, packageName).toString();
     }
 
-    protected String getFileName(GeneratorData generatorData) {
-        Assert.notNull(generatorData
-                , "Parameter \"generatorData\" must not null. ");
+    protected String getFileName(TableMeta table) {
+        Assert.notNull(table
+                , "Parameter \"table\" must not null. ");
         String templateName = this.getTemplateName();
         int index = templateName.lastIndexOf(UNDERLINE), length;
         String begin = templateName, end = EMPTY_STRING;
@@ -277,13 +274,14 @@ public class JavaCodeGenerator implements Generator {
                     , begin.length() - 1);
         }
         begin = StringUtils.uncapitalize(begin);
-        BeanMap beanMap = BeanUtils.createBeanMap(generatorData);
-        String className = (String) beanMap.get(begin + "ClassName");
+        String className = (String) table.getAttribute(begin + "ClassName");
         return className + DOT + end;
     }
 
     protected String readAndReplace(File existedFile, String generated) {
-        log.info("The file \"{}\" already exists, it will be try replace. ", existedFile.getName());
+        Assert.notNull(existedFile, "Parameter \"existedFile\" must not null. ");
+        Assert.notBlank(generated, "Parameter \"generated\" must not blank. ");
+        log.info("The file \"" + existedFile.getName() + "\" already exists, it will be try replace. ");
         InputStream in = null;
         String fileContent;
         try {
@@ -308,30 +306,28 @@ public class JavaCodeGenerator implements Generator {
         do {
             int fileBegin = fileContent.indexOf(beginCoverMark, fileIndex);
             if (fileBegin == EOF && count == 0) {
-                log.info("The file \"{}\" already exists and can not find " +
-                        "begin cover mark, it will be skip. ", existedFile.getName());
+                log.info("The file \"" + existedFile.getName() + "\" already exists " +
+                        "and can not find begin cover mark, it will be skip. ");
                 return null;
             }
             if (fileBegin == EOF) {
                 int fileEnd = fileContent.indexOf(endCoverMark, fileIndex);
                 if (fileEnd != EOF) {
-                    log.info("The file \"{}\" already exists and find error end " +
-                                    "cover mark after index {}, so it will be skip. "
-                            , existedFile.getName(), fileIndex);
+                    log.info("The file \"" + existedFile.getName() +
+                            "\" already exists and find error end cover mark after index "
+                            + fileIndex + ", so it will be skip. ");
                     return null;
                 }
                 int generatedBegin = generated.indexOf(beginCoverMark, generatedIndex);
                 if (generatedBegin != EOF) {
-                    log.info("Find begin cover mark in template when generate " +
-                                    "\"{}\" and it is not supposed to happen, so it will be skip. "
-                            , existedFile.getName());
+                    log.info("Find begin cover mark in template when generate \"" + existedFile.getName()
+                                    + "\" and it is not supposed to happen, so it will be skip. ");
                     return null;
                 }
                 int generatedEnd = generated.indexOf(endCoverMark, generatedIndex);
                 if (generatedEnd != EOF) {
-                    log.info("Find end cover mark in template when generate " +
-                                    "\"{}\" and it is not supposed to happen, so it will be skip. "
-                            , existedFile.getName());
+                    log.info("Find end cover mark in template when generate \"" + existedFile.getName()
+                                    + "\" and it is not supposed to happen, so it will be skip. ");
                     return null;
                 }
                 result.append(fileContent.substring(fileIndex, fileContent.length()));
@@ -340,21 +336,21 @@ public class JavaCodeGenerator implements Generator {
             int fileEnd = fileContent.indexOf(endCoverMark
                     , fileBegin + beginCoverMark.length());
             if (fileEnd == EOF) {
-                log.info("The file \"{}\" already exists and can not find " +
-                        "end cover mark, it will be skip. ", existedFile.getName());
+                log.info("The file \"" + existedFile.getName() + "\" already exists and " +
+                        "can not find end cover mark, it will be skip. ");
                 return null;
             }
             int generatedBegin = generated.indexOf(beginCoverMark, generatedIndex);
             if (generatedBegin == EOF) {
-                log.info("Can not find begin cover mark in template when " +
-                        "generate \"{}\", it will be skip. ", existedFile.getName());
+                log.info("Can not find begin cover mark in template when generate \""
+                        + existedFile.getName() + "\", it will be skip. ");
                 return null;
             }
             int generatedEnd = generated.indexOf(endCoverMark
                     , generatedBegin + beginCoverMark.length());
             if (generatedEnd == EOF) {
-                log.info("Can not find end cover mark in template when generate " +
-                        "\"{}\", it will be skip. ", existedFile.getName());
+                log.info("Can not find end cover mark in template " +
+                        "when generate \"" + existedFile.getName() + "\", it will be skip. ");
                 return null;
             }
             result.append(fileContent.substring(fileIndex, fileBegin));
@@ -366,32 +362,44 @@ public class JavaCodeGenerator implements Generator {
         } while (true);
     }
 
-    protected void render(GeneratorData generatorData, Writer writer) throws Exception {
-        Map<String, Object> data = new HashMap<String, Object>();
-        data.put("tableInfo", generatorData);
+    protected void render(TableMeta table, Writer writer) throws Exception {
+        Assert.notNull(writer, "Parameter \"writer\" must not null. ");
+        Assert.notNull(table, "Parameter \"table\" must not null. ");
+        log.info("Generator \"" + this.getTemplateName() +
+                "\": rendering the java code corresponding to table \"" + table.getName() + "\". ");
+        Map<String, Object> data = new HashMap<String, Object>(this.getAttributes());
+        List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
+        List<ColumnMeta> columnMetaList = table.getColumnMetaList();
+        for (ColumnMeta columnMeta : columnMetaList) {
+            columnList.add(columnMeta.getAttributes());
+        }
+        Map<String, Object> tableAttributes = table.getAttributes();
+        tableAttributes = new HashMap<String, Object>(tableAttributes);
+        tableAttributes.put("columnList", columnList);
+        tableAttributes.remove("columnMetaList");
         data.put("generatedTime", DateUtils.format());
-        data.putAll(this.getAttributes());
-        String fileName = this.getFileName(generatorData);
+        data.put("table", tableAttributes);
+        String fileName = this.getFileName(table);
         this.getRenderer().render(data, writer, fileName, this.getTemplateContent(), null);
     }
 
     @Override
-    public void generate() {
+    public void generate() throws GenerateException {
         try {
-            Assert.notEmpty(generatorDataList
-                    , "Parameter \"generatorDataList\" must not empty. ");
+            Assert.notEmpty(tableList
+                    , "Parameter \"tableList\" must not empty. ");
             File outputDir = new File(this.getOutputPath());
             if (!outputDir.exists() && !outputDir.mkdirs()) {
                 throw new IOException("Directory \"" + outputDir + "\" create failure. ");
             }
-            for (GeneratorData generatorData : generatorDataList) {
-                if (generatorData == null) { continue; }
-                String fileName = this.getFileName(generatorData);
+            for (TableMeta table : tableList) {
+                if (table == null) { continue; }
+                String fileName = this.getFileName(table);
                 File outputFile = new File(outputDir, fileName);
                 if (outputFile.exists()) {
                     if (skipExisted) { return; }
                     Writer builderWriter = new StringBuilderWriter();
-                    this.render(generatorData, builderWriter);
+                    this.render(table, builderWriter);
                     String generated = builderWriter.toString();
                     String outputStr = this.readAndReplace(outputFile, generated);
                     if (outputStr == null) { return; }
@@ -413,7 +421,7 @@ public class JavaCodeGenerator implements Generator {
                     try {
                         OutputStream out = new FileOutputStream(outputFile);
                         writer = new OutputStreamWriter(out, this.getOutputCharset());
-                        this.render(generatorData, writer);
+                        this.render(table, writer);
                     }
                     finally {
                         IOUtils.closeQuietly(writer);

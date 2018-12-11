@@ -1,10 +1,10 @@
 package artoria.util;
 
 import artoria.beans.BeanUtils;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import artoria.common.Paging;
 import artoria.common.Result;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +78,24 @@ public class PagingUtils {
         result.setPageCount(page.getPages());
         result.setTotal(page.getTotal());
         result.setData(list);
+        return result;
+    }
+
+    public static <F, T> Result<List<T>> handleResult(Result<List<F>> data, Class<T> clazz) {
+        if (data == null) {
+            return new Result<List<T>>();
+        }
+        Result<List<T>> result = new Result<List<T>>();
+        result.setPageNum(data.getPageNum());
+        result.setPageSize(data.getPageSize());
+        result.setPageCount(data.getPageCount());
+        result.setTotal(data.getTotal());
+        List<F> list = data.getData();
+        if (CollectionUtils.isEmpty(list)) {
+            result.setData(new ArrayList<T>());
+            return result;
+        }
+        result.setData(BeanUtils.beanToBeanInList(list, clazz));
         return result;
     }
 
