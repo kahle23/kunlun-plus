@@ -45,21 +45,26 @@ public class FreemarkerRenderer implements Renderer {
     }
 
     @Override
-    public void render(Object data, Object output, String name, Object input, String charsetName) throws Exception {
-        Assert.notBlank(name, "Parameter \"name\" must not blank. ");
-        Assert.state((output instanceof Writer)
-                , "Parameter \"output\" must instance of \"Writer\". ");
-        if ((input instanceof Reader) || (input instanceof String)) {
-            Reader reader = input instanceof Reader
-                    ? (Reader) input : new StringReader((String) input);
-            Template template = new Template(name, reader, this.configuration);
-            template.process(data, (Writer) output);
+    public void render(Object data, Object output, String name, Object input, String charsetName) {
+        try {
+            Assert.notBlank(name, "Parameter \"name\" must not blank. ");
+            Assert.state((output instanceof Writer)
+                    , "Parameter \"output\" must instance of \"Writer\". ");
+            if ((input instanceof Reader) || (input instanceof String)) {
+                Reader reader = input instanceof Reader
+                        ? (Reader) input : new StringReader((String) input);
+                Template template = new Template(name, reader, this.configuration);
+                template.process(data, (Writer) output);
+            }
+            else {
+                charsetName = StringUtils.isNotBlank(charsetName)
+                        ? charsetName : DEFAULT_CHARSET_NAME;
+                Template template = this.configuration.getTemplate(name, charsetName);
+                template.process(data, (Writer) output);
+            }
         }
-        else {
-            charsetName = StringUtils.isNotBlank(charsetName)
-                    ? charsetName : DEFAULT_CHARSET_NAME;
-            Template template = this.configuration.getTemplate(name, charsetName);
-            template.process(data, (Writer) output);
+        catch (Exception e) {
+            throw ExceptionUtils.wrap(e);
         }
     }
 

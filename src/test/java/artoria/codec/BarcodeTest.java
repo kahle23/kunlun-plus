@@ -17,8 +17,8 @@ public class BarcodeTest {
                 .setTrueColor(0x11111111)
                 .setFalseColor(0x99999999)
                 .setLogo(new File("C:\\Users\\Kahle\\Desktop\\logo.png"));
-        System.out.println(barcode.encodeToImage("https://github.com", file));
-        System.out.println(barcode.decodeToText(file));
+        System.out.println(barcode.encodeToFile("https://github.com", file));
+        System.out.println(barcode.decodeFromFile(file));
     }
 
 }

@@ -1,8 +1,8 @@
 package artoria.codec;
 
 import artoria.exception.ExceptionUtils;
+import artoria.file.FilenameUtils;
 import artoria.util.Assert;
-import artoria.util.PathUtils;
 import artoria.util.StringUtils;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
@@ -248,14 +248,14 @@ public class Barcode {
         return this;
     }
 
-    public BitMatrix encode(String content) throws WriterException {
+    public BitMatrix encodeToBitMatrix(String content) throws WriterException {
         this.handleHints();
         MultiFormatWriter writer = new MultiFormatWriter();
         return writer.encode(content
                 , this.barcodeFormat, this.width, this.height, this.encodeHints);
     }
 
-    public Result decode(BufferedImage image) throws NotFoundException {
+    public Result decodeFromBufferedImage(BufferedImage image) throws NotFoundException {
         this.handleHints();
         LuminanceSource source = new BufferedImageLuminanceSource(image);
         Binarizer binarizer = new HybridBinarizer(source);
@@ -264,30 +264,30 @@ public class Barcode {
         return reader.decode(binaryBitmap, this.decodeHints);
     }
 
-    public String decodeToText(BufferedImage image) throws NotFoundException {
-        Result result = this.decode(image);
+    public String decode(BufferedImage image) throws NotFoundException {
+        Result result = this.decodeFromBufferedImage(image);
         return result != null ? result.getText() : null;
     }
 
-    public BufferedImage encodeToImage(String content) throws WriterException {
-        BitMatrix bitMatrix = this.encode(content);
+    public BufferedImage encode(String content) throws WriterException {
+        BitMatrix bitMatrix = this.encodeToBitMatrix(content);
         BufferedImage bufferedImage =
                 Barcode.toBufferedImage(bitMatrix, this.imageType, this.trueColor, this.falseColor);
         this.handleLogo(bufferedImage);
         return bufferedImage;
     }
 
-    public String decodeToText(File file) throws NotFoundException, IOException {
+    public String decodeFromFile(File file) throws NotFoundException, IOException {
         BufferedImage image = Barcode.toBufferedImage(file);
-        return this.decodeToText(image);
+        return this.decode(image);
     }
 
-    public boolean encodeToImage(String content, File file) throws WriterException, IOException {
-        BufferedImage image = this.encodeToImage(content);
-        String extension = PathUtils.getExtension(file.toString());
+    public boolean encodeToFile(String content, File file) throws WriterException, IOException {
+        BufferedImage image = this.encode(content);
+        String extension = FilenameUtils.getExtension(file.toString());
         if (StringUtils.isBlank(extension)) {
             file = new File(file.toString(), DEFAULT_FILE_EXTENSION);
-            extension = PathUtils.getExtension(file.toString());
+            extension = FilenameUtils.getExtension(file.toString());
         }
         return ImageIO.write(image, extension, file);
     }

@@ -1,5 +1,7 @@
 package artoria.logging;
 
+import artoria.config.LoggingProperties;
+import artoria.servlet.RequestUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import artoria.config.LoggingProperties;
-import artoria.servlet.RequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,0 +1,64 @@
+package ${table.controllerPackageName};
+
+import artoria.beans.BeanUtils;
+import artoria.common.Input;
+import artoria.common.Result;
+import artoria.util.PagingUtils;
+import ${table.entityPackageName}.${table.entityClassName};
+import ${table.dtoPackageName}.${table.dtoClassName};
+import ${table.voPackageName}.${table.voClassName};
+import ${table.servicePackageName}.${table.serviceClassName};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ${table.controllerClassName}.
+ * @author $!{author}
+ */
+@Controller
+public class ${table.controllerClassName} {
+
+    @Autowired
+    private ${table.serviceClassName} ${table.serviceObjectName};
+
+    @ResponseBody
+    @RequestMapping(value = "/${table.entityObjectName}/add", method = RequestMethod.POST)
+    public Result<Boolean> add${table.entityClassName}(@RequestBody ${table.dtoClassName} ${table.dtoObjectName}) {
+        int effect = ${table.serviceObjectName}.insertSelective(
+                BeanUtils.beanToBean(${table.dtoObjectName}, ${table.entityClassName}.class));
+        return new Result<Boolean>(effect == 1);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/${table.entityObjectName}/delete", method = RequestMethod.POST)
+    public Result<Boolean> delete${table.entityClassName}(@RequestBody ${table.dtoClassName} ${table.dtoObjectName}) {
+        int effect = ${table.serviceObjectName}.deleteSelective(
+                BeanUtils.beanToBean(${table.dtoObjectName}, ${table.entityClassName}.class));
+        return new Result<Boolean>(effect == 1);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/${table.entityObjectName}/update", method = RequestMethod.POST)
+    public Result<Boolean> update${table.entityClassName}(@RequestBody ${table.dtoClassName} ${table.dtoObjectName}) {
+        int effect = ${table.serviceObjectName}.updateByPrimaryKey(
+                BeanUtils.beanToBean(${table.dtoObjectName}, ${table.entityClassName}.class));
+        return new Result<Boolean>(effect == 1);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/${table.entityObjectName}/query", method = RequestMethod.POST)
+    public Result<List<${table.dtoClassName}>> query${table.entityClassName}(@RequestBody ${table.dtoClassName} ${table.dtoObjectName}) {
+        Input<${table.entityClassName}> input = new Input<${table.entityClassName}>();
+        input.setData(BeanUtils.beanToBean(${table.dtoObjectName}, ${table.entityClassName}.class));
+        Result<List<${table.entityClassName}>> queryResult = ${table.serviceObjectName}.querySelective(input);
+        return PagingUtils.handleResult(queryResult, ${table.dtoClassName}.class);
+    }
+
+}

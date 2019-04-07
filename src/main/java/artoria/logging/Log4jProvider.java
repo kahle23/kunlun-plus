@@ -9,7 +9,8 @@ import static artoria.common.Constants.EMPTY_STRING;
 public class Log4jProvider implements LoggerProvider {
 	private static org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
 
-	public Log4jProvider() {}
+	public Log4jProvider() {
+	}
 
 	@Override
 	public Logger getLogger(Class<?> clazz) {
