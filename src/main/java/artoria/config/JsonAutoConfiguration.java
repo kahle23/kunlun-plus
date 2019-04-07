@@ -3,10 +3,12 @@ package artoria.config;
 import artoria.exchange.FastJsonProvider;
 import artoria.exchange.GsonProvider;
 import artoria.exchange.JsonUtils;
-import artoria.spring.InitializingDisposableBean;
+import artoria.util.ClassLoaderUtils;
 import artoria.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,14 +16,14 @@ import org.springframework.context.annotation.Configuration;
  * @author Kahle
  */
 @Configuration
-public class JsonAutoConfiguration implements InitializingDisposableBean {
+public class JsonAutoConfiguration implements InitializingBean, DisposableBean {
     private static final String FASTJSON_CLASS = "com.alibaba.fastjson.JSON";
     private static final String GSON_CLASS = "com.google.gson.Gson";
     private static Logger log = LoggerFactory.getLogger(JsonAutoConfiguration.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ClassLoader classLoader = ClassUtils.getDefaultClassLoader();
+        ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
         if (ClassUtils.isPresent(FASTJSON_CLASS, classLoader)) {
             JsonUtils.setJsonProvider(new FastJsonProvider());
         }
@@ -29,7 +31,7 @@ public class JsonAutoConfiguration implements InitializingDisposableBean {
             JsonUtils.setJsonProvider(new GsonProvider());
         }
         else {
-            log.error("Can not found fastjson or gson, will keep default. ");
+            log.warn(">> Can not found \"fastjson\" or \"gson\", will keep default. ");
         }
     }
 

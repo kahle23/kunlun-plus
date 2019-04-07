@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.io.Serializable;
 
 public class FstTest implements Serializable {
+    private Hex hex = new Hex();
 
     @Before
     public void init() {
@@ -19,7 +20,7 @@ public class FstTest implements Serializable {
         FstTest fstTest = new FstTest();
         System.out.println(fstTest);
         byte[] bytes = SerializeUtils.serialize(fstTest);
-        System.out.println(Hex.getInstance().encodeToString(bytes));
+        System.out.println(hex.encodeToString(bytes));
         Object obj = SerializeUtils.deserialize(bytes);
         System.out.println(obj);
     }

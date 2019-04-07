@@ -7,137 +7,98 @@ import org.apache.log4j.Logger;
  * @author Kahle
  */
 public class Log4jLogger implements artoria.logging.Logger {
-
-    private Logger logger;
+    private final Logger logger;
 
     public Log4jLogger(Logger logger) {
+
         this.logger = logger;
     }
 
     private void log(org.apache.log4j.Level level, String message, Throwable t) {
         StackTraceElement element = new Throwable().getStackTrace()[2];
         String clazzName = element.getClassName();
+        // TODO: render arguments
         logger.log(clazzName, level, message, t);
     }
 
     @Override
-    public void trace(String msg) {
+    public void trace(String format, Object... arguments) {
         if (!this.isTraceEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.TRACE, msg, null);
+        this.log(org.apache.log4j.Level.TRACE, format, null);
     }
 
     @Override
-    public void trace(Throwable e) {
+    public void trace(String message, Throwable throwable) {
         if (!this.isTraceEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.TRACE, e.getMessage(), e);
+        this.log(org.apache.log4j.Level.TRACE, message, throwable);
     }
 
     @Override
-    public void trace(String msg, Throwable e) {
-        if (!this.isTraceEnabled()) {
-            return;
-        }
-        this.log(org.apache.log4j.Level.TRACE, msg, e);
-    }
-
-    @Override
-    public void debug(String msg) {
+    public void debug(String format, Object... arguments) {
         if (!this.isDebugEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.DEBUG, msg, null);
+        this.log(org.apache.log4j.Level.DEBUG, format, null);
     }
 
     @Override
-    public void debug(Throwable e) {
+    public void debug(String message, Throwable throwable) {
         if (!this.isDebugEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.DEBUG, e.getMessage(), e);
+        this.log(org.apache.log4j.Level.DEBUG, message, throwable);
     }
 
     @Override
-    public void debug(String msg, Throwable e) {
-        if (!this.isDebugEnabled()) {
-            return;
-        }
-        this.log(org.apache.log4j.Level.DEBUG, msg, e);
-    }
-
-    @Override
-    public void info(String msg) {
+    public void info(String format, Object... arguments) {
         if (!this.isInfoEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.INFO, msg, null);
+        this.log(org.apache.log4j.Level.INFO, format, null);
     }
 
     @Override
-    public void info(Throwable e) {
+    public void info(String message, Throwable throwable) {
         if (!this.isInfoEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.INFO, e.getMessage(), e);
+        this.log(org.apache.log4j.Level.INFO, message, throwable);
     }
 
     @Override
-    public void info(String msg, Throwable e) {
-        if (!this.isInfoEnabled()) {
-            return;
-        }
-        this.log(org.apache.log4j.Level.INFO, msg, e);
-    }
-
-    @Override
-    public void warn(String msg) {
+    public void warn(String format, Object... arguments) {
         if (!this.isWarnEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.WARN, msg, null);
+        this.log(org.apache.log4j.Level.WARN, format, null);
     }
 
     @Override
-    public void warn(Throwable e) {
+    public void warn(String message, Throwable throwable) {
         if (!this.isWarnEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.WARN, e.getMessage(), e);
+        this.log(org.apache.log4j.Level.WARN, message, throwable);
     }
 
     @Override
-    public void warn(String msg, Throwable e) {
-        if (!this.isWarnEnabled()) {
-            return;
-        }
-        this.log(org.apache.log4j.Level.WARN, msg, e);
-    }
-
-    @Override
-    public void error(String msg) {
+    public void error(String format, Object... arguments) {
         if (!this.isErrorEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.ERROR, msg, null);
+        this.log(org.apache.log4j.Level.ERROR, format, null);
     }
 
     @Override
-    public void error(Throwable e) {
+    public void error(String message, Throwable throwable) {
         if (!this.isErrorEnabled()) {
             return;
         }
-        this.log(org.apache.log4j.Level.ERROR, e.getMessage(), e);
-    }
-
-    @Override
-    public void error(String msg, Throwable e) {
-        if (!this.isErrorEnabled()) {
-            return;
-        }
-        this.log(org.apache.log4j.Level.ERROR, msg, e);
+        this.log(org.apache.log4j.Level.ERROR, message, throwable);
     }
 
     @Override

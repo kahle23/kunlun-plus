@@ -1,0 +1,158 @@
+package ${table.serviceImplPackageName};
+
+import artoria.beans.BeanUtils;
+import artoria.util.CollectionUtils;
+import artoria.common.Paging;
+import artoria.util.PagingUtils;
+import artoria.common.Input;
+import artoria.common.Result;
+import artoria.exception.VerifyUtils;
+import ${table.entityPackageName}.${table.entityClassName};
+import ${table.mapperPackageName}.${table.mapperClassName};
+import ${table.servicePackageName}.${table.serviceClassName};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static artoria.exception.InternalErrorCode.PARAMETER_REQUIRED;
+
+/**
+ * ${table.serviceImplClassName}.
+ * @author $!{author}
+ */
+@Service
+public class ${table.serviceImplClassName} implements ${table.serviceClassName} {
+
+    @Autowired
+    private ${table.mapperClassName} ${table.mapperObjectName};
+
+    @Override
+    public int insert(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.insert(record);
+    }
+
+    @Override
+    public int insertBatch(List<${table.entityClassName}> recordList) {
+        VerifyUtils.notEmpty(recordList, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.insertBatch(recordList);
+    }
+
+    @Override
+    public int insertSelective(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.insertSelective(record);
+    }
+
+    @Override
+    public int deleteByPrimaryKey(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.javaType} ${column.fieldName}#end
+#end) {
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+        VerifyUtils.notNull(${column.fieldName}, PARAMETER_REQUIRED);
+#end#end
+        return ${table.mapperObjectName}.deleteByPrimaryKey(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.fieldName}#end
+#end);
+    }
+
+    @Override
+    public int deleteByPrimaryKeyList(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#List<${column.javaType}> ${column.fieldName}List#end
+#end) {
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+        VerifyUtils.notEmpty(${column.fieldName}List, PARAMETER_REQUIRED);
+#end#end
+        return ${table.mapperObjectName}.deleteByPrimaryKeyList(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.fieldName}List#end
+#end);
+    }
+
+    @Override
+    public int deleteSelective(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.deleteSelective(record);
+    }
+
+    @Override
+    public int updateByPrimaryKey(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.updateByPrimaryKey(record);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int countSelective(${table.entityClassName} record) {
+        VerifyUtils.notNull(record, PARAMETER_REQUIRED);
+        return ${table.mapperObjectName}.countSelective(record);
+    }
+
+    @Override
+    public ${table.entityClassName} queryByPrimaryKey(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.javaType} ${column.fieldName}#end
+#end) {
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+        VerifyUtils.notNull(${column.fieldName}, PARAMETER_REQUIRED);
+#end#end
+        return ${table.mapperObjectName}.queryByPrimaryKey(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.fieldName}#end
+#end);
+    }
+
+    @Override
+    public List<${table.entityClassName}> queryByPrimaryKeyList(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#List<${column.javaType}> ${column.fieldName}List#end
+#end) {
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+        VerifyUtils.notEmpty(${column.fieldName}List, PARAMETER_REQUIRED);
+#end#end
+        return ${table.mapperObjectName}.queryByPrimaryKeyList(#set($temp = 0)
+#foreach(${column} in ${table.columnList})
+#if($column.primaryKey)
+#if($temp > 0), #set($temp = $temp + 1)#end#*
+*#${column.fieldName}List#end
+#end);
+    }
+
+    @Override
+    public Result<List<${table.entityClassName}>> querySelective(Input<${table.entityClassName}> input) {
+        VerifyUtils.notNull(input, PARAMETER_REQUIRED);
+        ${table.entityClassName} ${table.entityObjectName} = input.getData();
+        if (${table.entityObjectName} == null) { ${table.entityObjectName} = new ${table.entityClassName}(); }
+        PagingUtils.startPage(input.getPaging());
+        return PagingUtils.handleResult(${table.mapperObjectName}.querySelective(${table.entityObjectName}));
+    }
+
+}

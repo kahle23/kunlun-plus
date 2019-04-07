@@ -75,7 +75,7 @@ public class VelocityRenderer implements Renderer {
     }
 
     @Override
-    public void render(Object data, Object output, String name, Object input, String charsetName) throws Exception {
+    public void render(Object data, Object output, String name, Object input, String charsetName) {
         Assert.notBlank(name, "Parameter \"name\" must not blank. ");
         Assert.state((output instanceof Writer)
                 , "Parameter \"output\" must instance of \"Writer\". ");

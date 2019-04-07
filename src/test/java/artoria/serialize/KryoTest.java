@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class KryoTest {
+    private Hex hex = new Hex();
 
     @Before
     public void init() {
@@ -27,7 +28,7 @@ public class KryoTest {
         KryoTest kryoTest = new KryoTest();
         System.out.println(kryoTest);
         byte[] bytes = SerializeUtils.serialize(kryoTest);
-        System.out.println(Hex.getInstance().encodeToString(bytes));
+        System.out.println(hex.encodeToString(bytes));
         Object obj = SerializeUtils.deserialize(bytes);
         System.out.println(obj);
     }

@@ -6,13 +6,16 @@ import artoria.reflect.ReflectUtils;
 import artoria.reflect.Reflecter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ConcurrentReferenceHashMap;
-import artoria.spring.InitializingDisposableBean;
 
 import java.lang.reflect.Method;
 import java.util.*;
+
+import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.WEAK;
 
 /**
  * Reflect auto configuration.
@@ -20,15 +23,15 @@ import java.util.*;
  */
 @Configuration
 @AutoConfigureAfter(CglibAutoConfiguration.class)
-public class ReflectAutoConfiguration implements InitializingDisposableBean {
+public class ReflectAutoConfiguration implements InitializingBean, DisposableBean {
     private static Logger log = LoggerFactory.getLogger(ReflectAutoConfiguration.class);
     private static final List<String> METHOD_NAMES;
 
     static {
         // TODO: Do cache optimize by cacheManager
         List<String> list = new ArrayList<String>();
-        Collections.addAll(list, "forName"
-                , "findConstructors", "findConstructor"
+        Collections.addAll(list, "findConstructors"
+                , "findConstructor"
                 , "findFields", "findDeclaredFields"
                 , "findAccessFields", "findField"
                 , "findMethods", "findDeclaredMethods"
@@ -45,7 +48,7 @@ public class ReflectAutoConfiguration implements InitializingDisposableBean {
             ReflecterInterceptor intr = new ReflecterInterceptor(reflecter);
             Reflecter instance = (Reflecter) Enhancer.enhance(reflecter, intr);
             ReflectUtils.setReflecter(instance);
-            log.info("Add cache to \"ReflectUtils\" success. ");
+            log.info(">> Add cache to reflection tools success. ");
         }
     }
 
@@ -58,10 +61,7 @@ public class ReflectAutoConfiguration implements InitializingDisposableBean {
         private Reflecter original;
 
         ReflecterInterceptor(Reflecter original) {
-            ConcurrentReferenceHashMap.ReferenceType type =
-                    ConcurrentReferenceHashMap.ReferenceType.WEAK;
-            this.cache =
-                    new ConcurrentReferenceHashMap<String, Object>(64, type);
+            this.cache = new ConcurrentReferenceHashMap<String, Object>(64, WEAK);
             this.original = original;
         }
 

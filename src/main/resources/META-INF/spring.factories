@@ -2,12 +2,11 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 artoria.config.Base64AutoConfiguration,\
 artoria.config.CglibAutoConfiguration,\
 artoria.config.CryptoAutoConfiguration,\
-artoria.config.EmailAutoConfiguration,\
 artoria.config.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.config.LoggingAutoConfiguration,\
 artoria.config.PageHelperAutoConfiguration,\
-artoria.config.RedisAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SpringAutoConfiguration,\
-artoria.config.ZkAutoConfiguration
+artoria.config.SwaggerAutoConfiguration,\
+artoria.config.ZookeeperAutoConfiguration
