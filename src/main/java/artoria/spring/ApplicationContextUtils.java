@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
  *
  * If in traditional spring project, you must add below code in "applicationContext.xml".
  * <pre>
- *      <bean class="artoria.spring.ApplicationContextUtils" lazy-init="false" />
+ *     &lt;bean class="artoria.spring.ApplicationContextUtils" lazy-init="false"/&gt;
  * </pre>
  *
  * @author Kahle

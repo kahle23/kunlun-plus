@@ -18,7 +18,7 @@ import java.util.Properties;
  * PageHelper auto configuration.
  * @author Kahle
  */
-@Configuration
+//@Configuration
 @ConditionalOnBean(SqlSessionFactory.class)
 @AutoConfigureAfter(MybatisAutoConfiguration.class)
 @ConditionalOnClass(name = {"com.github.pagehelper.PageHelper"})
