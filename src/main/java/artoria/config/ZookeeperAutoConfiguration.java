@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.Closeable;
@@ -23,6 +24,7 @@ import java.io.Closeable;
  * @author Kahle
  */
 @Configuration
+@ConditionalOnClass(name = {"org.apache.curator.framework.CuratorFramework"})
 public class ZookeeperAutoConfiguration implements InitializingBean, DisposableBean {
     private static final String CURATOR_FRAMEWORK_CLASS = "org.apache.curator.framework.CuratorFramework";
     private static final String ZK_URL_PREFIX = "zookeeper://";

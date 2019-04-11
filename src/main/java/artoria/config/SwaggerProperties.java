@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "artoria.swagger")
 public class SwaggerProperties {
-    private Boolean enable;
+    private Boolean enabled;
     private String basePackage = "com";
     private String title;
     private String description;
@@ -14,12 +14,12 @@ public class SwaggerProperties {
     private String licenseUrl;
     private String version;
 
-    public Boolean getEnable() {
-        return enable;
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getBasePackage() {

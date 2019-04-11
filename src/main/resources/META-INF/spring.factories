@@ -5,7 +5,6 @@ artoria.config.CryptoAutoConfiguration,\
 artoria.config.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.config.LoggingAutoConfiguration,\
-artoria.config.PageHelperAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SpringAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
