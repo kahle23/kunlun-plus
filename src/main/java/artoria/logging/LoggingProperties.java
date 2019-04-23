@@ -1,4 +1,4 @@
-package artoria.config;
+package artoria.logging;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
