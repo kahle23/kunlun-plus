@@ -1,6 +1,5 @@
-package artoria.config;
+package artoria.logging;
 
-import artoria.logging.ControllerLogPrinter;
 import artoria.util.ClassLoaderUtils;
 import artoria.util.ClassUtils;
 import org.slf4j.Logger;
@@ -8,17 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 /**
  * Logger auto configuration.
  * @author Kahle
  */
 @Configuration
-@EnableConfigurationProperties({LoggingProperties.class})
-@Import({ControllerLogPrinter.class})
 public class LoggingAutoConfiguration implements InitializingBean, DisposableBean {
     private static final String SLF4J_BRIDGE_HANDLER_CLASS = "org.slf4j.bridge.SLF4JBridgeHandler";
     private static Logger log = LoggerFactory.getLogger(LoggingAutoConfiguration.class);

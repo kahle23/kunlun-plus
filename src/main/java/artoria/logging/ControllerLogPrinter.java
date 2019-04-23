@@ -1,6 +1,5 @@
 package artoria.logging;
 
-import artoria.config.LoggingProperties;
 import artoria.servlet.RequestUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -23,8 +22,9 @@ import static artoria.common.Constants.EMPTY_STRING;
  * Controller log printer.
  * @author Kahle
  */
-@Aspect
-@Component
+//@Aspect
+//@Component
+@Deprecated
 public class ControllerLogPrinter {
     private static Logger log = LoggerFactory.getLogger(ControllerLogPrinter.class);
     private LoggingProperties loggerProperties;
