@@ -1,5 +1,7 @@
 package artoria.exception;
 
+import artoria.common.ErrorCode;
+
 /**
  * Business exception.
  * @author Kahle

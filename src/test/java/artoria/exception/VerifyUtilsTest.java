@@ -7,8 +7,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static artoria.exception.SysErrorCode.PASSWORD_IS_REQUIRED;
-import static artoria.exception.SysErrorCode.USERNAME_IS_REQUIRED;
+import static artoria.exception.SystemErrorCode.PASSWORD_IS_REQUIRED;
+import static artoria.exception.SystemErrorCode.USERNAME_IS_REQUIRED;
 
 public class VerifyUtilsTest {
     private Logger log = LoggerFactory.getLogger(VerifyUtilsTest.class);
