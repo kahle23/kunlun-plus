@@ -1,4 +1,4 @@
-package artoria.config;
+package artoria.exception;
 
 import artoria.util.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,17 +9,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "artoria.exception")
 public class ExceptionProperties {
-
     /**
      * Enabled internal error page.
      */
     private Boolean internalErrorPage = true;
-
     /**
      * Error display page base template path.
      */
     private String baseTemplatePath = "/error";
-
     /**
      * Enabled show exception message.
      */

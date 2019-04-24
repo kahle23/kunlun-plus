@@ -2,7 +2,6 @@ package artoria.exception;
 
 import artoria.util.Assert;
 
-import javax.validation.Validation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Mapping of error code and message.
  * @author Kahle
  */
-public class CodeMapper {
+public class ErrorCodeMapper {
     private static final Map<String, String> CODE_MAP = new ConcurrentHashMap<String, String>();
 
     public static void register(String code, String message) {
@@ -20,6 +19,7 @@ public class CodeMapper {
     }
 
     public static String getMessage(String code) {
+
         return CODE_MAP.get(code);
     }
 

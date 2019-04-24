@@ -2,7 +2,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 artoria.config.Base64AutoConfiguration,\
 artoria.config.CglibAutoConfiguration,\
 artoria.config.CryptoAutoConfiguration,\
-artoria.config.ExceptionAutoConfiguration,\
+artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.logging.ControllerLogAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\

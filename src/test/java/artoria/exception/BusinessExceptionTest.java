@@ -4,8 +4,8 @@ import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
 import org.junit.Test;
 
-import static artoria.exception.SysErrorCode.PASSWORD_IS_REQUIRED;
-import static artoria.exception.SysErrorCode.USERNAME_IS_REQUIRED;
+import static artoria.exception.SystemErrorCode.PASSWORD_IS_REQUIRED;
+import static artoria.exception.SystemErrorCode.USERNAME_IS_REQUIRED;
 
 public class BusinessExceptionTest {
     private static Logger log = LoggerFactory.getLogger(BusinessExceptionTest.class);

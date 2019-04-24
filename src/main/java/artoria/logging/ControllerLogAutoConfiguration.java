@@ -1,6 +1,6 @@
 package artoria.logging;
 
-import artoria.user.UserAutoConfiguration;
+import artoria.exception.ExceptionAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Kahle
  */
 @Configuration
-@AutoConfigureAfter(UserAutoConfiguration.class)
+@AutoConfigureAfter(ExceptionAutoConfiguration.class)
 @ConditionalOnProperty(name = "artoria.logging.printControllerLog", havingValue = "true")
 public class ControllerLogAutoConfiguration implements WebMvcConfigurer {
 
