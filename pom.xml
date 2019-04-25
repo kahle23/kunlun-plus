@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.kahlkn</groupId>
     <artifactId>artoria-extend</artifactId>
-    <version>0.8.0.20190417-SNAPSHOT</version>
+    <version>0.8.0.20190418-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Artoria Extend</name>
     <url>https://github.com/kahlkn/artoria-extend</url>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.github.kahlkn</groupId>
             <artifactId>artoria</artifactId>
-            <version>1.0.0.20190419-SNAPSHOT</version>
+            <version>1.0.0.20190420-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

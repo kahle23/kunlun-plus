@@ -1,6 +1,5 @@
 package artoria.generator;
 
-import artoria.common.AbstractAttributable;
 import artoria.exception.ExceptionUtils;
 import artoria.jdbc.ColumnMeta;
 import artoria.jdbc.DatabaseClient;
@@ -22,7 +21,7 @@ import static artoria.io.IOUtils.EOF;
  * Java code generate helper.
  * @author Kahle
  */
-public class JavaGenerateHelper extends AbstractAttributable implements Generator<Boolean> {
+public class JavaGenerateHelper extends HashMap<String, Object> implements Generator<Boolean> {
     private static final String DEFAULT_XML_BEGIN_COVER_MARK
             = "<!-- **** (Start) This will be covered, please do not modify. **** -->";
     private static final String DEFAULT_XML_END_COVER_MARK
@@ -382,17 +381,17 @@ public class JavaGenerateHelper extends AbstractAttributable implements Generato
             entityName = StringUtils.underlineToCamel(entityName);
             entityName = StringUtils.capitalize(entityName);
             // Handle column information
-            List<ColumnMeta> columnMetaList = table.getColumnMetaList();
+            List<ColumnMeta> columnList = table.getColumnList();
             Set<String> typeImportList = new HashSet<String>();
-            table.addAttribute("typeImportList", typeImportList);
+            table.put("typeImportList", typeImportList);
             Map<String, String> importClassMap = new HashMap<String, String>();
-            for (ColumnMeta columnMeta : columnMetaList) {
+            for (ColumnMeta columnMeta : columnList) {
                 String columnName = columnMeta.getName();
                 String fieldName = StringUtils.underlineToCamel(columnName);
-                columnMeta.addAttribute("fieldName", StringUtils.uncapitalize(fieldName));
+                columnMeta.put("fieldName", StringUtils.uncapitalize(fieldName));
                 String capFieldName = StringUtils.capitalize(fieldName);
-                columnMeta.addAttribute("getterName", GET + capFieldName);
-                columnMeta.addAttribute("setterName", SET + capFieldName);
+                columnMeta.put("getterName", GET + capFieldName);
+                columnMeta.put("setterName", SET + capFieldName);
                 // Handle java type
                 String columnClassName = columnMeta.getClassName();
                 if (StringUtils.isBlank(columnClassName)) { continue; }
@@ -400,18 +399,18 @@ public class JavaGenerateHelper extends AbstractAttributable implements Generato
                 columnClassName = JavaGenerateHelper.getTypeMapping(columnType, columnClassName);
                 int index = columnClassName.lastIndexOf(DOT);
                 if (index == EOF) {
-                    columnMeta.addAttribute(JAVA_TYPE, columnClassName);
+                    columnMeta.put(JAVA_TYPE, columnClassName);
                     continue;
                 }
                 String shortName = columnClassName.substring(index + 1);
                 String className = importClassMap.get(shortName);
                 if (className != null && !className.equals(columnClassName)) {
-                    columnMeta.addAttribute(JAVA_TYPE, columnClassName);
+                    columnMeta.put(JAVA_TYPE, columnClassName);
                 }
                 else {
                     importClassMap.put(shortName, columnClassName);
                     typeImportList.add(columnClassName);
-                    columnMeta.addAttribute(JAVA_TYPE, shortName);
+                    columnMeta.put(JAVA_TYPE, shortName);
                 }
             }
             //
@@ -431,11 +430,11 @@ public class JavaGenerateHelper extends AbstractAttributable implements Generato
                     backName = EMPTY_STRING;
                 }
                 String className = entityName + backName;
-                table.addAttribute(beginName + "ClassName", className);
+                table.put(beginName + "ClassName", className);
                 String objectName = StringUtils.uncapitalize(className);
-                table.addAttribute(beginName + "ObjectName", objectName);
+                table.put(beginName + "ObjectName", objectName);
                 String packageName = basePackageName + businessPackageName;
-                table.addAttribute(beginName + "PackageName", packageName);
+                table.put(beginName + "PackageName", packageName);
             }
         }
     }
@@ -446,7 +445,7 @@ public class JavaGenerateHelper extends AbstractAttributable implements Generato
             if (CollectionUtils.isEmpty(generatorList)) { return false; }
             this.initializeTableList();
             for (JavaCodeGenerator generator : generatorList) {
-                generator.addAttributes(this.getAttributes());
+                generator.putAll(this);
                 generator.setTableList(this.getTableList());
                 if (renderer != null) {
                     generator.setRenderer(this.getRenderer());

@@ -1,9 +1,11 @@
 package artoria.user;
 
 import artoria.config.SwaggerProperties;
+import artoria.logging.ControllerLogAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -16,7 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-@EnableConfigurationProperties({UserProperties.class})
+@EnableConfigurationProperties({UserProperties.class, SwaggerProperties.class})
+@AutoConfigureAfter(ControllerLogAutoConfiguration.class)
 @ConditionalOnBean({TokenManager.class, UserManager.class})
 @ConditionalOnProperty(name = "artoria.user.enabled", havingValue = "true")
 public class UserAutoConfiguration implements WebMvcConfigurer {
@@ -47,7 +50,8 @@ public class UserAutoConfiguration implements WebMvcConfigurer {
         List<String> willExclude = new ArrayList<String>(Arrays.asList(wantExclude));
         willExclude.add("/");
         willExclude.add("/error/**");
-        if (swaggerProperties.getEnabled()) {
+        Boolean swaggerEnabled = swaggerProperties.getEnabled();
+        if (swaggerEnabled != null && swaggerEnabled) {
             willExclude.add("/webjars/springfox-swagger-ui/**");
             willExclude.add("/swagger-resources/**");
             willExclude.add("/swagger-ui.html");

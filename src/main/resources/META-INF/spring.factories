@@ -9,4 +9,5 @@ artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SpringAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
+artoria.user.UserAutoConfiguration,\
 artoria.config.ZookeeperAutoConfiguration

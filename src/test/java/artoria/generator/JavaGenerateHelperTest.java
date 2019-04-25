@@ -30,18 +30,17 @@ public class JavaGenerateHelperTest {
 
     @Test
     public void test1() {
-        JavaGenerateHelper helper = new JavaGenerateHelper();
-        helper.createGenerator("mapper_xml,mapper_java,entity_java,serviceImpl_java," +
-                "service_java,controller_java,dto_java,vo_java")
-//                .setBaseTemplatePath("classpath:generator")
+        JavaGenerateHelper helper = new JavaGenerateHelper().createGenerator()
+                .setDatabaseClient(databaseClient)
+//                .setBaseTemplatePath("classpath:templates/generator/custom")
                 .setBaseOutputPath("src\\test\\java")
                 .setBasePackageName("artoria.generator.out")
-                .setDatabaseClient(databaseClient)
                 .setRenderer(new VelocityRenderer())
                 .addRemovedTableNamePrefixes("t_")
-                .addExcludedTables("t_15_user")
-                .addReservedTables("t_user");
-        helper.addAttribute("author", "Kahle");
+//                .addExcludedTables("t_15_user")
+//                .addReservedTables("t_user")
+                ;
+        helper.put("author", "Kahle");
         helper.generate();
     }
 
