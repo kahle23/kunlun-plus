@@ -4,21 +4,21 @@ import artoria.exception.VerifyUtils;
 import artoria.spring.ApplicationContextUtils;
 import artoria.util.ThreadLocalUtils;
 
-import static artoria.exception.InternalErrorCode.*;
+import static artoria.common.DefaultErrorCode.*;
 
 public class UserUtils {
     /**
-     * ThreadLocal token key
-     */
-    private static final String TOKEN_THREAD_LOCAL_KEY = "TOKEN";
-    /**
      * ThreadLocal tokenId key
      */
-    private static final String TOKEN_ID_THREAD_LOCAL_KEY = "TOKEN_ID";
+    public static final String TOKEN_ID_THREAD_LOCAL_KEY = "TOKEN_ID";
+    /**
+     * ThreadLocal token key
+     */
+    public static final String TOKEN_THREAD_LOCAL_KEY = "TOKEN";
     /**
      * ThreadLocal userInfo key
      */
-    private static final String USER_INFO_THREAD_LOCAL_KEY = "USER_INFO";
+    public static final String USER_INFO_THREAD_LOCAL_KEY = "USER_INFO";
 
     private static class Holder {
         static TokenManager tokenManager = ApplicationContextUtils.getBean(TokenManager.class);
@@ -32,7 +32,7 @@ public class UserUtils {
     }
 
     public static void setTokenId(String tokenId) {
-        VerifyUtils.notBlank(tokenId, PARAMETER_REQUIRED);
+        VerifyUtils.notBlank(tokenId, PARAMETER_IS_REQUIRED);
         ThreadLocalUtils.setValue(TOKEN_ID_THREAD_LOCAL_KEY, tokenId);
     }
 

@@ -1,10 +1,8 @@
 package artoria.generator;
 
-import artoria.common.AbstractAttributable;
 import artoria.exception.ExceptionUtils;
 import artoria.io.IOUtils;
 import artoria.io.StringBuilderWriter;
-import artoria.jdbc.ColumnMeta;
 import artoria.jdbc.TableMeta;
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
@@ -15,10 +13,8 @@ import artoria.util.ClassLoaderUtils;
 import artoria.util.StringUtils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static artoria.common.Constants.*;
 import static artoria.io.IOUtils.EOF;
@@ -27,54 +23,44 @@ import static artoria.io.IOUtils.EOF;
  * Java code generator.
  * @author Kahle
  */
-public class JavaCodeGenerator extends AbstractAttributable implements Generator<Boolean> {
+public class JavaCodeGenerator extends HashMap<String, Object> implements Generator<Boolean> {
     private static final String CLASSPATH = "classpath:";
     private static Logger log = LoggerFactory.getLogger(JavaCodeGenerator.class);
-    private String templateCharset = DEFAULT_CHARSET_NAME;
-    private String outputCharset = DEFAULT_CHARSET_NAME;
-    private String templateName;
-    private String baseTemplatePath = CLASSPATH;
-    private String templateExtensionName = ".txt";
-    private String baseOutputPath;
-    private Renderer renderer;
-    private String basePackageName;
-    private String businessPackageName = EMPTY_STRING;
-    private Boolean skipExisted = false;
-    private String beginCoverMark;
-    private String endCoverMark;
-    private String templateContent;
     private List<TableMeta> tableList;
 
     public JavaCodeGenerator() {
-
-        this.addAttribute("author", "artoria-extend");
+        this.setTemplateCharset(DEFAULT_CHARSET_NAME);
+        this.setOutputCharset(DEFAULT_CHARSET_NAME);
+        this.setBaseTemplatePath(CLASSPATH);
+        this.setTemplateExtensionName(".txt");
+        this.setBusinessPackageName(EMPTY_STRING);
+        this.setSkipExisted(false);
+        this.put("author", "artoria-extend");
     }
 
     public String getTemplateCharset() {
 
-        return this.templateCharset;
+        return (String) this.get("templateCharset");
     }
 
     public void setTemplateCharset(String templateCharset) {
         Assert.notBlank(templateCharset, "Parameter \"templateCharset\" must not blank. ");
-        this.templateCharset = templateCharset;
-        this.addAttribute("templateCharset", templateCharset);
+        this.put("templateCharset", templateCharset);
     }
 
     public String getOutputCharset() {
 
-        return this.outputCharset;
+        return (String) this.get("outputCharset");
     }
 
     public void setOutputCharset(String outputCharset) {
         Assert.notBlank(outputCharset, "Parameter \"outputCharset\" must not blank. ");
-        this.outputCharset = outputCharset;
-        this.addAttribute("outputCharset", outputCharset);
+        this.put("outputCharset", outputCharset);
     }
 
     public String getTemplateName() {
 
-        return this.templateName;
+        return (String) this.get("templateName");
     }
 
     public void setTemplateName(String templateName) {
@@ -84,24 +70,22 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         templateName = templateName.endsWith(DOT)
                 ? templateName.substring(0, templateName.length() - 1)
                 : templateName;
-        this.templateName = templateName;
-        this.addAttribute("templateName", templateName);
+        this.put("templateName", templateName);
     }
 
     public String getBaseTemplatePath() {
 
-        return this.baseTemplatePath;
+        return (String) this.get("baseTemplatePath");
     }
 
     public void setBaseTemplatePath(String baseTemplatePath) {
         Assert.notBlank(baseTemplatePath, "Parameter \"baseTemplatePath\" must not blank. ");
-        this.baseTemplatePath = baseTemplatePath;
-        this.addAttribute("baseTemplatePath", baseTemplatePath);
+        this.put("baseTemplatePath", baseTemplatePath);
     }
 
     public String getTemplateExtensionName() {
 
-        return this.templateExtensionName;
+        return (String) this.get("templateExtensionName");
     }
 
     public void setTemplateExtensionName(String templateExtensionName) {
@@ -110,34 +94,32 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         templateExtensionName = templateExtensionName.startsWith(DOT)
                 ? templateExtensionName
                 : DOT + templateExtensionName;
-        this.templateExtensionName = templateExtensionName.trim();
-        this.addAttribute("templateExtensionName", templateExtensionName);
+        this.put("templateExtensionName", templateExtensionName.trim());
     }
 
     public String getBaseOutputPath() {
 
-        return this.baseOutputPath;
+        return (String) this.get("baseOutputPath");
     }
 
     public void setBaseOutputPath(String baseOutputPath) {
         Assert.notBlank(baseOutputPath, "Parameter \"baseOutputPath\" must not blank. ");
-        this.baseOutputPath = baseOutputPath;
-        this.addAttribute("baseOutputPath", baseOutputPath);
+        this.put("baseOutputPath", baseOutputPath);
     }
 
     public Renderer getRenderer() {
 
-        return this.renderer;
+        return (Renderer) this.get("renderer");
     }
 
     public void setRenderer(Renderer renderer) {
         Assert.notNull(renderer, "Parameter \"renderer\" must not null. ");
-        this.renderer = renderer;
+        this.put("renderer", renderer);
     }
 
     public String getBasePackageName() {
 
-        return this.basePackageName;
+        return (String) this.get("basePackageName");
     }
 
     public void setBasePackageName(String basePackageName) {
@@ -147,13 +129,12 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
                 ? basePackageName.substring(0
                 , basePackageName.length() - 1)
                 : basePackageName;
-        this.basePackageName = basePackageName.trim();
-        this.addAttribute("basePackageName", basePackageName);
+        this.put("basePackageName", basePackageName.trim());
     }
 
     public String getBusinessPackageName() {
 
-        return this.businessPackageName;
+        return (String) this.get("businessPackageName");
     }
 
     public void setBusinessPackageName(String businessPackageName) {
@@ -162,49 +143,46 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         businessPackageName = businessPackageName.startsWith(DOT)
                 ? businessPackageName
                 : DOT + businessPackageName;
-        this.businessPackageName = businessPackageName.trim();
-        this.addAttribute("businessPackageName", businessPackageName);
+        this.put("businessPackageName", businessPackageName.trim());
     }
 
     public Boolean getSkipExisted() {
 
-        return this.skipExisted;
+        return (Boolean) this.get("skipExisted");
     }
 
     public void setSkipExisted(Boolean skipExisted) {
         Assert.notNull(skipExisted
                 , "Parameter \"skipExisted\" must not null. ");
-        this.skipExisted = skipExisted;
-        this.addAttribute("skipExisted", skipExisted);
+        this.put("skipExisted", skipExisted);
     }
 
     public String getBeginCoverMark() {
 
-        return this.beginCoverMark;
+        return (String) this.get("beginCoverMark");
     }
 
     public void setBeginCoverMark(String beginCoverMark) {
         Assert.notBlank(beginCoverMark
                 , "Parameter \"beginCoverMark\" must not blank. ");
-        this.beginCoverMark = beginCoverMark;
-        this.addAttribute("beginCoverMark", beginCoverMark);
+        this.put("beginCoverMark", beginCoverMark);
     }
 
     public String getEndCoverMark() {
 
-        return this.endCoverMark;
+        return (String) this.get("endCoverMark");
     }
 
     public void setEndCoverMark(String endCoverMark) {
         Assert.notBlank(endCoverMark
                 , "Parameter \"endCoverMark\" must not blank. ");
-        this.endCoverMark = endCoverMark;
-        this.addAttribute("endCoverMark", endCoverMark);
+        this.put("endCoverMark", endCoverMark);
     }
 
     public String getTemplateContent() {
-        if (StringUtils.isNotBlank(this.templateContent)) {
-            return this.templateContent;
+        String templateContent = (String) this.get("templateContent");
+        if (StringUtils.isNotBlank(templateContent)) {
+            return templateContent;
         }
         String templatePath = this.getTemplatePath();
         InputStream in = null;
@@ -214,7 +192,7 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
                             templatePath.substring(CLASSPATH.length()), this.getClass()
                     ) :
                     new FileInputStream(templatePath);
-            this.templateContent = IOUtils.toString(in, this.getTemplateCharset());
+            this.put("templateContent", IOUtils.toString(in, this.getTemplateCharset()));
         }
         catch (IOException e) {
             throw ExceptionUtils.wrap(e);
@@ -222,13 +200,13 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         finally {
             IOUtils.closeQuietly(in);
         }
-        return this.templateContent;
+        return (String) this.get("templateContent");
     }
 
     public void setTemplateContent(String templateContent) {
         Assert.notBlank(templateContent
                 , "Parameter \"templateContent\" must not blank. ");
-        this.templateContent = templateContent;
+        this.put("templateContent", templateContent);
     }
 
     public List<TableMeta> getTableList() {
@@ -275,7 +253,7 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
                     , begin.length() - 1);
         }
         begin = StringUtils.uncapitalize(begin);
-        String className = (String) table.getAttribute(begin + "ClassName");
+        String className = (String) table.get(begin + "ClassName");
         return className + DOT + end;
     }
 
@@ -298,6 +276,8 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         if (StringUtils.isBlank(fileContent)) {
             return generated;
         }
+        String beginCoverMark = this.getBeginCoverMark();
+        String endCoverMark = this.getEndCoverMark();
         if (StringUtils.isBlank(beginCoverMark)
                 || StringUtils.isBlank(endCoverMark)) {
             return generated;
@@ -368,20 +348,10 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
         Assert.notNull(table, "Parameter \"table\" must not null. ");
         log.info("Generator \"" + this.getTemplateName() +
                 "\": rendering the java code corresponding to table \"" + table.getName() + "\". ");
-        Map<String, Object> data = new HashMap<String, Object>(this.getAttributes());
-        List<Map<String, Object>> columnList = new ArrayList<Map<String, Object>>();
-        List<ColumnMeta> columnMetaList = table.getColumnMetaList();
-        for (ColumnMeta columnMeta : columnMetaList) {
-            columnList.add(columnMeta.getAttributes());
-        }
-        Map<String, Object> tableAttributes = table.getAttributes();
-        tableAttributes = new HashMap<String, Object>(tableAttributes);
-        tableAttributes.put("columnList", columnList);
-        tableAttributes.remove("columnMetaList");
-        data.put("generatedTime", DateUtils.format());
-        data.put("table", tableAttributes);
+        this.put("generatedTime", DateUtils.format());
+        this.put("table", table);
         String fileName = this.getFileName(table);
-        this.getRenderer().render(data, writer, fileName, this.getTemplateContent(), null);
+        this.getRenderer().render(this, writer, fileName, this.getTemplateContent(), null);
     }
 
     @Override
@@ -398,7 +368,7 @@ public class JavaCodeGenerator extends AbstractAttributable implements Generator
                 String fileName = this.getFileName(table);
                 File outputFile = new File(outputDir, fileName);
                 if (outputFile.exists()) {
-                    if (skipExisted) { return true; }
+                    if (this.getSkipExisted()) { return true; }
                     Writer builderWriter = new StringBuilderWriter();
                     this.render(table, builderWriter);
                     String generated = builderWriter.toString();

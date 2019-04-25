@@ -1,14 +1,16 @@
 package artoria.user;
 
 import artoria.exception.VerifyUtils;
+import artoria.servlet.RequestUtils;
 import artoria.util.ThreadLocalUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static artoria.exception.InternalErrorCode.NO_LOGIN;
-import static artoria.exception.InternalErrorCode.PARAMETER_REQUIRED;
+import static artoria.common.DefaultErrorCode.NO_LOGIN;
+import static artoria.common.DefaultErrorCode.PARAMETER_IS_REQUIRED;
+import static artoria.user.UserUtils.*;
 
 public class UserInterceptor extends HandlerInterceptorAdapter {
     private static final String OPTIONS_METHOD = "OPTIONS";
@@ -20,7 +22,7 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         this.tokenManager = tokenManager;
         this.userManager = userManager;
         String tokenName = userProperties.getTokenName();
-        VerifyUtils.notBlank(tokenName, PARAMETER_REQUIRED);
+        VerifyUtils.notBlank(tokenName, PARAMETER_IS_REQUIRED);
         this.userProperties = userProperties;
     }
 
@@ -33,6 +35,9 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
         VerifyUtils.notBlank(tokenId, NO_LOGIN);
         UserUtils.setTokenId(tokenId);
         Token token = UserUtils.getToken();
+        token.setLastAccessedTime(System.currentTimeMillis());
+        token.setLastAccessedAddress(RequestUtils.getRemoteAddr(request));
+        tokenManager.save(token);
         userManager.refresh(token.getUserId());
         tokenManager.refresh(tokenId);
         return true;
@@ -40,8 +45,9 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        super.afterCompletion(request, response, handler, ex);
-        ThreadLocalUtils.clear();
+        ThreadLocalUtils.remove(TOKEN_ID_THREAD_LOCAL_KEY);
+        ThreadLocalUtils.remove(TOKEN_THREAD_LOCAL_KEY);
+        ThreadLocalUtils.remove(USER_INFO_THREAD_LOCAL_KEY);
     }
 
 }
