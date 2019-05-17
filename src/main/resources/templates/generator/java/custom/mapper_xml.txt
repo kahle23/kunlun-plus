@@ -16,7 +16,7 @@
     <sql id="Base_Column_List" >
 #set($temp = 1)
 #foreach(${column} in ${table.columnList})
-        ${column.name}#if($temp < $table.columnList.size()),
+        `${column.name}`#if($temp < $table.columnList.size()),
 #set($temp = $temp + 1)#end
 #end
 
@@ -24,12 +24,12 @@
 
     <sql id="Base_Selective_Where" >
 #foreach(${column} in ${table.columnList})
-        <if test="${column.fieldName} != null" >and ${column.name} = #{${column.fieldName}}</if>
+        <if test="${column.fieldName} != null#if($column.javaType != "Date" && $column.javaType != "java.util.Date") and ${column.fieldName} != ''#end">and `${column.name}` = #{${column.fieldName}}</if>
 #end
     </sql>
 
     <insert id="insert" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-        insert into ${table.name} (
+        insert into `${table.name}` (
             <include refid="Base_Column_List" />
         )
         values (
@@ -43,7 +43,7 @@
     </insert>
 
     <insert id="insertBatch" >
-        insert into ${table.name} (
+        insert into `${table.name}` (
             <include refid="Base_Column_List" />
         )
         values
@@ -60,10 +60,10 @@
     </insert>
 
     <insert id="insertSelective" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-        insert into ${table.name}
+        insert into `${table.name}`
         <trim prefix="(" suffix=")" suffixOverrides="," >
 #foreach(${column} in ${table.columnList})
-            <if test="${column.fieldName} != null" >${column.name}, </if>
+            <if test="${column.fieldName} != null" >`${column.name}`, </if>
 #end
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -74,111 +74,116 @@
     </insert>
 
     <delete id="deleteByPrimaryKey" >
-        delete from ${table.name}
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        update `${table.name}`
+        set
+            `update_user` = #{updateUser},
+            `update_date` = NOW(),
+            `alive_flag` = 0
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-#if($temp > 0)
-
-            and #end#set($temp = $temp + 1)${column.name} = #{${column.fieldName}}
-#end
-#end
+            and `${column.name}` = #{${column.fieldName}}
+#end#end
     </delete>
 
     <delete id="deleteByPrimaryKeyList" >
-        delete from ${table.name}
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        update `${table.name}`
+        set
+            `update_user` = #{updateUser},
+            `update_date` = NOW(),
+            `alive_flag` = 0
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-
-            #if($temp > 0)and #end${column.name} in
+            and `${column.name}` in
             <foreach collection="${column.fieldName}List" index="index" item="item" open="(" separator="," close=")">
                     #{item}
             </foreach>
-#set($temp = $temp + 1)#end
-#end
+#end#end
     </delete>
 
     <delete id="deleteSelective" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-        delete from ${table.name}
-        where 1 = 1
-            <include refid="Base_Selective_Where" />
+        update `${table.name}`
+        set
+            `update_user` = #{updateUser},
+            `update_date` = NOW(),
+            `alive_flag` = 0
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
+#if($column.name != "update_user")
+            <if test="${column.fieldName} != null" >and `${column.name}` = #{${column.fieldName}}</if>
+#end
+#end
     </delete>
 
     <update id="updateByPrimaryKey" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-        update ${table.name}
+        update `${table.name}`
         set
 #set($temp = 1)#foreach(${column} in ${table.columnList})
-            ${column.name} = #{${column.fieldName}}#if($temp < $table.columnList.size()),
+            `${column.name}` = #{${column.fieldName}}#if($temp < $table.columnList.size()),
 #set($temp = $temp + 1)
 #end
 #end
 
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-#if($temp > 0)
-
-            and #end#set($temp = $temp + 1)${column.name} = #{${column.fieldName}}
-#end
-#end
+            and `${column.name}` = #{${column.fieldName}}
+#end#end
     </update>
 
     <update id="updateByPrimaryKeySelective" parameterType="${table.entityPackageName}.${table.entityClassName}" >
-        update ${table.name}
+        update `${table.name}`
         <set>
 #foreach(${column} in ${table.columnList})
-            <if test="${column.fieldName} != null" >${column.name} = #{${column.fieldName}}, </if>
+            <if test="${column.fieldName} != null" >`${column.name}` = #{${column.fieldName}}, </if>
 #end
         </set>
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-#if($temp > 0)
-
-            and #end#set($temp = $temp + 1)${column.name} = #{${column.fieldName}}
-#end
-#end
+            and `${column.name}` = #{${column.fieldName}}
+#end#end
     </update>
 
     <select id="countSelective" resultType="int" parameterType="${table.entityPackageName}.${table.entityClassName}" >
         select
             count(0)
-        from ${table.name}
-        where 1 = 1
+        from `${table.name}`
+        where `alive_flag` = 1
             <include refid="Base_Selective_Where" />
     </select>
 
     <select id="queryByPrimaryKey" resultMap="BaseResultMap" >
         select
             <include refid="Base_Column_List" />
-        from ${table.name}
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        from `${table.name}`
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-#if($temp > 0)
-
-            and #end#set($temp = $temp + 1)${column.name} = #{${column.fieldName}}
-#end
-#end
+            and `${column.name}` = #{${column.fieldName}}
+#end#end
     </select>
 
     <select id="queryByPrimaryKeyList" resultMap="BaseResultMap" >
         select
             <include refid="Base_Column_List" />
-        from ${table.name}
-        where #set($temp = 0)#foreach(${column} in ${table.columnList})
+        from `${table.name}`
+        where `alive_flag` = 1
+#foreach(${column} in ${table.columnList})
 #if($column.primaryKey)
-#if($temp > 0)
-
-            and #end${column.name} in
+            and `${column.name}` in
             <foreach collection="${column.fieldName}List" index="index" item="item" open="(" separator="," close=")">
                     #{item}
             </foreach>
-#set($temp = $temp + 1)#end
-#end
+#end#end
     </select>
 
     <select id="querySelective" resultMap="BaseResultMap" parameterType="${table.entityPackageName}.${table.entityClassName}">
         select
             <include refid="Base_Column_List" />
-        from ${table.name}
-        where 1 = 1
+        from `${table.name}`
+        where `alive_flag` = 1
             <include refid="Base_Selective_Where" />
     </select>
     <!-- **** (End) This will be covered, please do not modify. **** -->
