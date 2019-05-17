@@ -1,20 +1,22 @@
 package artoria.generator;
 
+import artoria.beans.BeanUtils;
 import artoria.exception.ExceptionUtils;
-import artoria.io.IOUtils;
-import artoria.io.StringBuilderWriter;
+import artoria.jdbc.ColumnMeta;
+import artoria.jdbc.DatabaseClient;
 import artoria.jdbc.TableMeta;
-import artoria.logging.Logger;
-import artoria.logging.LoggerFactory;
 import artoria.template.Renderer;
 import artoria.time.DateUtils;
 import artoria.util.Assert;
-import artoria.util.ClassLoaderUtils;
+import artoria.util.CollectionUtils;
+import artoria.util.MapUtils;
 import artoria.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.List;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.*;
 
 import static artoria.common.Constants.*;
 import static artoria.io.IOUtils.EOF;
@@ -23,381 +25,459 @@ import static artoria.io.IOUtils.EOF;
  * Java code generator.
  * @author Kahle
  */
-public class JavaCodeGenerator extends HashMap<String, Object> implements Generator<Boolean> {
-    private static final String CLASSPATH = "classpath:";
+public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
+    private static final String DEFAULT_XML_BEGIN_COVER_MARK
+            = "<!-- **** (Start) This will be covered, please do not modify. **** -->";
+    private static final String DEFAULT_XML_END_COVER_MARK
+            = "<!-- **** (End) This will be covered, please do not modify. **** -->";
+    private static final String DEFAULT_JAVA_BEGIN_COVER_MARK
+            = "/* (Start) This will be covered, please do not modify. */";
+    private static final String DEFAULT_JAVA_END_COVER_MARK
+            = "/* (End) This will be covered, please do not modify. */";
+    private static final String DEFAULT_TEMPLATE_NAME_ARRAY
+            = "mapper_xml,mapper_java,entity_java,serviceImpl_java,service_java,controller_java,dto_java,vo_java";
+    private static final String JAVA_TYPE = "javaType";
+    private static final String SERVICEIMPL = "serviceimpl";
+    private static final String CONTROLLER = "controller";
+    private static final String SERVICE = "service";
+    private static final String MAPPER = "mapper";
+    private static final String ENTITY = "entity";
+    private static final String DTO = "dto";
+    private static final String VO = "vo";
+    private static final String JAVA = "java";
+    private static final String XML = "xml";
     private static Logger log = LoggerFactory.getLogger(JavaCodeGenerator.class);
-    private List<TableMeta> tableList;
+    private Set<String> removedTableNamePrefixes = new HashSet<String>();
+    private Set<String> reservedTables = new HashSet<String>();
+    private Set<String> excludedTables = new HashSet<String>();
+    private DatabaseClient databaseClient;
+    private String templateCharset = DEFAULT_ENCODING;
+    private String outputCharset = DEFAULT_ENCODING;
+    private String baseTemplatePath = "classpath:templates/generator/java/default";
+    private String templateExtensionName = ".txt";
+    private String baseOutputPath;
+    private String basePackageName;
+    private Renderer renderer;
+    private Map<String, Object> attributes = new HashMap<String, Object>();
+    private Map<String, JavaCodeCreator> creatorMap = new HashMap<String, JavaCodeCreator>();
 
     public JavaCodeGenerator() {
-        this.setTemplateCharset(DEFAULT_CHARSET_NAME);
-        this.setOutputCharset(DEFAULT_CHARSET_NAME);
-        this.setBaseTemplatePath(CLASSPATH);
-        this.setTemplateExtensionName(".txt");
-        this.setBusinessPackageName(EMPTY_STRING);
-        this.setSkipExisted(false);
-        this.put("author", "artoria-extend");
+        this.addAttribute("author", "artoria-extend");
+        this.addAttribute("date", DateUtils.format(FILLED_DATE_PATTERN));
+    }
+
+    public Set<String> getRemovedTableNamePrefixes() {
+
+        return Collections.unmodifiableSet(removedTableNamePrefixes);
+    }
+
+    public JavaCodeGenerator addRemovedTableNamePrefixes(String... removedTableNamePrefixes) {
+        Assert.notEmpty(removedTableNamePrefixes
+                , "Parameter \"removedTableNamePrefixes\" must not empty. ");
+        Collections.addAll(this.removedTableNamePrefixes, removedTableNamePrefixes);
+        return this;
+    }
+
+    public Set<String> getReservedTables() {
+
+        return Collections.unmodifiableSet(reservedTables);
+    }
+
+    public JavaCodeGenerator addReservedTables(String... reservedTables) {
+        Assert.notEmpty(reservedTables
+                , "Parameter \"reservedTables\" must not empty. ");
+        Collections.addAll(this.reservedTables, reservedTables);
+        return this;
+    }
+
+    public Set<String> getExcludedTables() {
+
+        return Collections.unmodifiableSet(excludedTables);
+    }
+
+    public JavaCodeGenerator addExcludedTables(String... excludedTables) {
+        Assert.notEmpty(excludedTables
+                , "Parameter \"excludedTables\" must not empty. ");
+        Collections.addAll(this.excludedTables, excludedTables);
+        return this;
+    }
+
+    public DatabaseClient getDatabaseClient() {
+
+        return databaseClient;
+    }
+
+    public JavaCodeGenerator setDatabaseClient(DatabaseClient databaseClient) {
+        Assert.notNull(databaseClient
+                , "Parameter \"databaseClient\" must not null. ");
+        this.databaseClient = databaseClient;
+        return this;
     }
 
     public String getTemplateCharset() {
 
-        return (String) this.get("templateCharset");
+        return templateCharset;
     }
 
-    public void setTemplateCharset(String templateCharset) {
-        Assert.notBlank(templateCharset, "Parameter \"templateCharset\" must not blank. ");
-        this.put("templateCharset", templateCharset);
+    public JavaCodeGenerator setTemplateCharset(String templateCharset) {
+        Assert.notBlank(templateCharset
+                , "Parameter \"templateCharset\" must not blank. ");
+        this.templateCharset = templateCharset;
+        return this;
     }
 
     public String getOutputCharset() {
 
-        return (String) this.get("outputCharset");
+        return outputCharset;
     }
 
-    public void setOutputCharset(String outputCharset) {
-        Assert.notBlank(outputCharset, "Parameter \"outputCharset\" must not blank. ");
-        this.put("outputCharset", outputCharset);
-    }
-
-    public String getTemplateName() {
-
-        return (String) this.get("templateName");
-    }
-
-    public void setTemplateName(String templateName) {
-        Assert.notBlank(templateName, "Parameter \"templateName\" must not blank. ");
-        Assert.state(templateName.contains(UNDERLINE)
-                , "Parameter \"templateName\" must contain underline. ");
-        templateName = templateName.endsWith(DOT)
-                ? templateName.substring(0, templateName.length() - 1)
-                : templateName;
-        this.put("templateName", templateName);
+    public JavaCodeGenerator setOutputCharset(String outputCharset) {
+        Assert.notBlank(outputCharset
+                , "Parameter \"outputCharset\" must not blank. ");
+        this.outputCharset = outputCharset;
+        return this;
     }
 
     public String getBaseTemplatePath() {
 
-        return (String) this.get("baseTemplatePath");
+        return baseTemplatePath;
     }
 
-    public void setBaseTemplatePath(String baseTemplatePath) {
-        Assert.notBlank(baseTemplatePath, "Parameter \"baseTemplatePath\" must not blank. ");
-        this.put("baseTemplatePath", baseTemplatePath);
+    public JavaCodeGenerator setBaseTemplatePath(String baseTemplatePath) {
+        Assert.notBlank(baseTemplatePath
+                , "Parameter \"baseTemplatePath\" must not blank. ");
+        this.baseTemplatePath = baseTemplatePath;
+        return this;
     }
 
     public String getTemplateExtensionName() {
 
-        return (String) this.get("templateExtensionName");
+        return templateExtensionName;
     }
 
-    public void setTemplateExtensionName(String templateExtensionName) {
-        Assert.notNull(templateExtensionName
-                , "Parameter \"templateExtensionName\" must not null. ");
-        templateExtensionName = templateExtensionName.startsWith(DOT)
-                ? templateExtensionName
-                : DOT + templateExtensionName;
-        this.put("templateExtensionName", templateExtensionName.trim());
+    public JavaCodeGenerator setTemplateExtensionName(String templateExtensionName) {
+        Assert.notBlank(templateExtensionName
+                , "Parameter \"templateExtensionName\" must not blank. ");
+        this.templateExtensionName = templateExtensionName;
+        return this;
     }
 
     public String getBaseOutputPath() {
 
-        return (String) this.get("baseOutputPath");
+        return baseOutputPath;
     }
 
-    public void setBaseOutputPath(String baseOutputPath) {
-        Assert.notBlank(baseOutputPath, "Parameter \"baseOutputPath\" must not blank. ");
-        this.put("baseOutputPath", baseOutputPath);
-    }
-
-    public Renderer getRenderer() {
-
-        return (Renderer) this.get("renderer");
-    }
-
-    public void setRenderer(Renderer renderer) {
-        Assert.notNull(renderer, "Parameter \"renderer\" must not null. ");
-        this.put("renderer", renderer);
+    public JavaCodeGenerator setBaseOutputPath(String baseOutputPath) {
+        Assert.notBlank(baseOutputPath
+                , "Parameter \"baseOutputPath\" must not blank. ");
+        this.baseOutputPath = baseOutputPath;
+        return this;
     }
 
     public String getBasePackageName() {
 
-        return (String) this.get("basePackageName");
+        return basePackageName;
     }
 
-    public void setBasePackageName(String basePackageName) {
+    public JavaCodeGenerator setBasePackageName(String basePackageName) {
         Assert.notBlank(basePackageName
                 , "Parameter \"basePackageName\" must not blank. ");
-        basePackageName = basePackageName.endsWith(DOT)
-                ? basePackageName.substring(0
-                , basePackageName.length() - 1)
-                : basePackageName;
-        this.put("basePackageName", basePackageName.trim());
+        this.basePackageName = basePackageName;
+        return this;
     }
 
-    public String getBusinessPackageName() {
+    public Renderer getRenderer() {
 
-        return (String) this.get("businessPackageName");
+        return renderer;
     }
 
-    public void setBusinessPackageName(String businessPackageName) {
-        Assert.notNull(businessPackageName
-                , "Parameter \"businessPackageName\" must not null. ");
-        businessPackageName = businessPackageName.startsWith(DOT)
-                ? businessPackageName
-                : DOT + businessPackageName;
-        this.put("businessPackageName", businessPackageName.trim());
+    public JavaCodeGenerator setRenderer(Renderer renderer) {
+        Assert.notNull(renderer
+                , "Parameter \"renderer\" must not null. ");
+        this.renderer = renderer;
+        return this;
     }
 
-    public Boolean getSkipExisted() {
-
-        return (Boolean) this.get("skipExisted");
+    public JavaCodeGenerator addAttribute(String name, Object value) {
+        attributes.put(name, value);
+        return this;
     }
 
-    public void setSkipExisted(Boolean skipExisted) {
-        Assert.notNull(skipExisted
-                , "Parameter \"skipExisted\" must not null. ");
-        this.put("skipExisted", skipExisted);
+    public JavaCodeGenerator addAttributes(Map<String, Object> data) {
+        attributes.putAll(data);
+        return this;
     }
 
-    public String getBeginCoverMark() {
-
-        return (String) this.get("beginCoverMark");
+    public JavaCodeGenerator removeAttribute(String name) {
+        attributes.remove(name);
+        return this;
     }
 
-    public void setBeginCoverMark(String beginCoverMark) {
-        Assert.notBlank(beginCoverMark
-                , "Parameter \"beginCoverMark\" must not blank. ");
-        this.put("beginCoverMark", beginCoverMark);
+    public JavaCodeGenerator clearAttribute() {
+        attributes.clear();
+        return this;
     }
 
-    public String getEndCoverMark() {
+    public Map<String, Object> getAttributes() {
 
-        return (String) this.get("endCoverMark");
+        return Collections.unmodifiableMap(attributes);
     }
 
-    public void setEndCoverMark(String endCoverMark) {
-        Assert.notBlank(endCoverMark
-                , "Parameter \"endCoverMark\" must not blank. ");
-        this.put("endCoverMark", endCoverMark);
+    public JavaCodeGenerator newCreator() {
+        this.newCreator(DEFAULT_TEMPLATE_NAME_ARRAY);
+        return this;
     }
 
-    public String getTemplateContent() {
-        String templateContent = (String) this.get("templateContent");
-        if (StringUtils.isNotBlank(templateContent)) {
-            return templateContent;
+    public JavaCodeGenerator newCreator(String templateNameArray) {
+        Assert.notBlank(templateNameArray
+                , "Parameter \"templateNameArray\" must not blank. ");
+        String[] split = templateNameArray.split(COMMA);
+        for (String templateName : split) {
+            if (StringUtils.isBlank(templateName)) { continue; }
+            this.newCreator(templateName, null);
         }
-        String templatePath = this.getTemplatePath();
-        InputStream in = null;
-        try {
-            in = templatePath.startsWith(CLASSPATH) ?
-                    ClassLoaderUtils.getResourceAsStream(
-                            templatePath.substring(CLASSPATH.length()), this.getClass()
-                    ) :
-                    new FileInputStream(templatePath);
-            this.put("templateContent", IOUtils.toString(in, this.getTemplateCharset()));
-        }
-        catch (IOException e) {
-            throw ExceptionUtils.wrap(e);
-        }
-        finally {
-            IOUtils.closeQuietly(in);
-        }
-        return (String) this.get("templateContent");
+        return this;
     }
 
-    public void setTemplateContent(String templateContent) {
-        Assert.notBlank(templateContent
-                , "Parameter \"templateContent\" must not blank. ");
-        this.put("templateContent", templateContent);
+    public JavaCodeGenerator newCreator(String templateName, String businessPackageName) {
+        Assert.notBlank(templateName, "Parameter \"templateName\" must not blank. ");
+        JavaCodeCreator creator = new JavaCodeCreator();
+        boolean havePackageName = StringUtils.isNotBlank(businessPackageName);
+        if (templateName.toLowerCase().contains(MAPPER)) {
+            businessPackageName = havePackageName ? businessPackageName : ".persistence.mapper";
+            creator.setSkipExisted(false);
+        }
+        else if (templateName.toLowerCase().contains(SERVICEIMPL)) {
+            businessPackageName = havePackageName ? businessPackageName : ".service.impl";
+            creator.setSkipExisted(true);
+        }
+        else if (templateName.toLowerCase().contains(SERVICE)) {
+            businessPackageName = havePackageName ? businessPackageName : ".service";
+            creator.setSkipExisted(false);
+        }
+        else if (templateName.toLowerCase().contains(CONTROLLER)) {
+            businessPackageName = havePackageName ? businessPackageName : ".controller";
+            creator.setSkipExisted(true);
+        }
+        else if (templateName.toLowerCase().contains(ENTITY)) {
+            businessPackageName = havePackageName ? businessPackageName : ".persistence.entity";
+            creator.setSkipExisted(false);
+        }
+        else if (templateName.toLowerCase().contains(VO)) {
+            businessPackageName = havePackageName ? businessPackageName : ".pojo.vo";
+            creator.setSkipExisted(false);
+        }
+        else if (templateName.toLowerCase().contains(DTO)) {
+            businessPackageName = havePackageName ? businessPackageName : ".pojo.dto";
+            creator.setSkipExisted(false);
+        }
+        else {
+            businessPackageName = EMPTY_STRING;
+            creator.setSkipExisted(true);
+        }
+        if (templateName.toLowerCase().contains(XML)) {
+            creator.setBeginCoverMark(DEFAULT_XML_BEGIN_COVER_MARK);
+            creator.setEndCoverMark(DEFAULT_XML_END_COVER_MARK);
+        }
+        else if (templateName.toLowerCase().contains(JAVA)) {
+            creator.setBeginCoverMark(DEFAULT_JAVA_BEGIN_COVER_MARK);
+            creator.setEndCoverMark(DEFAULT_JAVA_END_COVER_MARK);
+        }
+        creator.setBusinessPackageName(businessPackageName);
+        creator.setTemplateName(templateName);
+        creatorMap.put(templateName, creator);
+        return this;
     }
 
-    public List<TableMeta> getTableList() {
-
-        return this.tableList;
+    public JavaCodeGenerator removeCreator(String templateName) {
+        creatorMap.remove(templateName);
+        return this;
     }
 
-    public void setTableList(List<TableMeta> tableList) {
-        Assert.notNull(tableList
-                , "Parameter \"tableList\" must not null. ");
-        this.tableList = tableList;
+    public JavaCodeGenerator clearCreator() {
+        creatorMap.clear();
+        return this;
     }
 
-    protected String getTemplatePath() {
-        String baseTemplatePath = this.getBaseTemplatePath();
-        String templateName = this.getTemplateName();
-        String extensionName = this.getTemplateExtensionName();
-        String fileName = templateName + extensionName;
-        return new File(baseTemplatePath, fileName).toString();
+    public JavaCodeCreator getCreator(String templateName) {
+
+        return creatorMap.get(templateName);
     }
 
-    protected String getOutputPath() {
-        String baseOutputPath = this.getBaseOutputPath();
-        String basePackageName = this.getBasePackageName();
-        String businessPackageName = this.getBusinessPackageName();
-        String packageName = basePackageName + businessPackageName;
-        packageName = StringUtils.replace(packageName, DOT, SLASH);
-        return new File(baseOutputPath, packageName).toString();
+    public Map<String, JavaCodeCreator> getCreatorMap() {
+
+        return Collections.unmodifiableMap(creatorMap);
     }
 
-    protected String getFileName(TableMeta table) {
-        Assert.notNull(table
-                , "Parameter \"table\" must not null. ");
-        String templateName = this.getTemplateName();
-        int index = templateName.lastIndexOf(UNDERLINE), length;
-        String begin = templateName, end = EMPTY_STRING;
-        if (index != -1 && index + 1 !=
-                (length = templateName.length())) {
-            begin = templateName.substring(0, index);
-            end = templateName.substring(index + 1, length);
-        }
-        if (begin.endsWith(UNDERLINE)) {
-            begin = begin.substring(0
-                    , begin.length() - 1);
-        }
-        begin = StringUtils.uncapitalize(begin);
-        String className = (String) table.get(begin + "ClassName");
-        return className + DOT + end;
-    }
-
-    protected String readAndReplace(File existedFile, String generated) {
-        Assert.notNull(existedFile, "Parameter \"existedFile\" must not null. ");
-        Assert.notBlank(generated, "Parameter \"generated\" must not blank. ");
-        log.info("The file \"" + existedFile.getName() + "\" already exists, it will be try replace. ");
-        InputStream in = null;
-        String fileContent;
-        try {
-            in = new FileInputStream(existedFile);
-            fileContent = IOUtils.toString(in, this.getOutputCharset());
-        }
-        catch (Exception e) {
-            throw ExceptionUtils.wrap(e, GenerateException.class);
-        }
-        finally {
-            IOUtils.closeQuietly(in);
-        }
-        if (StringUtils.isBlank(fileContent)) {
-            return generated;
-        }
-        String beginCoverMark = this.getBeginCoverMark();
-        String endCoverMark = this.getEndCoverMark();
-        if (StringUtils.isBlank(beginCoverMark)
-                || StringUtils.isBlank(endCoverMark)) {
-            return generated;
-        }
-        StringBuilder result = new StringBuilder();
-        int fileIndex = 0, generatedIndex = 0, count = 0;
-        do {
-            int fileBegin = fileContent.indexOf(beginCoverMark, fileIndex);
-            if (fileBegin == EOF && count == 0) {
-                log.info("The file \"" + existedFile.getName() + "\" already exists " +
-                        "and can not find begin cover mark, it will be skip. ");
-                return null;
+    protected Map<String, Object> tableMap(TableMeta tableMeta) {
+        if (tableMeta == null) { return null; }
+        Map<String, Object> result = BeanUtils.beanToMap(tableMeta);
+        // Get the column list and create a column map list.
+        List<Map<String, Object>> columnMapList = new ArrayList<Map<String, Object>>();
+        List<ColumnMeta> columnMetaList = tableMeta.getColumnList();
+        result.put("columnList", columnMapList);
+        if (CollectionUtils.isEmpty(columnMetaList)) { return result; }
+        // Create a map of the import classes.
+        Map<String, String> importClassMap = new HashMap<String, String>(columnMetaList.size());
+        Set<String> typeImportList = new HashSet<String>();
+        result.put("typeImportList", typeImportList);
+        // Processing column data.
+        for (ColumnMeta columnMeta : columnMetaList) {
+            // Create column map.
+            if (columnMeta == null) { continue; }
+            Map<String, Object> columnMap = BeanUtils.beanToMap(columnMeta);
+            columnMapList.add(columnMap);
+            // Set column field, getter and setter.
+            String columnName = columnMeta.getName();
+            String fieldName = StringUtils.underlineToCamel(columnName);
+            columnMap.put("fieldName", StringUtils.uncapitalize(fieldName));
+            String capFieldName = StringUtils.capitalize(fieldName);
+            columnMap.put("getterName", GET + capFieldName);
+            columnMap.put("setterName", SET + capFieldName);
+            // Handle java type.
+            String columnClassName = columnMeta.getClassName();
+            String columnType = columnMeta.getType();
+            String typeMapping =
+                    DatabaseTypeMapper.getTypeMapping(columnType, columnClassName);
+            columnClassName =
+                    StringUtils.isNotBlank(typeMapping) ? typeMapping : columnClassName;
+            if (StringUtils.isBlank(columnClassName)) { continue; }
+            // Try to convert short java type.
+            int index = columnClassName.lastIndexOf(DOT);
+            if (index == EOF) {
+                columnMap.put(JAVA_TYPE, columnClassName);
+                continue;
             }
-            if (fileBegin == EOF) {
-                int fileEnd = fileContent.indexOf(endCoverMark, fileIndex);
-                if (fileEnd != EOF) {
-                    log.info("The file \"" + existedFile.getName() +
-                            "\" already exists and find error end cover mark after index "
-                            + fileIndex + ", so it will be skip. ");
-                    return null;
+            String shortName = columnClassName.substring(index + 1);
+            String className = importClassMap.get(shortName);
+            if (className != null && !className.equals(columnClassName)) {
+                columnMap.put(JAVA_TYPE, columnClassName);
+            }
+            else {
+                importClassMap.put(shortName, columnClassName);
+                typeImportList.add(columnClassName);
+                columnMap.put(JAVA_TYPE, shortName);
+            }
+        }
+        return result;
+    }
+
+    protected List<Map<String, Object>> tableMapList(List<TableMeta> tableList) {
+        List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+        if (CollectionUtils.isEmpty(tableList)) { return result; }
+        // Clipping template name.
+        Map<String, JavaCodeCreator> creatorMap =
+                new HashMap<String, JavaCodeCreator>(this.creatorMap.size());
+        for (JavaCodeCreator creator : this.creatorMap.values()) {
+            String templateName = creator.getTemplateName();
+            int index = templateName.lastIndexOf(UNDERLINE);
+            if (index != -1) {
+                templateName = templateName.substring(0, index);
+            }
+            templateName = StringUtils.uncapitalize(templateName);
+            creatorMap.put(templateName, creator);
+        }
+        // Convert table meta list to table map list.
+        for (TableMeta tableMeta : tableList) {
+            if (tableMeta == null) { continue; }
+            Map<String, Object> tableMap = this.tableMap(tableMeta);
+            if (tableMap == null) { continue; }
+            // Get the name of the entity.
+            String entityName = tableMeta.getAlias();
+            // Create class name, object name and package name.
+            for (Map.Entry<String, JavaCodeCreator> entry : creatorMap.entrySet()) {
+                JavaCodeCreator creator = entry.getValue();
+                if (creator == null) { continue; }
+                String basePackageName = creator.getBasePackageName();
+                if (StringUtils.isBlank(basePackageName)) {
+                    basePackageName = this.getBasePackageName();
                 }
-                int generatedBegin = generated.indexOf(beginCoverMark, generatedIndex);
-                if (generatedBegin != EOF) {
-                    log.info("Find begin cover mark in template when generate \"" + existedFile.getName()
-                                    + "\" and it is not supposed to happen, so it will be skip. ");
-                    return null;
+                String businessPackageName = creator.getBusinessPackageName();
+                String typeName = entry.getKey();
+                String backTypeName = StringUtils.capitalize(typeName);
+                if (VO.equalsIgnoreCase(backTypeName)
+                        || DTO.equalsIgnoreCase(backTypeName)) {
+                    backTypeName = backTypeName.toUpperCase();
                 }
-                int generatedEnd = generated.indexOf(endCoverMark, generatedIndex);
-                if (generatedEnd != EOF) {
-                    log.info("Find end cover mark in template when generate \"" + existedFile.getName()
-                                    + "\" and it is not supposed to happen, so it will be skip. ");
-                    return null;
+                else if (ENTITY.equalsIgnoreCase(backTypeName)) {
+                    backTypeName = EMPTY_STRING;
                 }
-                result.append(fileContent.substring(fileIndex, fileContent.length()));
-                return result.toString();
+                String className = entityName + backTypeName;
+                tableMap.put(typeName + "ClassName", className);
+                String objectName = StringUtils.uncapitalize(className);
+                tableMap.put(typeName + "ObjectName", objectName);
+                String packageName = basePackageName + businessPackageName;
+                tableMap.put(typeName + "PackageName", packageName);
             }
-            int fileEnd = fileContent.indexOf(endCoverMark
-                    , fileBegin + beginCoverMark.length());
-            if (fileEnd == EOF) {
-                log.info("The file \"" + existedFile.getName() + "\" already exists and " +
-                        "can not find end cover mark, it will be skip. ");
-                return null;
-            }
-            int generatedBegin = generated.indexOf(beginCoverMark, generatedIndex);
-            if (generatedBegin == EOF) {
-                log.info("Can not find begin cover mark in template when generate \""
-                        + existedFile.getName() + "\", it will be skip. ");
-                return null;
-            }
-            int generatedEnd = generated.indexOf(endCoverMark
-                    , generatedBegin + beginCoverMark.length());
-            if (generatedEnd == EOF) {
-                log.info("Can not find end cover mark in template " +
-                        "when generate \"" + existedFile.getName() + "\", it will be skip. ");
-                return null;
-            }
-            result.append(fileContent.substring(fileIndex, fileBegin));
-            result.append(generated.substring(generatedBegin, generatedEnd));
-            result.append(endCoverMark);
-            fileIndex = fileEnd + endCoverMark.length();
-            generatedIndex = generatedEnd + endCoverMark.length();
-            count++;
-        } while (true);
+            // Add to the result.
+            result.add(tableMap);
+        }
+        return result;
     }
 
-    protected void render(TableMeta table, Writer writer) throws Exception {
-        Assert.notNull(writer, "Parameter \"writer\" must not null. ");
-        Assert.notNull(table, "Parameter \"table\" must not null. ");
-        log.info("Generator \"" + this.getTemplateName() +
-                "\": rendering the java code corresponding to table \"" + table.getName() + "\". ");
-        this.put("generatedTime", DateUtils.format());
-        this.put("table", table);
-        String fileName = this.getFileName(table);
-        this.getRenderer().render(this, writer, fileName, this.getTemplateContent(), null);
+    protected List<TableMeta> tableMetaList() throws SQLException {
+        DatabaseClient databaseClient = this.getDatabaseClient();
+        Assert.notNull(databaseClient, "Parameter \"databaseClient\" must not null. ");
+        List<TableMeta> tableList = databaseClient.getTableMetaList();
+        if (CollectionUtils.isEmpty(tableList)) { return tableList; }
+        // Table filtering and alias handling.
+        for (TableMeta tableMeta : tableList) {
+            String tableName = tableMeta.getName();
+            if (!reservedTables.isEmpty() && !reservedTables.contains(tableName)) {
+                continue;
+            }
+            if (!excludedTables.isEmpty() && excludedTables.contains(tableName)) {
+                continue;
+            }
+            // Handle entity name (alias).
+            String entityName = tableName;
+            if (!this.removedTableNamePrefixes.isEmpty()) {
+                for (String prefix : this.removedTableNamePrefixes) {
+                    if (!entityName.startsWith(prefix)) { continue; }
+                    entityName = entityName.substring(prefix.length());
+                    break;
+                }
+            }
+            if (StringUtils.isBlank(entityName)) {
+                log.error("Table name \"{}\" handled is blank, so continue. ", tableName);
+                continue;
+            }
+            entityName = StringUtils.underlineToCamel(entityName);
+            entityName = StringUtils.capitalize(entityName);
+            tableMeta.setAlias(entityName);
+        }
+        return tableList;
     }
 
     @Override
     public Boolean generate() throws GenerateException {
+        if (MapUtils.isEmpty(creatorMap)) { return false; }
+        List<Map<String, Object>> tableMapList;
         try {
-            Assert.notEmpty(tableList
-                    , "Parameter \"tableList\" must not empty. ");
-            File outputDir = new File(this.getOutputPath());
-            if (!outputDir.exists() && !outputDir.mkdirs()) {
-                throw new IOException("Directory \"" + outputDir + "\" create failure. ");
-            }
-            for (TableMeta table : tableList) {
-                if (table == null) { continue; }
-                String fileName = this.getFileName(table);
-                File outputFile = new File(outputDir, fileName);
-                if (outputFile.exists()) {
-                    if (this.getSkipExisted()) { return true; }
-                    Writer builderWriter = new StringBuilderWriter();
-                    this.render(table, builderWriter);
-                    String generated = builderWriter.toString();
-                    String outputStr = this.readAndReplace(outputFile, generated);
-                    if (outputStr == null) { return true; }
-                    Writer writer = null;
-                    try {
-                        OutputStream out = new FileOutputStream(outputFile);
-                        writer = new OutputStreamWriter(out, this.getOutputCharset());
-                        writer.write(outputStr);
-                    }
-                    finally {
-                        IOUtils.closeQuietly(writer);
-                    }
+            tableMapList = this.tableMapList(this.tableMetaList());
+            for (JavaCodeCreator creator : creatorMap.values()) {
+                // Run the creator's configuration first.
+                Map<String, Object> attributes = new HashMap<String, Object>(this.getAttributes());
+                attributes.putAll(creator.getAttributes());
+                creator.addAttributes(attributes);
+                creator.setTemplateCharset(this.getTemplateCharset());
+                creator.setOutputCharset(this.getOutputCharset());
+                if (StringUtils.isBlank(creator.getBaseTemplatePath())) {
+                    creator.setBaseTemplatePath(this.getBaseTemplatePath());
                 }
-                else {
-                    if (!outputFile.createNewFile()) {
-                        throw new IOException("File \"" + outputDir + "\" create failure. ");
-                    }
-                    Writer writer = null;
-                    try {
-                        OutputStream out = new FileOutputStream(outputFile);
-                        writer = new OutputStreamWriter(out, this.getOutputCharset());
-                        this.render(table, writer);
-                    }
-                    finally {
-                        IOUtils.closeQuietly(writer);
-                    }
+                if (StringUtils.isBlank(creator.getTemplateExtensionName())) {
+                    creator.setTemplateExtensionName(this.getTemplateExtensionName());
                 }
+                if (StringUtils.isBlank(creator.getBaseOutputPath())) {
+                    creator.setBaseOutputPath(this.getBaseOutputPath());
+                }
+                if (StringUtils.isBlank(creator.getBasePackageName())) {
+                    creator.setBasePackageName(this.getBasePackageName());
+                }
+                if (creator.getRenderer() == null) {
+                    creator.setRenderer(this.getRenderer());
+                }
+                creator.create(tableMapList);
             }
             return true;
         }
