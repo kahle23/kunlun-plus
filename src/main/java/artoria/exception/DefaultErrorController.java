@@ -31,7 +31,7 @@ public class DefaultErrorController implements ErrorController {
     public DefaultErrorController(ErrorAttributes errorAttributes, ErrorProcessor errorProcessor) {
         this.errorAttributes = errorAttributes;
         this.errorProcessor = errorProcessor;
-        log.info(">> The internal error controller was initialized success. ");
+        log.info("The internal error controller was initialized success. ");
     }
 
     @Override

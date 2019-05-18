@@ -40,7 +40,7 @@ public class PageHelperAutoConfiguration {
         properties.setProperty("pageSizeZero", "true");
         pageHelper.setProperties(properties);
         this.sqlSessionFactory.getConfiguration().addInterceptor(pageHelper);
-        log.info(">> The page helper was initialized success. ");
+        log.info("The page helper was initialized success. ");
     }
 
 }

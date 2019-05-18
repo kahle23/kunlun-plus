@@ -28,7 +28,7 @@ public class SpringAutoConfiguration implements InitializingBean, DisposableBean
     public void afterPropertiesSet() throws Exception {
         if (applicationContext != null) {
             ApplicationContextUtils.setContext(this.applicationContext);
-            log.info(">> The application context tools was initialized success. ");
+            log.info("The application context tools was initialized success. ");
         }
     }
 

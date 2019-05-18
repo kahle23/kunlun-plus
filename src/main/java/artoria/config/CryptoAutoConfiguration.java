@@ -38,10 +38,10 @@ public class CryptoAutoConfiguration implements InitializingBean, DisposableBean
             Security.addProvider(provider);
             String name = provider.getClass().getName();
             double version = provider.getVersion();
-            log.info(">> The bouncy castle provider was initialized success. ", name, version);
+            log.info("The bouncy castle provider was initialized success. ", name, version);
         }
         catch (Exception e) {
-            log.warn(">> The bouncy castle provider was initialized error. ", e);
+            log.warn("The bouncy castle provider was initialized error. ", e);
         }
     }
 

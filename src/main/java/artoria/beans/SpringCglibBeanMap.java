@@ -26,8 +26,8 @@ public class SpringCglibBeanMap extends BeanMap {
 
     @Override
     protected Object put(Object bean, Object key, Object value) {
-        if (key != null) {
-            TypeConverter cvt = this.getTypeConverter();
+        TypeConverter cvt = this.getTypeConverter();
+        if (key != null && cvt != null) {
             Class type = this.beanMap.getPropertyType((String) key);
             value = cvt.convert(value, type);
         }
