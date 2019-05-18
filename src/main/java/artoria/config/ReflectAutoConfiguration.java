@@ -48,7 +48,7 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
             ReflecterInterceptor intr = new ReflecterInterceptor(reflecter);
             Reflecter instance = (Reflecter) Enhancer.enhance(reflecter, intr);
             ReflectUtils.setReflecter(instance);
-            log.info(">> Add cache to reflection tools success. ");
+            log.info("Add cache to reflection tools success. ");
         }
     }
 

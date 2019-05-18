@@ -61,7 +61,7 @@ public class UserAutoConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(userInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(willExclude);
-        log.info(">> The user tools was initialized success. ");
+        log.info("The user tools was initialized success. ");
     }
 
 }

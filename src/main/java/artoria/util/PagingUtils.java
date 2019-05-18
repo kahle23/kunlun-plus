@@ -1,8 +1,8 @@
 package artoria.util;
 
 import artoria.beans.BeanUtils;
+import artoria.common.PageResult;
 import artoria.common.Paging;
-import artoria.common.Result;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 
@@ -14,6 +14,11 @@ import java.util.List;
  * @author Kahle
  */
 public class PagingUtils {
+
+    public static void startPage(int pageNum, int pageSize) {
+
+        PagingUtils.startPage(new Paging(pageNum, pageSize));
+    }
 
     public static void startPage(Paging paging) {
 
@@ -32,26 +37,28 @@ public class PagingUtils {
 
     public static void startPage(Paging paging, boolean doCount, String orderBy) {
         if (paging == null) { return; }
-        Integer pageNum = paging.getPageNum();
         Integer pageSize = paging.getPageSize();
+        Integer pageNum = paging.getPageNum();
+        Assert.notNull(pageSize, "Parameter \"pageSize\" must not null. ");
+        Assert.notNull(pageNum, "Parameter \"pageNum\" must not null. ");
         PageHelper.startPage(pageNum, pageSize, doCount);
         if (StringUtils.isNotBlank(orderBy)) {
             PageHelper.orderBy(orderBy);
         }
     }
 
-    public static <T> Result<List<T>> handleResult(List<T> data) {
+    public static <T> PageResult<List<T>> handleResult(List<T> data) {
         if (data == null) {
-            return new Result<List<T>>();
+            return new PageResult<List<T>>();
         }
         if (data.isEmpty()) {
-            return new Result<List<T>>(new ArrayList<T>());
+            return new PageResult<List<T>>(new ArrayList<T>());
         }
         if (!(data instanceof Page)) {
-            return new Result<List<T>>(data);
+            return new PageResult<List<T>>(data);
         }
         Page page = (Page) data;
-        Result<List<T>> result = new Result<List<T>>();
+        PageResult<List<T>> result = new PageResult<List<T>>();
         result.setPageNum(page.getPageNum());
         result.setPageSize(page.getPageSize());
         result.setPageCount(page.getPages());
@@ -60,19 +67,19 @@ public class PagingUtils {
         return result;
     }
 
-    public static <F, T> Result<List<T>> handleResult(List<F> data, Class<T> clazz) {
+    public static <F, T> PageResult<List<T>> handleResult(List<F> data, Class<T> clazz) {
         if (data == null) {
-            return new Result<List<T>>();
+            return new PageResult<List<T>>();
         }
         if (data.isEmpty()) {
-            return new Result<List<T>>(new ArrayList<T>());
+            return new PageResult<List<T>>(new ArrayList<T>());
         }
         List<T> list = BeanUtils.beanToBeanInList(data, clazz);
         if (!(data instanceof Page)) {
-            return new Result<List<T>>(list);
+            return new PageResult<List<T>>(list);
         }
         Page page = (Page) data;
-        Result<List<T>> result = new Result<List<T>>();
+        PageResult<List<T>> result = new PageResult<List<T>>();
         result.setPageNum(page.getPageNum());
         result.setPageSize(page.getPageSize());
         result.setPageCount(page.getPages());
@@ -81,11 +88,11 @@ public class PagingUtils {
         return result;
     }
 
-    public static <F, T> Result<List<T>> handleResult(Result<List<F>> data, Class<T> clazz) {
+    public static <F, T> PageResult<List<T>> handleResult(PageResult<List<F>> data, Class<T> clazz) {
         if (data == null) {
-            return new Result<List<T>>();
+            return new PageResult<List<T>>();
         }
-        Result<List<T>> result = new Result<List<T>>();
+        PageResult<List<T>> result = new PageResult<List<T>>();
         result.setPageNum(data.getPageNum());
         result.setPageSize(data.getPageSize());
         result.setPageCount(data.getPageCount());

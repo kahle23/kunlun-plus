@@ -24,7 +24,7 @@ public class DefaultExceptionHandler {
     @Autowired
     public DefaultExceptionHandler(ErrorProcessor errorProcessor) {
         this.errorProcessor = errorProcessor;
-        log.info(">> The internal exception handler was initialized success. ");
+        log.info("The internal exception handler was initialized success. ");
     }
 
     @ResponseBody

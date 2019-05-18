@@ -32,7 +32,7 @@ public class Base64AutoConfiguration implements InitializingBean, DisposableBean
         urlSafeBase64 = haveApache ? new ApacheBase64() : new Base64();
         urlSafeBase64.setUrlSafe(true);
         Base64Utils.setBase64(base64);
-        log.info(">> The base64 tools was initialized success. ");
+        log.info("The base64 tools was initialized success. ");
     }
 
     @Override

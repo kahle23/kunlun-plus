@@ -31,7 +31,7 @@ public class JsonAutoConfiguration implements InitializingBean, DisposableBean {
             JsonUtils.setJsonProvider(new GsonProvider());
         }
         else {
-            log.warn(">> Can not found \"fastjson\" or \"gson\", will keep default. ");
+            log.warn("Can not found \"fastjson\" or \"gson\", will keep default. ");
         }
     }
 

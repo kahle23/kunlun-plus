@@ -33,13 +33,13 @@ public class CglibAutoConfiguration implements InitializingBean, DisposableBean 
             mapType = SpringCglibBeanMap.class;
             beanCopier = new SpringCglibBeanCopier();
             proxyFactory = new SpringCglibProxyFactory();
-            log.info(">> The spring cglib was initialized success. ");
+            log.info("The spring cglib was initialized success. ");
         }
         else if (ClassUtils.isPresent(CGLIB_CLASS, classLoader)) {
             mapType = CglibBeanMap.class;
             beanCopier = new CglibBeanCopier();
             proxyFactory = new CglibProxyFactory();
-            log.info(">> The cglib was initialized success. ");
+            log.info("The cglib was initialized success. ");
         }
         if (mapType != null) { BeanUtils.setMapType(mapType); }
         if (beanCopier != null) { BeanUtils.setBeanCopier(beanCopier); }

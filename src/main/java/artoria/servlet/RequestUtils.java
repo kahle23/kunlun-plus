@@ -18,20 +18,6 @@ import static artoria.common.Constants.*;
  * @author Kahle
  */
 public class RequestUtils {
-    private static final String XML_HTTP_REQUEST = "XMLHttpRequest";
-    private static final String UNKNOWN = "unknown";
-
-    /**
-     * XMLHttpRequest is base of ajax.
-     * @param request Http servlet request
-     * @return Is request by ajax or not
-     */
-    public static boolean isXmlHttpRequest(HttpServletRequest request) {
-        if (request == null) { return false; }
-        String xRequestedWith = request.getHeader("x-requested-with");
-        boolean hasXReq = StringUtils.isNotBlank(xRequestedWith);
-        return hasXReq && XML_HTTP_REQUEST.equalsIgnoreCase(xRequestedWith);
-    }
 
     public static String getUserAgent(HttpServletRequest request) {
         if (request == null) { return null; }
@@ -42,6 +28,9 @@ public class RequestUtils {
     public static String getRemoteAddr(HttpServletRequest request) {
         if (request == null) { return null; }
         String address = request.getHeader("X-Forwarded-For");
+        if(StringUtils.isBlank(address) || UNKNOWN.equalsIgnoreCase(address)) {
+            address = request.getHeader("X-Real-IP");
+        }
         if(StringUtils.isBlank(address) || UNKNOWN.equalsIgnoreCase(address)) {
             address = request.getHeader("Proxy-Client-IP");
         }
