@@ -1,5 +1,7 @@
-package artoria.aop;
+package artoria.aop.support;
 
+import artoria.aop.Enhancer;
+import artoria.aop.ProxyFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -9,13 +11,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Spring cglib aop auto configuration.
+ * The spring cglib aop auto configuration.
  * @author Kahle
  */
 @Configuration
 @ConditionalOnClass({MethodInterceptor.class})
 public class SpringCglibAopAutoConfiguration {
-    private static Logger log = LoggerFactory.getLogger(SpringCglibAopAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringCglibAopAutoConfiguration.class);
 
     @Bean
     @ConditionalOnMissingBean
