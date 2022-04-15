@@ -1,4 +1,4 @@
-package artoria.spring;
+package artoria.spring.config.hystrix;
 
 import com.netflix.hystrix.HystrixThreadPoolKey;
 import com.netflix.hystrix.strategy.concurrency.HystrixConcurrencyStrategy;

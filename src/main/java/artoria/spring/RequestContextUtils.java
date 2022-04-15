@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Request context holder tools.
+ * The request context holder tools.
  * @author Kahle
+ * @see org.springframework.web.context.request.RequestContextHolder
+ * @see org.springframework.web.context.request.RequestAttributes
  */
 public class RequestContextUtils {
 

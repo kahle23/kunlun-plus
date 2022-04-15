@@ -7,8 +7,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
- * Spring project "ApplicationContext" tools.
+ * The spring project "ApplicationContext" tools.
  * @author Kahle
+ * @see org.springframework.context.ApplicationContext
  */
 public class ApplicationContextUtils {
     private static ApplicationContext context = null;

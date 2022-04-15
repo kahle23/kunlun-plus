@@ -1,4 +1,4 @@
-package artoria.spring;
+package artoria.spring.config.hystrix;
 
 import com.netflix.hystrix.Hystrix;
 import com.netflix.hystrix.strategy.HystrixPlugins;
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConditionalOnClass({Hystrix.class})
+@ConditionalOnProperty(name = "artoria.spring.hystrix.request-transfer", havingValue = "true")
 public class RequestContextHystrixAutoConfiguration implements InitializingBean, DisposableBean {
     private static final Logger log = LoggerFactory.getLogger(RequestContextHystrixConcurrencyStrategy.class);
 

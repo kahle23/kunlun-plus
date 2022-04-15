@@ -1,5 +1,6 @@
-package artoria.spring;
+package artoria.spring.config;
 
+import artoria.spring.ApplicationContextUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -16,7 +17,7 @@ import static artoria.common.Constants.SIXTEEN;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /**
- * Spring auto configuration.
+ * The spring auto configuration.
  * @author Kahle
  */
 @Configuration
@@ -38,6 +39,7 @@ public class SpringAutoConfiguration implements ApplicationContextAware, Initial
 
     @Override
     public void destroy() throws Exception {
+
     }
 
 }
