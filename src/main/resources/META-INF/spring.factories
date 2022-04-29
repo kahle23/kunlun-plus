@@ -15,3 +15,5 @@ artoria.config.ReflectAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
 artoria.user.UserAutoConfiguration,\
 artoria.config.ZookeeperAutoConfiguration
+artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
+artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
