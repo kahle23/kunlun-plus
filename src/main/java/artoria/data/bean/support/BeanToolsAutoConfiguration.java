@@ -1,5 +1,9 @@
-package artoria.beans;
+package artoria.data.bean.support;
 
+import artoria.data.bean.BeanCopier;
+import artoria.data.bean.BeanMapFactory;
+import artoria.data.bean.BeanUtils;
+import artoria.data.bean.SimpleBeanMapFactory;
 import artoria.util.ClassLoaderUtils;
 import artoria.util.ClassUtils;
 import org.slf4j.Logger;
@@ -9,51 +13,52 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Bean tools auto configuration.
+ * The bean tools auto configuration.
  * @author Kahle
  */
 @Configuration
-public class BeanAutoConfiguration implements InitializingBean, DisposableBean {
+public class BeanToolsAutoConfiguration implements InitializingBean, DisposableBean {
     private static final String APACHE_BEAN_TOOLS_CLASS = "org.apache.commons.beanutils.BeanUtils";
     private static final String SPRING_BEAN_TOOLS_CLASS = "org.springframework.beans.BeanUtils";
     private static final String SPRING_CGLIB_CLASS = "org.springframework.cglib.proxy.MethodInterceptor";
     private static final String CGLIB_CLASS = "net.sf.cglib.proxy.MethodInterceptor";
-    private static Logger log = LoggerFactory.getLogger(BeanAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(BeanToolsAutoConfiguration.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {
         ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-        Class<? extends BeanMap> mapType = null;
+        BeanMapFactory beanMapFactory = null;
         BeanCopier beanCopier = null;
         if (ClassUtils.isPresent(SPRING_CGLIB_CLASS, classLoader)) {
+            beanMapFactory = new SpringCglibBeanMapFactory();
             beanCopier = new SpringCglibBeanCopier();
-            mapType = SpringCglibBeanMap.class;
             log.info("The spring cglib bean tools was initialized success. ");
         }
         else if (ClassUtils.isPresent(CGLIB_CLASS, classLoader)) {
+            beanMapFactory = new CglibBeanMapFactory();
             beanCopier = new CglibBeanCopier();
-            mapType = CglibBeanMap.class;
             log.info("The cglib bean tools was initialized success. ");
         }
         else if (ClassUtils.isPresent(SPRING_BEAN_TOOLS_CLASS, classLoader)) {
+            beanMapFactory = new SimpleBeanMapFactory();
             beanCopier = new SpringBeanCopier();
-            mapType = SimpleBeanMap.class;
             log.info("The spring bean tools was initialized success. ");
         }
         else if (ClassUtils.isPresent(APACHE_BEAN_TOOLS_CLASS, classLoader)) {
+            beanMapFactory = new SimpleBeanMapFactory();
             beanCopier = new ApacheBeanCopier();
-            mapType = SimpleBeanMap.class;
             log.info("The apache bean tools was initialized success. ");
         }
         else {
             // Do nothing.
         }
-        if (mapType != null) { BeanUtils.setMapType(mapType); }
+        if (beanMapFactory != null) { BeanUtils.setBeanMapFactory(beanMapFactory); }
         if (beanCopier != null) { BeanUtils.setBeanCopier(beanCopier); }
     }
 
     @Override
     public void destroy() throws Exception {
+
     }
 
 }

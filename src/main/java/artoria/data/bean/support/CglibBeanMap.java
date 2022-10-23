@@ -1,17 +1,36 @@
-package artoria.beans;
+package artoria.data.bean.support;
 
-import artoria.convert.TypeConverter;
+import artoria.convert.ConversionProvider;
+import artoria.data.bean.BeanMap;
 import artoria.util.ObjectUtils;
 import org.springframework.lang.NonNull;
 
 import java.util.Set;
 
 /**
- * Cglib bean map.
+ * The cglib bean map.
  * @author Kahle
  */
 public class CglibBeanMap extends BeanMap {
     private net.sf.cglib.beans.BeanMap beanMap;
+
+    public CglibBeanMap() {
+    }
+
+    public CglibBeanMap(Object bean) {
+
+        setBean(bean);
+    }
+
+    public CglibBeanMap(ConversionProvider conversionProvider) {
+
+        setConversionProvider(conversionProvider);
+    }
+
+    public CglibBeanMap(ConversionProvider conversionProvider, Object bean) {
+        setConversionProvider(conversionProvider);
+        setBean(bean);
+    }
 
     @Override
     public void setBean(Object bean) {
@@ -27,10 +46,9 @@ public class CglibBeanMap extends BeanMap {
 
     @Override
     protected Object put(Object bean, Object key, Object value) {
-        TypeConverter cvt = getTypeConverter();
-        if (key != null && cvt != null) {
+        if (key != null && getConversionProvider() != null) {
             Class type = beanMap.getPropertyType((String) key);
-            value = cvt.convert(value, type);
+            value = getConversionProvider().convert(value, type);
         }
         return beanMap.put(key, value);
     }
