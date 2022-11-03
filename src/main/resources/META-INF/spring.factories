@@ -3,9 +3,9 @@ artoria.spring.RequestContextHystrixAutoConfiguration,\
 artoria.beans.BeanAutoConfiguration,\
 artoria.spring.config.SpringAutoConfiguration,\
 artoria.aop.support.SpringCglibAopAutoConfiguration,\
+artoria.spring.config.crypto.BouncyCastleAutoConfiguration,\
 artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.codec.Base64AutoConfiguration,\
-artoria.crypto.CryptoAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.feign.FeignSupportAutoConfiguration,\
