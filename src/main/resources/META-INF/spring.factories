@@ -13,7 +13,6 @@ artoria.logging.ControllerLogAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
-artoria.user.UserAutoConfiguration,\
 artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
 artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
 artoria.spring.config.async.SpringAsyncConfigurerSupport,\
