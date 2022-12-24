@@ -10,6 +10,7 @@ artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.feign.FeignSupportAutoConfiguration,\
 artoria.logging.ControllerLogAutoConfiguration,\
+artoria.action.ActionAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
