@@ -34,7 +34,7 @@ import static artoria.common.Constants.ZERO;
 @ConditionalOnMissingClass({"org.springframework.boot.autoconfigure.elasticsearch.rest.RestClientAutoConfiguration"})
 @EnableConfigurationProperties(RestClientProperties.class)
 public class RestClientAutoConfiguration {
-    private static Logger log = LoggerFactory.getLogger(RestClientAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(RestClientAutoConfiguration.class);
     private final RestClientProperties restClientProperties;
 
     public RestClientAutoConfiguration(RestClientProperties restClientProperties) {

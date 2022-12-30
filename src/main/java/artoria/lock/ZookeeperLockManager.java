@@ -35,6 +35,8 @@ public class ZookeeperLockManager implements LockManager {
                 .connectionTimeoutMs(30000)
                 .connectString(connectString)
                 .build();
+        //ConnectionStateListener listener = new SimpleConnectionStateListener("zk-" + connectString);
+        //curator.getConnectionStateListenable().addListener(listener);
         curator.start();
         return curator;
     }

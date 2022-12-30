@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
  * @author Kahle
  */
 public interface AutoActionHandler extends ActionHandler, ConfigSupportHandler {
+    // TODO: ConfigSupportHandler will delete
 
     /**
      * Get the action handler name.

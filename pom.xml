@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.kahlkn</groupId>
+    <groupId>io.github.kahle23</groupId>
     <artifactId>artoria-extend</artifactId>
-    <version>1.0.0.20190429-SNAPSHOT</version>
+    <version>1.0.0.20210919.beta</version>
     <packaging>jar</packaging>
     <name>Artoria Extend</name>
-    <url>https://github.com/kahlkn/artoria-extend</url>
+    <url>https://github.com/kahle23/artoria-extend</url>
     <description>A toolkit extends the artoria.</description>
 
     <properties>
@@ -28,15 +28,15 @@
     <developers>
         <developer>
             <name>Kahle Kernel</name>
-            <email>kahlkn@gmail.com</email>
-            <url>https://github.com/kahlkn</url>
+            <email>kahle23@163.com</email>
+            <url>https://github.com/kahle23</url>
         </developer>
     </developers>
 
     <scm>
-        <url>https://github.com/kahlkn/artoria-extend</url>
-        <connection>scm:git:https://github.com/kahlkn/artoria-extend.git</connection>
-        <developerConnection>https://github.com/kahlkn</developerConnection>
+        <url>https://github.com/kahle23/artoria-extend</url>
+        <connection>scm:git:https://github.com/kahle23/artoria-extend.git</connection>
+        <developerConnection>https://github.com/kahle23</developerConnection>
     </scm>
 
     <distributionManagement>
@@ -57,9 +57,9 @@
 
         <!-- ///// begin artoria //// -->
         <dependency>
-            <groupId>com.github.kahlkn</groupId>
+            <groupId>io.github.kahle23</groupId>
             <artifactId>artoria</artifactId>
-            <version>1.0.0.20190429-SNAPSHOT</version>
+            <version>1.0.0.20210920g97.beta</version>
         </dependency>
         <!-- ///// end artoria //// -->
 
@@ -85,12 +85,13 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
+        <!-- maybe can delete -->
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <version>2.0.9.RELEASE</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -113,10 +114,16 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <version>2.0.2.RELEASE</version>
+            <scope>provided</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>2.2.2.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <!-- ///// end spring //// -->
@@ -125,7 +132,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.47</version>
+            <version>8.0.28</version>
             <scope>test</scope>
         </dependency>
 
@@ -217,7 +224,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.60</version>
+            <version>1.67</version>
             <scope>provided</scope>
         </dependency>
         <!-- ///// end encryption //// -->
@@ -240,7 +247,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <scope>provided</scope>
         </dependency>
         <!-- ///// end apache //// -->
@@ -249,7 +256,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.6</version>
+            <version>4.5.13</version>
             <scope>provided</scope>
         </dependency>
 
@@ -284,16 +291,37 @@
 
         <!-- ///// begin json //// -->
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.9</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.9</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.9</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.68</version>
+            <version>1.2.83</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.2</version>
+            <version>2.8.9</version>
             <scope>provided</scope>
         </dependency>
         <!-- ///// end json //// -->
@@ -343,21 +371,21 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.17</version>
+            <version>5.2.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
+            <version>5.2.1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
-            <version>3.17</version>
+            <version>5.2.1</version>
             <scope>provided</scope>
         </dependency>
         <!-- ///// end poi //// -->
@@ -542,7 +570,7 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
@@ -552,9 +580,13 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <!-- disable format checking -->
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -650,6 +682,10 @@
                                 <goals>
                                     <goal>jar</goal>
                                 </goals>
+                                <!-- disable format checking -->
+                                <configuration>
+                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
