@@ -8,12 +8,12 @@ artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.codec.Base64AutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
-artoria.feign.FeignSupportAutoConfiguration,\
 artoria.logging.ControllerLogAutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
 artoria.config.SwaggerAutoConfiguration,\
+artoria.spring.config.feign.FeignSupportAutoConfiguration,\
 artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
 artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
 artoria.spring.config.async.SpringAsyncConfigurerSupport,\
