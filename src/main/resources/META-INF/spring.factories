@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-artoria.spring.RequestContextHystrixAutoConfiguration,\
 artoria.beans.BeanAutoConfiguration,\
 artoria.spring.config.SpringAutoConfiguration,\
 artoria.aop.support.SpringCglibAopAutoConfiguration,\
@@ -12,8 +11,10 @@ artoria.logging.ControllerLogAutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
-artoria.config.SwaggerAutoConfiguration,\
-artoria.spring.config.feign.FeignSupportAutoConfiguration,\
-artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
-artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
 artoria.spring.config.async.SpringAsyncConfigurerSupport,\
+artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
+artoria.spring.config.feign.FeignSupportAutoConfiguration,\
+artoria.spring.config.hystrix.RequestContextHystrixAutoConfiguration,\
+artoria.spring.config.swagger.SwaggerAutoConfiguration,\
+artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
+artoria.spring.config.xxljob.XxlJobAutoConfiguration
