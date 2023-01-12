@@ -23,7 +23,7 @@ import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 @Configuration
 @AutoConfigureOrder(HIGHEST_PRECEDENCE + SIXTEEN)
 public class SpringAutoConfiguration implements ApplicationContextAware, InitializingBean, DisposableBean {
-    private static Logger log = LoggerFactory.getLogger(SpringAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringAutoConfiguration.class);
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {

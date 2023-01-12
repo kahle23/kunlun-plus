@@ -24,7 +24,7 @@ import java.util.Map;
 @ConditionalOnProperty(name = "spring.extension.web.cors.enabled", havingValue = "true")
 @EnableConfigurationProperties({SpringWebCorsProperties.class})
 public class SpringWebCorsFilterAutoConfiguration {
-    private static Logger log = LoggerFactory.getLogger(SpringWebCorsFilterAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringWebCorsFilterAutoConfiguration.class);
     private final SpringWebCorsProperties corsProperties;
 
     @Autowired

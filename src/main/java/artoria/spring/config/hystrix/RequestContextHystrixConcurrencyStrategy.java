@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class RequestContextHystrixConcurrencyStrategy extends HystrixConcurrencyStrategy {
     private static final Logger log = LoggerFactory.getLogger(RequestContextHystrixConcurrencyStrategy.class);
-    private HystrixConcurrencyStrategy existingConcurrencyStrategy;
+    private final HystrixConcurrencyStrategy existingConcurrencyStrategy;
 
     public RequestContextHystrixConcurrencyStrategy(HystrixConcurrencyStrategy existingConcurrencyStrategy) {
 

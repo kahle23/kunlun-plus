@@ -375,20 +375,6 @@ public class Excel extends BinaryFile implements Table {
     }
 
     @Override
-    public <T> List<T> toBeanList(Class<T> clazz) {
-        Assert.notNull(clazz, "Parameter \"clazz\" must not null. ");
-        List<Map<String, Object>> mapList = toMapList();
-        return BeanUtils.mapToBeanInList(mapList, clazz);
-    }
-
-    @Override
-    public <T> void fromBeanList(List<T> beanList) {
-        Assert.notEmpty(beanList, "Parameter \"beanList\" must not empty. ");
-        List<Map<String, Object>> mapList = BeanUtils.beanToMapInList(beanList);
-        fromMapList(mapList);
-    }
-
-    @Override
     public List<Map<String, Object>> toMapList() {
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
         int lastRowNumber = getLastRowNumber();

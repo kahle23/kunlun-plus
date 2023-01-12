@@ -1,5 +1,6 @@
 package artoria.codec;
 
+import artoria.codec.support.Barcode;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.junit.Ignore;
 import org.junit.Test;

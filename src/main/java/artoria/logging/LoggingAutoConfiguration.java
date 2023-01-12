@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class LoggingAutoConfiguration implements InitializingBean, DisposableBean {
+    private static final Logger log = LoggerFactory.getLogger(LoggingAutoConfiguration.class);
     private static final String SLF4J_BRIDGE_HANDLER_CLASS = "org.slf4j.bridge.SLF4JBridgeHandler";
-    private static Logger log = LoggerFactory.getLogger(LoggingAutoConfiguration.class);
 
     private void initJulToSlf4j() {
         ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();

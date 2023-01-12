@@ -1,4 +1,4 @@
-package artoria.codec;
+package artoria.codec.support;
 
 import artoria.exception.ExceptionUtils;
 import artoria.file.FilenameUtils;

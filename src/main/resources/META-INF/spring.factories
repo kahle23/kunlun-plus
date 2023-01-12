@@ -7,7 +7,6 @@ artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.codec.Base64AutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
-artoria.logging.ControllerLogAutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
@@ -18,3 +17,6 @@ artoria.spring.config.hystrix.RequestContextHystrixAutoConfiguration,\
 artoria.spring.config.swagger.SwaggerAutoConfiguration,\
 artoria.spring.config.web.cors.SpringWebCorsFilterAutoConfiguration,\
 artoria.spring.config.xxljob.XxlJobAutoConfiguration
+
+
+
