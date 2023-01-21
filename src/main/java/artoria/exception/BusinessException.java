@@ -1,6 +1,6 @@
 package artoria.exception;
 
-import artoria.common.ErrorCode;
+import artoria.data.ErrorCode;
 
 /**
  * Business exception.

@@ -1,5 +1,6 @@
-package artoria.exception;
+package artoria.exception.spring;
 
+import artoria.exception.ServletErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Default exception handler.
+ * Simple exception handler.
  * @author Kahle
  */
 @ControllerAdvice
-public class DefaultExceptionHandler {
-    private static Logger log = LoggerFactory.getLogger(DefaultExceptionHandler.class);
-    private ErrorProcessor errorProcessor;
+public class ServletErrorHandlerExceptionHandler {
+    private static final Logger log = LoggerFactory.getLogger(ServletErrorHandlerExceptionHandler.class);
+    private final ServletErrorHandler servletErrorHandler;
 
     @Autowired
-    public DefaultExceptionHandler(ErrorProcessor errorProcessor) {
-        this.errorProcessor = errorProcessor;
-        log.info("The internal exception handler was initialized success. ");
+    public ServletErrorHandlerExceptionHandler(ServletErrorHandler servletErrorHandler) {
+        this.servletErrorHandler = servletErrorHandler;
+        log.info("The exception handler based on servlet error handler was initialized success. ");
     }
 
     @ResponseBody
@@ -32,7 +33,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(Exception.class)
     public Object handleException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
         log.error("Caught an unhandled exception. ", ex);
-        return errorProcessor.process(request, response, ex);
+        return servletErrorHandler.handle(request, response, ex);
     }
 
 }

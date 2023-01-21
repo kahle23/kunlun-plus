@@ -5,11 +5,11 @@ artoria.aop.support.SpringCglibAopAutoConfiguration,\
 artoria.spring.config.crypto.BouncyCastleAutoConfiguration,\
 artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.codec.Base64AutoConfiguration,\
-artoria.exception.ExceptionAutoConfiguration,\
 artoria.config.JsonAutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.config.ReflectAutoConfiguration,\
+artoria.exception.ExceptionAutoConfiguration,\
 artoria.spring.config.async.SpringAsyncConfigurerSupport,\
 artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
 artoria.spring.config.feign.FeignSupportAutoConfiguration,\

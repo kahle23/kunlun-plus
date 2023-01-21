@@ -1,5 +1,6 @@
-package artoria.exception;
+package artoria.exception.spring;
 
+import artoria.exception.ServletErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +18,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Default error controller.
+ * Simple error controller.
  * @author Kahle
  */
 @Controller
-public class DefaultErrorController implements ErrorController {
-    private static Logger log = LoggerFactory.getLogger(DefaultErrorController.class);
+public class ServletErrorHandlerErrorController implements ErrorController {
+    private static final Logger log = LoggerFactory.getLogger(ServletErrorHandlerErrorController.class);
     private static final String ERROR_PATH = "/error";
-    private ErrorAttributes errorAttributes;
-    private ErrorProcessor errorProcessor;
+    private final ServletErrorHandler servletErrorHandler;
+    private final ErrorAttributes errorAttributes;
 
     @Autowired
-    public DefaultErrorController(ErrorAttributes errorAttributes, ErrorProcessor errorProcessor) {
+    public ServletErrorHandlerErrorController(ServletErrorHandler servletErrorHandler,
+                                              ErrorAttributes errorAttributes) {
+        this.servletErrorHandler = servletErrorHandler;
         this.errorAttributes = errorAttributes;
-        this.errorProcessor = errorProcessor;
-        log.info("The internal error controller was initialized success. ");
+        log.info("The error controller based on servlet error handler was initialized success. ");
     }
 
     @Override
@@ -45,7 +47,7 @@ public class DefaultErrorController implements ErrorController {
     public Object returnPageResult(HttpServletRequest request, HttpServletResponse response) {
         WebRequest webRequest = new ServletWebRequest(request);
         Throwable throwable = errorAttributes.getError(webRequest);
-        return errorProcessor.process(request, response, throwable);
+        return servletErrorHandler.handle(request, response, throwable);
     }
 
     @ResponseBody
@@ -54,7 +56,7 @@ public class DefaultErrorController implements ErrorController {
     public Object returnJsonResult(HttpServletRequest request, HttpServletResponse response) {
         WebRequest webRequest = new ServletWebRequest(request);
         Throwable throwable = errorAttributes.getError(webRequest);
-        return errorProcessor.process(request, response, throwable);
+        return servletErrorHandler.handle(request, response, throwable);
     }
 
 }

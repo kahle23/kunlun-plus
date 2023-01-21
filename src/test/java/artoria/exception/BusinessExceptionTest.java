@@ -8,7 +8,7 @@ import static artoria.exception.SystemErrorCode.PASSWORD_IS_REQUIRED;
 import static artoria.exception.SystemErrorCode.USERNAME_IS_REQUIRED;
 
 public class BusinessExceptionTest {
-    private static Logger log = LoggerFactory.getLogger(BusinessExceptionTest.class);
+    private static final Logger log = LoggerFactory.getLogger(BusinessExceptionTest.class);
 
     @Test
     public void testCreate() {
