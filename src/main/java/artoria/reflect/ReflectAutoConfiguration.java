@@ -1,9 +1,8 @@
-package artoria.config;
+package artoria.reflect;
 
-import artoria.aop.Enhancer;
-import artoria.aop.Interceptor;
-import artoria.reflect.ReflectUtils;
-import artoria.reflect.Reflecter;
+import artoria.aop.AbstractInterceptor;
+import artoria.aop.ProxyUtils;
+import artoria.data.bean.support.BeanToolsAutoConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -22,13 +21,13 @@ import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.
  * @author Kahle
  */
 @Configuration
-@AutoConfigureAfter(CglibAutoConfiguration.class)
+@AutoConfigureAfter(BeanToolsAutoConfiguration.class)
 public class ReflectAutoConfiguration implements InitializingBean, DisposableBean {
-    private static Logger log = LoggerFactory.getLogger(ReflectAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(ReflectAutoConfiguration.class);
     private static final List<String> METHOD_NAMES;
 
     static {
-        // TODO: Do cache optimize by cacheManager
+        // TODO: Do cache optimize by CacheUtils
         List<String> list = new ArrayList<String>();
         Collections.addAll(list, "findConstructors"
                 , "findConstructor"
@@ -43,12 +42,11 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Reflecter reflecter = ReflectUtils.getReflecter();
-        if (reflecter != null) {
-            ReflecterInterceptor intr = new ReflecterInterceptor(reflecter);
-            Reflecter instance = (Reflecter) Enhancer.enhance(reflecter, intr);
-            ReflectUtils.setReflecter(instance);
-            log.info("Add cache to reflection tools success. ");
+        ReflectProvider reflectProvider = ReflectUtils.getReflectProvider();
+        if (reflectProvider != null) {
+            ReflectProvider instance = ProxyUtils.proxy(new ReflectProviderInterceptor(reflectProvider));
+            ReflectUtils.setReflectProvider(instance);
+            log.info("Add cache to reflect provider success. ");
         }
     }
 
@@ -56,14 +54,14 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
     public void destroy() throws Exception {
     }
 
-    private static class ReflecterInterceptor implements Interceptor {
-        private Map<String, Object> cache;
-        private Reflecter original;
+    private static class ReflectProviderInterceptor extends AbstractInterceptor<ReflectProvider> {
+        private final Map<String, Object> cache;
 
-        ReflecterInterceptor(Reflecter original) {
+        public ReflectProviderInterceptor(ReflectProvider originalObject) {
+            super(originalObject);
             this.cache = new ConcurrentReferenceHashMap<String, Object>(64, WEAK);
-            this.original = original;
         }
+
 
         @Override
         public Object intercept(Object proxyObject, Method method, Object[] args) throws Throwable {
@@ -71,13 +69,13 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
                 String key = method.getName() + Arrays.toString(args);
                 Object val = this.cache.get(key);
                 if (val == null) {
-                    val = method.invoke(this.original, args);
+                    val = method.invoke(getOriginalObject(), args);
                     this.cache.put(key, val);
                 }
                 return val;
             }
             else {
-                return method.invoke(this.original, args);
+                return method.invoke(getOriginalObject(), args);
             }
         }
 

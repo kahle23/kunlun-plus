@@ -77,7 +77,7 @@ public class Excel extends BinaryFile implements Table {
         if (cell == null) {
             return null;
         }
-        CellType cellType = cell.getCellTypeEnum();
+        CellType cellType = cell.getCellType();
         switch (cellType) {
             case NUMERIC:
             case FORMULA: {

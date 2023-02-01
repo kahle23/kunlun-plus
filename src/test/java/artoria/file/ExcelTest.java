@@ -2,7 +2,7 @@ package artoria.file;
 
 import artoria.beans.BeanUtils;
 import artoria.entity.Student;
-import artoria.random.RandomUtils;
+import artoria.mock.MockUtils;
 import com.alibaba.fastjson.JSON;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ExcelTest {
         titleStuMap.put("Student Id", "studentId");
         titleStuMap.put("School Name", "schoolName");
         for (int i = 0; i < 5; i++) {
-            students.add(RandomUtils.nextObject(Student.class));
+            students.add(MockUtils.mock(Student.class));
         }
         studentsMap.addAll(BeanUtils.beanToMapInList(students));
     }
@@ -48,7 +48,7 @@ public class ExcelTest {
         excel.readFromFile(new File("e:\\123.xls"));
         excel.setRowStartNumber(4);
         excel.setColumnStartNumber(5);
-        List<Student> students = excel.toBeanList(Student.class);
+        List<Map<String, Object>> students = excel.toMapList();
         System.out.println(JSON.toJSONString(students, true));
     }
 
@@ -60,7 +60,7 @@ public class ExcelTest {
         excel.setRowStartNumber(3);
         excel.setColumnStartNumber(4);
         excel.addHeaders(titleStuMap);
-        excel.fromBeanList(students);
+        excel.fromMapList(studentsMap);
         excel.writeToFile(new File("e:\\456.xlsx"));
     }
 
@@ -74,7 +74,7 @@ public class ExcelTest {
         excel.setRowStartNumber(3);
         excel.setColumnStartNumber(4);
         excel.addHeaders(titleStuMap);
-        excel.fromBeanList(students);
+        excel.fromMapList(studentsMap);
         excel.writeToFile(new File("e:\\456.xlsx"));
     }
 
