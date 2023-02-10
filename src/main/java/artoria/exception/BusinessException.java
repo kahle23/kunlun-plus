@@ -1,5 +1,6 @@
 package artoria.exception;
 
+import artoria.common.SimpleErrorCode;
 import artoria.data.ErrorCode;
 
 /**
@@ -7,41 +8,42 @@ import artoria.data.ErrorCode;
  * @author Kahle
  */
 public class BusinessException extends UncheckedException {
-    private ErrorCode errorCode;
+    private static final String DEF_ERROR_CODE = "500";
+    private final ErrorCode errorCode;
+    private final Object[] arguments;
+
+    public BusinessException(String message, Object... arguments) {
+        super(message);
+        this.errorCode = new SimpleErrorCode(DEF_ERROR_CODE, message);
+        this.arguments = arguments;
+    }
+
+    public BusinessException(String message, Throwable cause, Object... arguments) {
+        super(message, cause);
+        this.errorCode = new SimpleErrorCode(DEF_ERROR_CODE, message);
+        this.arguments = arguments;
+    }
+
+    public BusinessException(ErrorCode errorCode, Object... arguments) {
+        super(errorCode != null ? errorCode.getDescription() : null);
+        this.errorCode = errorCode;
+        this.arguments = arguments;
+    }
+
+    public BusinessException(ErrorCode errorCode, Throwable cause, Object... arguments) {
+        super(errorCode != null ? errorCode.getDescription() : null, cause);
+        this.errorCode = errorCode;
+        this.arguments = arguments;
+    }
 
     public ErrorCode getErrorCode() {
 
-        return this.errorCode;
+        return errorCode;
     }
 
-    public BusinessException() {
+    public Object[] getArguments() {
 
-        super();
-    }
-
-    public BusinessException(String message) {
-
-        super(message);
-    }
-
-    public BusinessException(Throwable cause) {
-
-        super(cause);
-    }
-
-    public BusinessException(String message, Throwable cause) {
-
-        super(message, cause);
-    }
-
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode != null ? errorCode.getDescription() : null);
-        this.errorCode = errorCode;
-    }
-
-    public BusinessException(ErrorCode errorCode, Throwable cause) {
-        super(errorCode != null ? errorCode.getDescription() : null, cause);
-        this.errorCode = errorCode;
+        return arguments;
     }
 
 }
