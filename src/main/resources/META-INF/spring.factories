@@ -12,6 +12,7 @@ artoria.exception.ExceptionAutoConfiguration,\
 artoria.convert.ConversionAutoConfiguration,\
 artoria.reflect.ReflectAutoConfiguration,\
 artoria.action.hanlp.support.HankcsHanLpAutoConfiguration,\
+artoria.action.similarity.support.XmTextSimilarityAutoConfiguration,\
 artoria.spring.config.async.SpringAsyncConfigurerSupport,\
 artoria.spring.config.elasticsearch.RestClientAutoConfiguration,\
 artoria.spring.config.feign.FeignSupportAutoConfiguration,\
