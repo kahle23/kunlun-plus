@@ -7,6 +7,7 @@ artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.codec.Base64AutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.data.json.support.JsonAutoConfiguration,\
+artoria.data.xml.support.XmlAutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.convert.ConversionAutoConfiguration,\
