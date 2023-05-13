@@ -5,6 +5,7 @@ import org.slf4j.MDC;
 
 import java.util.Map;
 
+@Deprecated // TODO: Deletable
 public class MdcPropertySource extends AbstractPropertySource {
 
     public MdcPropertySource(String name) {

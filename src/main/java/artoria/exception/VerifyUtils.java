@@ -15,6 +15,7 @@ import java.util.Map;
  * Verify tools.
  * @author Kahle
  */
+@Deprecated // TODO: can delete
 public class VerifyUtils {
     private static final String DEFAULT_CODE = "500";
 

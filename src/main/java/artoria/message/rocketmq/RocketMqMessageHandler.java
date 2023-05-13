@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class RocketMqMessageHandler extends AbstractClassicMessageHandler {
-    private DefaultMQProducer mqProducer;
+    private final DefaultMQProducer mqProducer;
 
     public RocketMqMessageHandler(DefaultMQProducer mqProducer) {
 

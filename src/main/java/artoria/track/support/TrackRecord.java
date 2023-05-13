@@ -1,5 +1,6 @@
 package artoria.track.support;
 
+import artoria.core.Builder;
 import artoria.data.Dict;
 import artoria.track.TrackLevel;
 import artoria.util.Assert;
@@ -8,7 +9,7 @@ import artoria.util.Assert;
  * The track record.
  * @author Kahle
  */
-public class TrackRecord {
+public class TrackRecord implements Builder {
     private final StringBuilder content = new StringBuilder();
     private final StringBuilder message = new StringBuilder();
     private final String code;
@@ -60,6 +61,7 @@ public class TrackRecord {
         return this;
     }
 
+    @Override
     public Dict build() {
         return Dict.of("code", code)
                 .set("level", level.getValue())

@@ -1,6 +1,5 @@
 package artoria.file;
 
-import artoria.beans.BeanUtils;
 import artoria.exception.ExceptionUtils;
 import artoria.io.IOUtils;
 import artoria.time.DateUtils;
@@ -18,6 +17,7 @@ import static artoria.common.Constants.*;
  * Excel tools and excel object.
  * @author Kahle
  */
+@Deprecated // TODO: can delete
 public class Excel extends BinaryFile implements Table {
     public static final String XLSX = "xlsx";
     public static final String XLS = "xls";
@@ -428,7 +428,12 @@ public class Excel extends BinaryFile implements Table {
             headerList.addAll(propertiesMapping.values());
         }
         else {
-            Map<String, Object> first = CollectionUtils.firstNotNullElement(mapList);
+            Map<String, Object> first = null;
+            for (Map<String, Object> map : mapList) {
+                if (map != null) { first = map; break; }
+            }
+            //noinspection ConstantConditions
+            Assert.notNull(first, "Parameter \"mapList\" must contain not null element. ");
             headerList.addAll(first.keySet());
         }
         if (columnStartNumber != ZERO) {

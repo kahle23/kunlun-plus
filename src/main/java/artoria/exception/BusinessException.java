@@ -7,6 +7,7 @@ import artoria.data.ErrorCode;
  * Business exception.
  * @author Kahle
  */
+@Deprecated // TODO: can delete
 public class BusinessException extends UncheckedException {
     private static final String DEF_ERROR_CODE = "500";
     private final ErrorCode errorCode;

@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Exception properties.
  * @author Kahle
  */
+@Deprecated // TODO: can delete
 @ConfigurationProperties(prefix = "artoria.exception")
 public class ExceptionProperties {
     /**

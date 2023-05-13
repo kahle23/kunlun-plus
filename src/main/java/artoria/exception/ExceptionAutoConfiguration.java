@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Import;
  * Exception auto configuration.
  * @author Kahle
  */
+@Deprecated // TODO: can delete
 @Configuration
 @AutoConfigureBefore({ErrorMvcAutoConfiguration.class})
 @EnableConfigurationProperties({ExceptionProperties.class})

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 public abstract class AbstractAspect {
 
     protected List<Object> getArguments(JoinPoint joinPoint, Class<?>... ignoreTypes) {

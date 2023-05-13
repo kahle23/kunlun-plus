@@ -12,6 +12,7 @@ artoria.logging.LoggingAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.mock.JMockDataAutoConfiguration,\
 artoria.message.rocketmq.RocketMqListenerAutoConfiguration,\
+artoria.property.PropertySourceAutoConfiguration,\
 artoria.convert.ConversionAutoConfiguration,\
 artoria.reflect.ReflectAutoConfiguration,\
 artoria.action.hanlp.support.HankcsHanLpAutoConfiguration,\

@@ -20,8 +20,10 @@ import static artoria.util.StringUtils.isNotBlank;
 
 /**
  * The configurable feign client.
+ * @deprecated This is not recommended. Because frameworks like "seata" only use the delegate class, not the current object. So for scalability, this is not a good idea.
  * @author Kahle
  */
+@Deprecated
 public class ConfigurableFeignClient extends LoadBalancerFeignClient {
     private static final Logger log = LoggerFactory.getLogger(ConfigurableFeignClient.class);
     private final Map<String, String> configInfo;
