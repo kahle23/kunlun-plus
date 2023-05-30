@@ -18,6 +18,7 @@ import static artoria.common.Constants.ZERO;
  * Jdbc string identifier generator.
  * @author Kahle
  */
+@Deprecated
 public class JdbcStringIdGenerator extends AbstractIncrementalIdGenerator {
     private static final String SQL_QUERY_TEMPLATE = "SELECT `%s` FROM `%s` WHERE `%s` = ? FOR UPDATE;";
     private static final String SQL_INSERT_TEMPLATE = "INSERT INTO `%s` (`%s`, `%s`) VALUES (?, ?);";
