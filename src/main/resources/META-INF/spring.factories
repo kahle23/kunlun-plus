@@ -4,10 +4,10 @@ artoria.spring.config.SpringAutoConfiguration,\
 artoria.aop.support.SpringCglibAopAutoConfiguration,\
 artoria.spring.config.crypto.BouncyCastleAutoConfiguration,\
 artoria.aop.support.CglibAopAutoConfiguration,\
-artoria.codec.Base64AutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
 artoria.data.json.support.JsonAutoConfiguration,\
 artoria.data.xml.support.XmlAutoConfiguration,\
+artoria.codec.support.Base64AutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.mock.JMockDataAutoConfiguration,\
