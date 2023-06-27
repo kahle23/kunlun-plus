@@ -23,8 +23,8 @@ public class JdbcStringIdGenerator extends AbstractIncrementalIdGenerator {
     private static final String SQL_QUERY_TEMPLATE = "SELECT `%s` FROM `%s` WHERE `%s` = ? FOR UPDATE;";
     private static final String SQL_INSERT_TEMPLATE = "INSERT INTO `%s` (`%s`, `%s`) VALUES (?, ?);";
     private static final String SQL_UPDATE_TEMPLATE = "UPDATE `%s` SET `%s` = ? WHERE `%s` = ?;";
-    private TransactionTemplate transactionTemplate;
-    private JdbcTemplate jdbcTemplate;
+    private final TransactionTemplate transactionTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private String valueColumn;
     private String nameColumn;
     private String tableName;

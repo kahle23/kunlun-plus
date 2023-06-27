@@ -25,7 +25,7 @@ public class FieldDifferenceComparator extends AbstractFieldComparator {
     }
 
     @Override
-    public List<FieldCompareResult> compare(Object left, Object right) {
+    public List<FieldCompareResult> compare(Object left, Object right, Object... arguments) {
         Assert.notNull(left, "Parameter \"right\" must not null. ");
         Assert.notNull(left, "Parameter \"left\" must not null. ");
         // The right is new value.

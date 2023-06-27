@@ -1,4 +1,4 @@
-package artoria.generator;
+package artoria.generator.code;
 
 import artoria.util.Assert;
 import artoria.util.StringUtils;

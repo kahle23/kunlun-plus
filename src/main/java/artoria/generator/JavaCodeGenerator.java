@@ -2,10 +2,11 @@ package artoria.generator;
 
 import artoria.beans.BeanUtils;
 import artoria.exception.ExceptionUtils;
+import artoria.generator.code.DatabaseTypeMapper;
 import artoria.jdbc.ColumnMeta;
 import artoria.jdbc.DatabaseClient;
 import artoria.jdbc.TableMeta;
-import artoria.template.Renderer;
+import artoria.renderer.TextRenderer;
 import artoria.time.DateUtils;
 import artoria.util.Assert;
 import artoria.util.CollectionUtils;
@@ -25,7 +26,7 @@ import static artoria.io.IOUtils.EOF;
  * Java code generator.
  * @author Kahle
  */
-public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
+public class JavaCodeGenerator implements Serializable {
     private static final String DEFAULT_XML_BEGIN_COVER_MARK
             = "<!-- **** (Start) This will be covered, please do not modify. **** -->";
     private static final String DEFAULT_XML_END_COVER_MARK
@@ -57,7 +58,7 @@ public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
     private String templateExtensionName = ".txt";
     private String baseOutputPath;
     private String basePackageName;
-    private Renderer renderer;
+    private TextRenderer textRenderer;
     private Map<String, Object> attributes = new HashMap<String, Object>();
     private Map<String, JavaCodeCreator> creatorMap = new HashMap<String, JavaCodeCreator>();
 
@@ -186,15 +187,14 @@ public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
         return this;
     }
 
-    public Renderer getRenderer() {
+    public TextRenderer getTextRenderer() {
 
-        return renderer;
+        return textRenderer;
     }
 
-    public JavaCodeGenerator setRenderer(Renderer renderer) {
-        Assert.notNull(renderer
-                , "Parameter \"renderer\" must not null. ");
-        this.renderer = renderer;
+    public JavaCodeGenerator setTextRenderer(TextRenderer textRenderer) {
+        Assert.notNull(textRenderer, "Parameter \"textRenderer\" must not null. ");
+        this.textRenderer = textRenderer;
         return this;
     }
 
@@ -451,8 +451,7 @@ public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
         return result;
     }
 
-    @Override
-    public Boolean generate() throws GenerateException {
+    public Boolean generate() {
         if (MapUtils.isEmpty(creatorMap)) { return false; }
         List<Map<String, Object>> tableMapList;
         try {
@@ -476,8 +475,8 @@ public class JavaCodeGenerator implements Generator<Boolean>, Serializable {
                 if (StringUtils.isBlank(creator.getBasePackageName())) {
                     creator.setBasePackageName(this.getBasePackageName());
                 }
-                if (creator.getRenderer() == null) {
-                    creator.setRenderer(this.getRenderer());
+                if (creator.getTextRenderer() == null) {
+                    creator.setTextRenderer(getTextRenderer());
                 }
                 creator.create(tableMapList);
             }

@@ -594,6 +594,23 @@
             <version>1.4.2</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js-scriptengine</artifactId>
+            <version>20.3.11</version>
+            <!--<version>21.3.7</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <version>20.3.11</version>
+            <!--<version>21.3.7</version>-->
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <repositories>

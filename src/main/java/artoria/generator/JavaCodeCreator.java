@@ -3,10 +3,9 @@ package artoria.generator;
 import artoria.exception.ExceptionUtils;
 import artoria.file.FileUtils;
 import artoria.io.IOUtils;
-import artoria.io.StringBuilderWriter;
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
-import artoria.template.Renderer;
+import artoria.renderer.TextRenderer;
 import artoria.time.DateUtils;
 import artoria.util.Assert;
 import artoria.util.ClassLoaderUtils;
@@ -41,7 +40,7 @@ public class JavaCodeCreator implements Serializable {
     private Boolean skipExisted = false;
     private String beginCoverMark;
     private String endCoverMark;
-    private Renderer renderer;
+    private TextRenderer textRenderer;
     private String templatePath;
     private String outputPath;
     private String templateContent;
@@ -199,14 +198,14 @@ public class JavaCodeCreator implements Serializable {
         this.endCoverMark = endCoverMark;
     }
 
-    public Renderer getRenderer() {
+    public TextRenderer getTextRenderer() {
 
-        return renderer;
+        return textRenderer;
     }
 
-    public void setRenderer(Renderer renderer) {
-        Assert.notNull(renderer, "Parameter \"renderer\" must not null. ");
-        this.renderer = renderer;
+    public void setTextRenderer(TextRenderer textRenderer) {
+        Assert.notNull(textRenderer, "Parameter \"textRenderer\" must not null. ");
+        this.textRenderer = textRenderer;
     }
 
     public String getTemplatePath() {
@@ -378,7 +377,7 @@ public class JavaCodeCreator implements Serializable {
         String outputCharset = this.getOutputCharset();
         String templateName = this.getTemplateName();
         String templateContent = this.getTemplateContent();
-        Renderer renderer = this.getRenderer();
+        TextRenderer textRenderer = this.getTextRenderer();
         // Create template filled model.
         Map<String, Object> model = new HashMap<String, Object>(this.getAttributes());
         model.put("generatedTime", DateUtils.format(FULL_DATETIME_PATTERN));
@@ -391,9 +390,7 @@ public class JavaCodeCreator implements Serializable {
             if (this.getSkipExisted()) { return; }
             log.info("The file \"{}\" already exists, it will be try replace. ", outputFile.getName());
             // Generated content.
-            Writer builderWriter = new StringBuilderWriter();
-            renderer.render(model, builderWriter, filename, templateContent, null);
-            String generation = builderWriter.toString();
+            String generation = textRenderer.renderToString(templateContent, filename, model);
             // Read file content.
             byte[] fileBytes = FileUtils.read(outputFile);
             String fileContent = new String(fileBytes, outputCharset);
@@ -414,7 +411,7 @@ public class JavaCodeCreator implements Serializable {
             try {
                 OutputStream output = new FileOutputStream(outputFile);
                 writer = new OutputStreamWriter(output, outputCharset);
-                renderer.render(model, writer, filename, templateContent, null);
+                textRenderer.render(templateContent, filename, model, writer);
             }
             finally {
                 CloseUtils.closeQuietly(writer);
