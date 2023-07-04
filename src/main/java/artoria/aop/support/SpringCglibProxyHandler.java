@@ -1,7 +1,7 @@
 package artoria.aop.support;
 
+import artoria.aop.AbstractProxyHandler;
 import artoria.aop.Interceptor;
-import artoria.aop.ProxyFactory;
 import artoria.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,8 @@ import java.lang.reflect.Method;
  * The proxy factory implements by spring cglib.
  * @author Kahle
  */
-public class SpringCglibProxyFactory implements ProxyFactory {
-    private static final Logger log = LoggerFactory.getLogger(SpringCglibProxyFactory.class);
+public class SpringCglibProxyHandler extends AbstractProxyHandler {
+    private static final Logger log = LoggerFactory.getLogger(SpringCglibProxyHandler.class);
 
     /**
      * The spring cglib method interceptor adapter.
@@ -31,7 +31,8 @@ public class SpringCglibProxyFactory implements ProxyFactory {
         }
 
         @Override
-        public Object intercept(Object proxyObject, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+        public Object intercept(Object proxyObject, Method method,
+                                Object[] args, MethodProxy methodProxy) throws Throwable {
 
             return interceptor.intercept(proxyObject, method, args);
         }
@@ -39,7 +40,7 @@ public class SpringCglibProxyFactory implements ProxyFactory {
     }
 
     @Override
-    public Object getInstance(Class<?> originalClass, Interceptor interceptor) {
+    public Object proxy(Class<?> originalClass, Interceptor interceptor) {
         Assert.notNull(originalClass, "Parameter \"originalClass\" must not null. ");
         Assert.notNull(interceptor, "Parameter \"interceptor\" must not null. ");
         MethodInterceptor methodInterceptor = new MethodInterceptorAdapter(interceptor);

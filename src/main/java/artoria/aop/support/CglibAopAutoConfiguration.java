@@ -1,14 +1,12 @@
 package artoria.aop.support;
 
-import artoria.aop.Enhancer;
-import artoria.aop.ProxyFactory;
-import net.sf.cglib.proxy.MethodInterceptor;
+import artoria.aop.ProxyHandler;
+import artoria.aop.ProxyUtils;
+import artoria.common.Constants;
+import artoria.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -16,18 +14,22 @@ import org.springframework.context.annotation.Configuration;
  * @author Kahle
  */
 @Configuration
-@ConditionalOnClass({MethodInterceptor.class})
-@AutoConfigureAfter({SpringCglibAopAutoConfiguration.class})
-public class CglibAopAutoConfiguration {
+public class CglibAopAutoConfiguration implements InitializingBean {
     private static final Logger log = LoggerFactory.getLogger(CglibAopAutoConfiguration.class);
 
-    @Bean
-    @ConditionalOnMissingBean
-    public ProxyFactory proxyFactory() {
-        ProxyFactory proxyFactory = new CglibProxyFactory();
-        Enhancer.setProxyFactory(proxyFactory);
-        log.info("The cglib proxy factory was initialized success. ");
-        return proxyFactory;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        ProxyHandler proxyHandler;
+        if (ClassUtils.isPresent("net.sf.cglib.proxy.MethodInterceptor")) {
+            ProxyUtils.registerHandler("cglib", proxyHandler = new CglibProxyHandler());
+            ProxyUtils.registerHandler(Constants.DEFAULT, proxyHandler);
+            log.info("The cglib proxy handler was initialized success. ");
+        }
+        if (ClassUtils.isPresent("org.springframework.cglib.proxy.MethodInterceptor")) {
+            ProxyUtils.registerHandler("spring-cglib", proxyHandler = new SpringCglibProxyHandler());
+            ProxyUtils.registerHandler(Constants.DEFAULT, proxyHandler);
+            log.info("The spring cglib proxy factory was initialized success. ");
+        }
     }
 
 }
