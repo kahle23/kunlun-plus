@@ -1,9 +1,9 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-artoria.beans.BeanAutoConfiguration,\
 artoria.spring.config.SpringAutoConfiguration,\
 artoria.spring.config.crypto.BouncyCastleAutoConfiguration,\
 artoria.aop.support.CglibAopAutoConfiguration,\
 artoria.action.ActionAutoConfiguration,\
+artoria.data.bean.support.BeanToolsAutoConfiguration,\
 artoria.data.json.support.JsonAutoConfiguration,\
 artoria.data.xml.support.XmlAutoConfiguration,\
 artoria.codec.support.Base64AutoConfiguration,\
