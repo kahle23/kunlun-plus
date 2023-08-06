@@ -6,6 +6,7 @@ artoria.action.ActionAutoConfiguration,\
 artoria.data.bean.support.BeanToolsAutoConfiguration,\
 artoria.data.json.support.JsonAutoConfiguration,\
 artoria.data.xml.support.XmlAutoConfiguration,\
+artoria.ai.support.AiHandlerAutoConfiguration,\
 artoria.codec.support.Base64AutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
