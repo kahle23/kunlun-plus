@@ -11,6 +11,7 @@ artoria.codec.support.Base64AutoConfiguration,\
 artoria.logging.LoggingAutoConfiguration,\
 artoria.exception.ExceptionAutoConfiguration,\
 artoria.mock.JMockDataAutoConfiguration,\
+artoria.cache.support.spring.SpringCacheAdapterAutoConfiguration,\
 artoria.message.rocketmq.RocketMqListenerAutoConfiguration,\
 artoria.property.PropertySourceAutoConfiguration,\
 artoria.convert.ConversionAutoConfiguration,\
