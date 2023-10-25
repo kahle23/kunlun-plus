@@ -17,6 +17,7 @@ artoria.message.rocketmq.RocketMqListenerAutoConfiguration,\
 artoria.property.PropertySourceAutoConfiguration,\
 artoria.convert.ConversionAutoConfiguration,\
 artoria.reflect.ReflectAutoConfiguration,\
+artoria.data.desensitize.support.DesensitizeAutoConfiguration,\
 artoria.data.validation.config.ValidateAutoConfiguration,\
 artoria.action.hanlp.support.HankcsHanLpAutoConfiguration,\
 artoria.action.similarity.support.XmTextSimilarityAutoConfiguration,\
