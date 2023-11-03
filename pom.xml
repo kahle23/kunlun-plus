@@ -729,6 +729,26 @@
                 </executions>
             </plugin>-->
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Bundle-Vendor>${project.groupId}</Bundle-Vendor>
+                            <Bundle-Name>${project.artifactId}</Bundle-Name>
+                            <Bundle-Version>${project.version}</Bundle-Version>
+                            <Bundle-Description>${project.description}</Bundle-Description>
+                            <Watched>true</Watched>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
         </plugins>
 
     </build>
@@ -829,6 +849,26 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Bundle-Vendor>${project.groupId}</Bundle-Vendor>
+                                    <Bundle-Name>${project.artifactId}</Bundle-Name>
+                                    <Bundle-Version>${project.version}</Bundle-Version>
+                                    <Bundle-Description>${project.description}</Bundle-Description>
+                                    <Watched>true</Watched>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
                     </plugin>
 
                 </plugins>
