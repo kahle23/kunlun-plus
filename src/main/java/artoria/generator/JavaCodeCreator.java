@@ -25,6 +25,7 @@ import static artoria.io.IOUtils.EOF;
  * Java code creator.
  * @author Kahle
  */
+@Deprecated
 public class JavaCodeCreator implements Serializable {
     private static final String CLASSPATH = "classpath:";
     private static Logger log = LoggerFactory.getLogger(JavaCodeCreator.class);

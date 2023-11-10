@@ -23,11 +23,11 @@ import static artoria.common.Constants.*;
 import static artoria.io.IOUtils.EOF;
 
 /**
- * Java code generator.
+ * Java code generator1.
  * @author Kahle
  */
 @Deprecated
-public class JavaCodeGenerator implements Serializable {
+public class JavaCodeGenerator1 implements Serializable {
     private static final String DEFAULT_XML_BEGIN_COVER_MARK
             = "<!-- **** (Start) This will be covered, please do not modify. **** -->";
     private static final String DEFAULT_XML_END_COVER_MARK
@@ -48,7 +48,7 @@ public class JavaCodeGenerator implements Serializable {
     private static final String VO = "vo";
     private static final String JAVA = "java";
     private static final String XML = "xml";
-    private static Logger log = LoggerFactory.getLogger(JavaCodeGenerator.class);
+    private static Logger log = LoggerFactory.getLogger(JavaCodeGenerator1.class);
     private Set<String> removedTableNamePrefixes = new HashSet<String>();
     private Set<String> reservedTables = new HashSet<String>();
     private Set<String> excludedTables = new HashSet<String>();
@@ -63,7 +63,7 @@ public class JavaCodeGenerator implements Serializable {
     private Map<String, Object> attributes = new HashMap<String, Object>();
     private Map<String, JavaCodeCreator> creatorMap = new HashMap<String, JavaCodeCreator>();
 
-    public JavaCodeGenerator() {
+    public JavaCodeGenerator1() {
         this.addAttribute("author", "artoria-extend");
         this.addAttribute("date", DateUtils.format(FULL_DATETIME_PATTERN));
     }
@@ -73,7 +73,7 @@ public class JavaCodeGenerator implements Serializable {
         return Collections.unmodifiableSet(removedTableNamePrefixes);
     }
 
-    public JavaCodeGenerator addRemovedTableNamePrefixes(String... removedTableNamePrefixes) {
+    public JavaCodeGenerator1 addRemovedTableNamePrefixes(String... removedTableNamePrefixes) {
         Assert.notEmpty(removedTableNamePrefixes
                 , "Parameter \"removedTableNamePrefixes\" must not empty. ");
         Collections.addAll(this.removedTableNamePrefixes, removedTableNamePrefixes);
@@ -85,7 +85,7 @@ public class JavaCodeGenerator implements Serializable {
         return Collections.unmodifiableSet(reservedTables);
     }
 
-    public JavaCodeGenerator addReservedTables(String... reservedTables) {
+    public JavaCodeGenerator1 addReservedTables(String... reservedTables) {
         Assert.notEmpty(reservedTables
                 , "Parameter \"reservedTables\" must not empty. ");
         Collections.addAll(this.reservedTables, reservedTables);
@@ -97,7 +97,7 @@ public class JavaCodeGenerator implements Serializable {
         return Collections.unmodifiableSet(excludedTables);
     }
 
-    public JavaCodeGenerator addExcludedTables(String... excludedTables) {
+    public JavaCodeGenerator1 addExcludedTables(String... excludedTables) {
         Assert.notEmpty(excludedTables
                 , "Parameter \"excludedTables\" must not empty. ");
         Collections.addAll(this.excludedTables, excludedTables);
@@ -109,7 +109,7 @@ public class JavaCodeGenerator implements Serializable {
         return databaseClient;
     }
 
-    public JavaCodeGenerator setDatabaseClient(DatabaseClient databaseClient) {
+    public JavaCodeGenerator1 setDatabaseClient(DatabaseClient databaseClient) {
         Assert.notNull(databaseClient
                 , "Parameter \"databaseClient\" must not null. ");
         this.databaseClient = databaseClient;
@@ -121,7 +121,7 @@ public class JavaCodeGenerator implements Serializable {
         return templateCharset;
     }
 
-    public JavaCodeGenerator setTemplateCharset(String templateCharset) {
+    public JavaCodeGenerator1 setTemplateCharset(String templateCharset) {
         Assert.notBlank(templateCharset
                 , "Parameter \"templateCharset\" must not blank. ");
         this.templateCharset = templateCharset;
@@ -133,7 +133,7 @@ public class JavaCodeGenerator implements Serializable {
         return outputCharset;
     }
 
-    public JavaCodeGenerator setOutputCharset(String outputCharset) {
+    public JavaCodeGenerator1 setOutputCharset(String outputCharset) {
         Assert.notBlank(outputCharset
                 , "Parameter \"outputCharset\" must not blank. ");
         this.outputCharset = outputCharset;
@@ -145,7 +145,7 @@ public class JavaCodeGenerator implements Serializable {
         return baseTemplatePath;
     }
 
-    public JavaCodeGenerator setBaseTemplatePath(String baseTemplatePath) {
+    public JavaCodeGenerator1 setBaseTemplatePath(String baseTemplatePath) {
         Assert.notBlank(baseTemplatePath
                 , "Parameter \"baseTemplatePath\" must not blank. ");
         this.baseTemplatePath = baseTemplatePath;
@@ -157,7 +157,7 @@ public class JavaCodeGenerator implements Serializable {
         return templateExtensionName;
     }
 
-    public JavaCodeGenerator setTemplateExtensionName(String templateExtensionName) {
+    public JavaCodeGenerator1 setTemplateExtensionName(String templateExtensionName) {
         Assert.notBlank(templateExtensionName
                 , "Parameter \"templateExtensionName\" must not blank. ");
         this.templateExtensionName = templateExtensionName;
@@ -169,7 +169,7 @@ public class JavaCodeGenerator implements Serializable {
         return baseOutputPath;
     }
 
-    public JavaCodeGenerator setBaseOutputPath(String baseOutputPath) {
+    public JavaCodeGenerator1 setBaseOutputPath(String baseOutputPath) {
         Assert.notBlank(baseOutputPath
                 , "Parameter \"baseOutputPath\" must not blank. ");
         this.baseOutputPath = baseOutputPath;
@@ -181,7 +181,7 @@ public class JavaCodeGenerator implements Serializable {
         return basePackageName;
     }
 
-    public JavaCodeGenerator setBasePackageName(String basePackageName) {
+    public JavaCodeGenerator1 setBasePackageName(String basePackageName) {
         Assert.notBlank(basePackageName
                 , "Parameter \"basePackageName\" must not blank. ");
         this.basePackageName = basePackageName;
@@ -193,28 +193,28 @@ public class JavaCodeGenerator implements Serializable {
         return textRenderer;
     }
 
-    public JavaCodeGenerator setTextRenderer(TextRenderer textRenderer) {
+    public JavaCodeGenerator1 setTextRenderer(TextRenderer textRenderer) {
         Assert.notNull(textRenderer, "Parameter \"textRenderer\" must not null. ");
         this.textRenderer = textRenderer;
         return this;
     }
 
-    public JavaCodeGenerator addAttribute(String name, Object value) {
+    public JavaCodeGenerator1 addAttribute(String name, Object value) {
         attributes.put(name, value);
         return this;
     }
 
-    public JavaCodeGenerator addAttributes(Map<String, Object> data) {
+    public JavaCodeGenerator1 addAttributes(Map<String, Object> data) {
         attributes.putAll(data);
         return this;
     }
 
-    public JavaCodeGenerator removeAttribute(String name) {
+    public JavaCodeGenerator1 removeAttribute(String name) {
         attributes.remove(name);
         return this;
     }
 
-    public JavaCodeGenerator clearAttribute() {
+    public JavaCodeGenerator1 clearAttribute() {
         attributes.clear();
         return this;
     }
@@ -224,12 +224,12 @@ public class JavaCodeGenerator implements Serializable {
         return Collections.unmodifiableMap(attributes);
     }
 
-    public JavaCodeGenerator newCreator() {
+    public JavaCodeGenerator1 newCreator() {
         this.newCreator(DEFAULT_TEMPLATE_NAME_ARRAY);
         return this;
     }
 
-    public JavaCodeGenerator newCreator(String templateNameArray) {
+    public JavaCodeGenerator1 newCreator(String templateNameArray) {
         Assert.notBlank(templateNameArray
                 , "Parameter \"templateNameArray\" must not blank. ");
         String[] split = templateNameArray.split(COMMA);
@@ -240,7 +240,7 @@ public class JavaCodeGenerator implements Serializable {
         return this;
     }
 
-    public JavaCodeGenerator newCreator(String templateName, String businessPackageName) {
+    public JavaCodeGenerator1 newCreator(String templateName, String businessPackageName) {
         Assert.notBlank(templateName, "Parameter \"templateName\" must not blank. ");
         JavaCodeCreator creator = new JavaCodeCreator();
         boolean havePackageName = StringUtils.isNotBlank(businessPackageName);
@@ -257,7 +257,7 @@ public class JavaCodeGenerator implements Serializable {
             creator.setSkipExisted(false);
         }
         else if (templateName.toLowerCase().contains(CONTROLLER)) {
-            businessPackageName = havePackageName ? businessPackageName : ".controller";
+            businessPackageName = havePackageName ? businessPackageName : ".facade.api";
             creator.setSkipExisted(true);
         }
         else if (templateName.toLowerCase().contains(ENTITY)) {
@@ -265,11 +265,11 @@ public class JavaCodeGenerator implements Serializable {
             creator.setSkipExisted(false);
         }
         else if (templateName.toLowerCase().contains(VO)) {
-            businessPackageName = havePackageName ? businessPackageName : ".pojo.vo";
+            businessPackageName = havePackageName ? businessPackageName : ".facade.vo";
             creator.setSkipExisted(false);
         }
         else if (templateName.toLowerCase().contains(DTO)) {
-            businessPackageName = havePackageName ? businessPackageName : ".pojo.dto";
+            businessPackageName = havePackageName ? businessPackageName : ".service.dto";
             creator.setSkipExisted(false);
         }
         else {
@@ -290,12 +290,12 @@ public class JavaCodeGenerator implements Serializable {
         return this;
     }
 
-    public JavaCodeGenerator removeCreator(String templateName) {
+    public JavaCodeGenerator1 removeCreator(String templateName) {
         creatorMap.remove(templateName);
         return this;
     }
 
-    public JavaCodeGenerator clearCreator() {
+    public JavaCodeGenerator1 clearCreator() {
         creatorMap.clear();
         return this;
     }

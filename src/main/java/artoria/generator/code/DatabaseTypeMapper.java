@@ -14,6 +14,7 @@ import static artoria.io.IOUtils.EOF;
  * Type mapping of the database to Java code.
  * @author Kahle
  */
+@Deprecated
 public class DatabaseTypeMapper {
     private static final Map<String, String> TYPE_MAPPINGS = new ConcurrentHashMap<String, String>();
 
