@@ -2,8 +2,8 @@ package artoria.mock;
 
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
-import artoria.test.bean.Book;
-import artoria.test.bean.User;
+import artoria.test.entity.other.Book;
+import artoria.test.entity.system.User;
 import artoria.util.TypeUtils;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MockUtilsTest {
-    private static Logger log = LoggerFactory.getLogger(MockUtilsTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MockUtilsTest.class);
 
     static {
 

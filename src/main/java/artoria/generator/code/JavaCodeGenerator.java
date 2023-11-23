@@ -3,6 +3,8 @@ package artoria.generator.code;
 import artoria.beans.BeanUtils;
 import artoria.exception.ExceptionUtils;
 import artoria.generator.Generator;
+import artoria.generator.code.support.java.SimpleFileBuilder;
+import artoria.generator.code.support.java.SimpleFileContext;
 import artoria.jdbc.ColumnMeta;
 import artoria.jdbc.TableMeta;
 import artoria.jdbc.TableMetaUtils;
@@ -30,7 +32,7 @@ public class JavaCodeGenerator implements Generator {
     private static final String VO = "vo";
     private static final String JAVA = "java";
     private static final String XML = "xml";
-    private Map<String, CodeBuilder> builderMap = new HashMap<String, CodeBuilder>();
+    private Map<String, FileBuilder> builderMap = new HashMap<String, FileBuilder>();
 
     protected String getFilename(Map<String, Object> tableInfo, String templateName) {
         Assert.notNull(tableInfo, "Parameter \"tableInfo\" must not null. ");
@@ -149,7 +151,7 @@ public class JavaCodeGenerator implements Generator {
         return result;
     }
 
-    protected void fillTableInfo(BuildContext buildContext, JavaCodeGenConfig javaCodeGenConfig) {
+    protected void fillTableInfo(FileContext buildContext, JavaCodeGenConfig javaCodeGenConfig) {
         //
         String xmlBaseOutputPath = javaCodeGenConfig.getXmlBaseOutputPath();
         boolean notBlankXmlDir = StringUtils.isNotBlank(xmlBaseOutputPath);
@@ -157,7 +159,7 @@ public class JavaCodeGenerator implements Generator {
         List<TableMeta> tableList = getTables(javaCodeGenConfig);
         // Clipping template name.
         Map<String, String> typeNameMap = new HashMap<String, String>(builderMap.size());
-        for (CodeBuilder codeBuilder : builderMap.values()) {
+        for (FileBuilder codeBuilder : builderMap.values()) {
             String templateName = codeBuilder.getName();
             String typeName = templateName;
             int index = typeName.lastIndexOf(UNDERLINE);
@@ -179,8 +181,8 @@ public class JavaCodeGenerator implements Generator {
             // Get the name of the entity.
             String entityName = tableMeta.getAlias();
             // Create class name, object name and package name.
-            for (Map.Entry<String, CodeBuilder> entry : builderMap.entrySet()) {
-                CodeBuilder codeBuilder = entry.getValue();
+            for (Map.Entry<String, FileBuilder> entry : builderMap.entrySet()) {
+                FileBuilder codeBuilder = entry.getValue();
                 if (codeBuilder == null) { continue; }
                 String templateName = codeBuilder.getName();
                 String baseOutputPath = javaCodeGenConfig.getBaseOutputPath();
@@ -208,17 +210,17 @@ public class JavaCodeGenerator implements Generator {
                 File outputDir = existXmlDir ? new File(xmlBaseOutputPath) : new File(baseOutputPath, packageName);
                 String filename = getFilename(tableInfo, templateName);
                 String outputPath = new File(outputDir, filename).toString();
-                ((SimpleBuildContext) buildContext).setOutputPath(templateName, tableName, outputPath);
+                ((SimpleFileContext) buildContext).setOutputPath(templateName, tableName, outputPath);
             }
             // Add to the result.
-            ((SimpleBuildContext) buildContext).setTableInfo(tableName, tableInfo);
+            ((SimpleFileContext) buildContext).setTableInfo(tableName, tableInfo);
         }
-        ((SimpleBuildContext) buildContext).setTableNames(tableNames);
+        ((SimpleFileContext) buildContext).setTableNames(tableNames);
     }
 
-    protected BuildContext createContext(JavaCodeGenConfig javaCodeGenConfig) {
+    protected FileContext createContext(JavaCodeGenConfig javaCodeGenConfig) {
         TextRenderer textRenderer = javaCodeGenConfig.getTextRenderer();
-        SimpleBuildContext buildContext = new SimpleBuildContext();
+        SimpleFileContext buildContext = new SimpleFileContext();
         Map<String, Object> attributes = javaCodeGenConfig.getCustomAttributes();
 
         List<JavaTemplateConfig> templateConfigs = javaCodeGenConfig.getTemplateConfigs();
@@ -253,7 +255,7 @@ public class JavaCodeGenerator implements Generator {
             String templatePath = new File(baseTemplatePath, fileName).toString();
             buildContext.setTemplatePath(templateName, templatePath);
             // Code builder
-            SimpleCodeBuilder codeBuilder = new SimpleCodeBuilder(templateName, textRenderer);
+            SimpleFileBuilder codeBuilder = new SimpleFileBuilder(templateName, textRenderer);
             builderMap.put(templateName, codeBuilder);
         }
         return buildContext;
@@ -261,10 +263,10 @@ public class JavaCodeGenerator implements Generator {
 
     public void generate(JavaCodeGenConfig javaCodeGenConfig) {
         if (javaCodeGenConfig == null) { return; }
-        BuildContext buildContext = createContext(javaCodeGenConfig);
+        FileContext buildContext = createContext(javaCodeGenConfig);
         fillTableInfo(buildContext, javaCodeGenConfig);
-        for (Map.Entry<String, CodeBuilder> entry : builderMap.entrySet()) {
-            CodeBuilder codeBuilder = entry.getValue();
+        for (Map.Entry<String, FileBuilder> entry : builderMap.entrySet()) {
+            FileBuilder codeBuilder = entry.getValue();
             String result = codeBuilder.build(buildContext);
         }
     }
