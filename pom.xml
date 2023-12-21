@@ -7,9 +7,9 @@
     <artifactId>artoria-extend</artifactId>
     <version>1.0.0.20210919.beta</version>
     <packaging>jar</packaging>
-    <name>Artoria Extend</name>
+    <name>artoria-extend</name>
     <url>https://github.com/kahle23/artoria-extend</url>
-    <description>A toolkit extends the artoria.</description>
+    <description>Artoria is a java technology framework based on the facade pattern.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
