@@ -1,6 +1,6 @@
 package artoria.data.bean.support;
 
-import artoria.convert.ConversionProvider;
+import artoria.convert.ConversionService;
 import artoria.data.bean.BeanCopier;
 import org.springframework.beans.BeanUtils;
 
@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 public class SpringBeanCopier implements BeanCopier {
 
     @Override
-    public void copy(Object from, Object to, ConversionProvider conversionProvider) {
+    public void copy(Object from, Object to, ConversionService conversionService) {
 
         BeanUtils.copyProperties(from, to);
     }

@@ -1,6 +1,6 @@
 package artoria.data.bean.support;
 
-import artoria.convert.ConversionProvider;
+import artoria.convert.ConversionService;
 import artoria.data.bean.BeanCopier;
 import artoria.exception.ExceptionUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -12,7 +12,7 @@ import org.apache.commons.beanutils.BeanUtils;
 public class ApacheBeanCopier implements BeanCopier {
 
     @Override
-    public void copy(Object from, Object to, ConversionProvider conversionProvider) {
+    public void copy(Object from, Object to, ConversionService conversionService) {
         try {
             BeanUtils.copyProperties(to, from);
         }

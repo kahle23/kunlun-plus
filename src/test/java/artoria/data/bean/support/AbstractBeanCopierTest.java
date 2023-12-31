@@ -1,6 +1,6 @@
 package artoria.data.bean.support;
 
-import artoria.convert.ConversionProvider;
+import artoria.convert.ConversionService;
 import artoria.convert.GenericConverter;
 import artoria.data.bean.BeanCopier;
 import artoria.data.bean.BeanUtils;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 import static artoria.common.Constants.ONE;
 import static artoria.common.Constants.ZERO;
-import static artoria.convert.ConversionUtils.getConversionProvider;
+import static artoria.convert.ConversionUtils.getConversionService;
 
 /**
  * The abstract bean copier Test.
@@ -38,7 +38,7 @@ abstract class AbstractBeanCopierTest {
         Dog toDog = new Dog();
         log.info("From object: {}", JSON.toJSONString(fromMap));
         log.info("To object: {}", JSON.toJSONString(toDog));
-        beanCopier.copy(fromMap, toDog, getConversionProvider());
+        beanCopier.copy(fromMap, toDog, getConversionService());
         log.info("After the copy, From object: {}", JSON.toJSONString(fromMap));
         log.info("After the copy, To object: {}", JSON.toJSONString(toDog));
     }
@@ -48,7 +48,7 @@ abstract class AbstractBeanCopierTest {
         Map<String, Object> toMap = new HashMap<String, Object>();
         log.info("From object: {}", JSON.toJSONString(fromDog));
         log.info("To object: {}", JSON.toJSONString(toMap));
-        beanCopier.copy(fromDog, toMap, getConversionProvider());
+        beanCopier.copy(fromDog, toMap, getConversionService());
         log.info("After the copy, From object: {}", JSON.toJSONString(fromDog));
         log.info("After the copy, To object: {}", JSON.toJSONString(toMap));
     }
@@ -60,7 +60,7 @@ abstract class AbstractBeanCopierTest {
         toDog.setName("ToDog's name");
         log.info("From object: {}", JSON.toJSONString(fromDog));
         log.info("To object: {}", JSON.toJSONString(toDog));
-        beanCopier.copy(fromDog, toDog, getConversionProvider());
+        beanCopier.copy(fromDog, toDog, getConversionService());
         log.info("After the copy, From object: {}", JSON.toJSONString(fromDog));
         log.info("After the copy, To object: {}", JSON.toJSONString(toDog));
         log.info("After the copy, The to object's name: {}", toDog.getName());
@@ -73,7 +73,7 @@ abstract class AbstractBeanCopierTest {
         log.info("From object: {}", JSON.toJSONString(fromPerson));
         log.info("To object: {}", JSON.toJSONString(toPerson));
         try {
-            beanCopier.copy(fromPerson, toPerson, new NoOpConversionProvider());
+            beanCopier.copy(fromPerson, toPerson, new NoOpConversionService());
             log.info("After the copy, From object: {}", JSON.toJSONString(fromPerson));
             log.info("After the copy, To object: {}", JSON.toJSONString(toPerson));
         }
@@ -92,7 +92,7 @@ abstract class AbstractBeanCopierTest {
         OrdinaryPersonDTO toPerson = new OrdinaryPersonDTO();
         log.info("From object: {}", JSON.toJSONString(fromPerson));
         log.info("To object: {}", JSON.toJSONString(toPerson));
-        beanCopier.copy(fromPerson, toPerson, getConversionProvider());
+        beanCopier.copy(fromPerson, toPerson, getConversionService());
         log.info("After the copy, From object: {}", JSON.toJSONString(fromPerson));
         log.info("After the copy, To object: {}", JSON.toJSONString(toPerson));
         try {
@@ -105,11 +105,11 @@ abstract class AbstractBeanCopierTest {
         }
     }
 
-    static class NoOpConversionProvider implements ConversionProvider {
+    static class NoOpConversionService implements ConversionService {
         @Override
-        public void addConverter(GenericConverter converter) {}
+        public void registerConverter(GenericConverter converter) {}
         @Override
-        public void removeConverter(GenericConverter converter) {}
+        public void deregisterConverter(GenericConverter converter) {}
         @Override
         public GenericConverter getConverter(Type sourceType, Type targetType) { return null; }
         @Override

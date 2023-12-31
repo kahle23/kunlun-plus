@@ -30,10 +30,10 @@ public class ConversionAutoConfiguration {
         cacheConfig.set("timeToLive", 4L);
         cacheConfig.set("timeToLiveUnit", TimeUnit.HOURS);
         //
-        CacheUtils.registerCache(new SpringSimpleCache(cacheName, cacheConfig));
+        CacheUtils.registerCache(cacheName, new SpringSimpleCache(cacheConfig));
         //
-        ConversionProvider provider = ConversionUtils.getConversionProvider();
-        ConversionUtils.setConversionProvider(new CacheConversionProvider(provider, cacheName));
+        ConversionService conversionService = ConversionUtils.getConversionService();
+        ConversionUtils.setConversionService(new CacheConversionService(conversionService, cacheName));
         log.info(">> The conversion service provider increased cache successfully. ");
         //
         registerSpringConverter(applicationContext);
@@ -45,7 +45,7 @@ public class ConversionAutoConfiguration {
         for (Map.Entry<String, GenericConverter> entry : beansOfType.entrySet()) {
             GenericConverter converter = entry.getValue();
             if (converter == null) { continue; }
-            ConversionUtils.register(converter);
+            ConversionUtils.registerConverter(converter);
         }
     }
 
