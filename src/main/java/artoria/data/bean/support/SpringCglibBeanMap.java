@@ -1,6 +1,6 @@
 package artoria.data.bean.support;
 
-import artoria.convert.ConversionProvider;
+import artoria.convert.ConversionService;
 import artoria.data.bean.BeanMap;
 import artoria.util.ObjectUtils;
 import org.springframework.lang.NonNull;
@@ -22,13 +22,13 @@ public class SpringCglibBeanMap extends BeanMap {
         setBean(bean);
     }
 
-    public SpringCglibBeanMap(ConversionProvider conversionProvider) {
+    public SpringCglibBeanMap(ConversionService conversionService) {
 
-        setConversionProvider(conversionProvider);
+        setConversionService(conversionService);
     }
 
-    public SpringCglibBeanMap(ConversionProvider conversionProvider, Object bean) {
-        setConversionProvider(conversionProvider);
+    public SpringCglibBeanMap(ConversionService conversionService, Object bean) {
+        setConversionService(conversionService);
         setBean(bean);
     }
 
@@ -46,9 +46,9 @@ public class SpringCglibBeanMap extends BeanMap {
 
     @Override
     protected Object put(Object bean, Object key, Object value) {
-        if (key != null && getConversionProvider() != null) {
+        if (key != null && getConversionService() != null) {
             Class type = beanMap.getPropertyType((String) key);
-            value = getConversionProvider().convert(value, type);
+            value = getConversionService().convert(value, type);
         }
         return beanMap.put(key, value);
     }
