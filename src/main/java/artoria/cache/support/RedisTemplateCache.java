@@ -22,6 +22,7 @@ public class RedisTemplateCache extends AbstractCache {
     private static final String KEY_PREFIX = "_cache:";
     private final RedisTemplate<String, Object> redisTemplate;
     private final String lockManager;
+    private final String name;
     protected final TimeUnit timeToLiveUnit;
     protected final Long timeToLive;
 
@@ -31,7 +32,8 @@ public class RedisTemplateCache extends AbstractCache {
     }
 
     public RedisTemplateCache(String name, Object cacheConfig, RedisTemplate<String, Object> redisTemplate) {
-        super(name);
+        Assert.notBlank(name, "Parameter \"name\" must not null. ");
+        this.name = name;
         Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
         if (redisTemplate == null) {
             redisTemplate = ObjectUtils.cast(config.get("redisTemplate"));
@@ -42,6 +44,11 @@ public class RedisTemplateCache extends AbstractCache {
         // Process the timeToLive and the timeToLiveUnit.
         this.timeToLiveUnit = config.get("timeToLiveUnit", TimeUnit.class);
         this.timeToLive = config.getLong("timeToLive");
+    }
+
+    public String getName() {
+
+        return name;
     }
 
     @Override

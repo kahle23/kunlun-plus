@@ -23,27 +23,8 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 public class CaffeineCache extends AbstractCache {
     private final Cache<Object, Object> cache;
 
-    /*@Deprecated
-    public CaffeineCache(String name, ReferenceType referenceType) {
-
-        this(name, ZERO, MINUS_ONE, MINUS_ONE, referenceType);
-    }
-
-    @Deprecated
-    public CaffeineCache(String name, long capacity, ReferenceType referenceType) {
-
-        this(name, capacity, MINUS_ONE, MINUS_ONE, referenceType);
-    }
-
-    @Deprecated
-    public CaffeineCache(String name, long capacity, long timeToLive, ReferenceType referenceType) {
-
-        this(name, capacity, timeToLive, MINUS_ONE, referenceType);
-    }*/
-
     @Deprecated
     public CaffeineCache(String name, long capacity, long timeToLive, long timeToIdle, ReferenceType referenceType) {
-        super(name);
         boolean flag = capacity <= ZERO && timeToLive <= ZERO && timeToIdle <= ZERO;
         Assert.isFalse(flag,
                 "A parameter must have a value in \"capacity\", \"timeToLive\", \"timeToIdle\". "
@@ -63,13 +44,12 @@ public class CaffeineCache extends AbstractCache {
     }
 
 
-    public CaffeineCache(String name) {
+    public CaffeineCache() {
 
-        this(name, (Object) null);
+        this((Object) null);
     }
 
-    public CaffeineCache(String name, Object cacheConfig) {
-        super(name);
+    public CaffeineCache(Object cacheConfig) {
         // Process the cache config.
         Assert.notNull(cacheConfig, "Parameter \"cacheConfig\" must not null. ");
         Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
@@ -110,8 +90,7 @@ public class CaffeineCache extends AbstractCache {
         this.cache = builder.build();
     }
 
-    public CaffeineCache(String name, Cache<Object, Object> cache) {
-        super(name);
+    public CaffeineCache(Cache<Object, Object> cache) {
         Assert.notNull(cache, "Parameter \"cache\" must not null. ");
         this.cache = cache;
     }
