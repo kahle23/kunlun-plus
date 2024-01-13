@@ -38,7 +38,7 @@ public class SpringCacheManagerAdapter implements CacheManager {
                 }
                 //
                 artoria.cache.Cache cache1 = CacheUtils.getCache(name);
-                cache = new SpringCacheAdapter(cache1);
+                cache = new SpringCacheAdapter(name, cache1);
                 cacheMap.put(name, cache);
                 return cache;
             }

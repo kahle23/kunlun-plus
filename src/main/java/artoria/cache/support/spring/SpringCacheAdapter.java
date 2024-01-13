@@ -9,15 +9,17 @@ import java.util.concurrent.Callable;
 
 public class SpringCacheAdapter extends AbstractValueAdaptingCache {
     private final Cache cache;
+    private final String name;
 
-    public SpringCacheAdapter(Cache cache) {
+    public SpringCacheAdapter(String name, Cache cache) {
 
-        this(cache, Boolean.TRUE);
+        this(name, cache, Boolean.TRUE);
     }
 
-    public SpringCacheAdapter(Cache cache, boolean allowNullValues) {
+    public SpringCacheAdapter(String name, Cache cache, boolean allowNullValues) {
         super(allowNullValues);
         this.cache = cache;
+        this.name = name;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class SpringCacheAdapter extends AbstractValueAdaptingCache {
     @Override
     public String getName() {
 
-        return cache.getName();
+        return name;
     }
 
     @NonNull

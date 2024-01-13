@@ -17,8 +17,8 @@ public class SpringSimpleCacheTest {
     @Ignore
     @Test
     public void testConcurrentModificationException() {
-        final SpringSimpleCache cache = new SpringSimpleCache("TEST"
-                , Dict.of("referenceType", ReferenceType.SOFT));
+        final SpringSimpleCache cache =
+                new SpringSimpleCache(Dict.of("referenceType", ReferenceType.SOFT));
 //        cache.setRecordLog(true);
         long start = System.currentTimeMillis();
         new Thread(new Runnable() {

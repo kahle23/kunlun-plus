@@ -12,14 +12,13 @@ import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.
 
 public class SpringSimpleCache extends SimpleCache {
 
-    public SpringSimpleCache(String name) {
+    public SpringSimpleCache(Object cacheConfig) {
 
-        super(name);
+        super(cacheConfig);
     }
 
-    public SpringSimpleCache(String name, Object cacheConfig) {
+    public SpringSimpleCache() {
 
-        super(name, cacheConfig);
     }
 
     @Override

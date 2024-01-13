@@ -26,11 +26,13 @@ public abstract class AbstractJdbcCache extends AbstractCache {
     private final String fieldCacheValue;
     private final String fieldCacheName;
     private final String fieldCacheKey;
+    private final String name;
     protected final TimeUnit timeToLiveUnit;
     protected final Long timeToLive;
 
     public AbstractJdbcCache(String name, Object cacheConfig, Object jdbcExecutor) {
-        super(name);
+        Assert.notBlank(name, "Parameter \"name\" must not null. ");
+        this.name = name;
         Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
         if (jdbcExecutor == null) {
             jdbcExecutor = config.get("jdbcExecutor");
@@ -48,6 +50,11 @@ public abstract class AbstractJdbcCache extends AbstractCache {
         // Process the timeToLive and the timeToLiveUnit.
         this.timeToLiveUnit = config.get("timeToLiveUnit", TimeUnit.class);
         this.timeToLive = config.getLong("timeToLive");
+    }
+
+    public String getName() {
+
+        return name;
     }
 
     @Override
