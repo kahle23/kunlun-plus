@@ -1,7 +1,8 @@
 package artoria.file;
 
-import artoria.beans.BeanUtils;
+import artoria.data.bean.BeanUtils;
 import artoria.entity.Student;
+import artoria.io.util.FileUtils;
 import artoria.mock.MockUtils;
 import com.alibaba.fastjson.JSON;
 import org.junit.Ignore;

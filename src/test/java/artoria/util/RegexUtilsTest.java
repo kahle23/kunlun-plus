@@ -1,6 +1,8 @@
 package artoria.util;
 
-import artoria.net.HttpUtils;
+import artoria.net.http.HttpMethod;
+import artoria.net.http.HttpUtils;
+import artoria.net.http.support.SimpleRequest;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -68,7 +70,8 @@ public class RegexUtilsTest {
 
     @Test
     public void test5() throws Exception {
-        List<String> list = RegexUtils.findAllALabel(HttpUtils.get("https://bing.com"));
+        List<String> list = RegexUtils.findAllALabel(
+                HttpUtils.execute(new SimpleRequest("https://bing.com", HttpMethod.GET)).getBodyAsString());
         for (String s : list) {
             System.out.println(s);
         }
@@ -76,7 +79,8 @@ public class RegexUtilsTest {
 
     @Test
     public void test6() throws Exception {
-        List<String> list = RegexUtils.findAllImgLabel(HttpUtils.get("https://bing.com"));
+        List<String> list = RegexUtils.findAllImgLabel(
+                HttpUtils.execute(new SimpleRequest("https://bing.com", HttpMethod.GET)).getBodyAsString());
         for (String s : list) {
             System.out.println(s);
         }

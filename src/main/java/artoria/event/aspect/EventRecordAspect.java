@@ -1,10 +1,10 @@
 package artoria.event.aspect;
 
 import artoria.aspect.AbstractAspect;
-import artoria.event.EventUtils;
+import artoria.data.Dict;
 import artoria.event.annotation.EventRecord;
 import artoria.exception.ExceptionUtils;
-import artoria.lang.Dict;
+import artoria.track.TrackUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -61,7 +61,7 @@ public class EventRecordAspect extends AbstractAspect {
             attrs.set("methodName", method.toString());
 
             if (record) {
-                EventUtils.track(eventCode, null, null, attrs);
+                TrackUtils.track(eventCode, null, null, attrs);
             }
         }
         catch (Exception e) {

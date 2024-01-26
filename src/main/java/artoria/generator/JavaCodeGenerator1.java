@@ -1,6 +1,6 @@
 package artoria.generator;
 
-import artoria.beans.BeanUtils;
+import artoria.data.bean.BeanUtils;
 import artoria.exception.ExceptionUtils;
 import artoria.generator.code.DatabaseTypeMapper;
 import artoria.jdbc.ColumnMeta;

@@ -1,8 +1,8 @@
 package artoria.util;
 
-import artoria.beans.BeanUtils;
 import artoria.common.PageResult;
 import artoria.common.Paging;
+import artoria.data.bean.BeanUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 

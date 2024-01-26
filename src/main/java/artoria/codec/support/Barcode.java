@@ -1,7 +1,7 @@
 package artoria.codec.support;
 
 import artoria.exception.ExceptionUtils;
-import artoria.file.FilenameUtils;
+import artoria.io.util.FilenameUtils;
 import artoria.util.Assert;
 import artoria.util.StringUtils;
 import com.google.zxing.*;
