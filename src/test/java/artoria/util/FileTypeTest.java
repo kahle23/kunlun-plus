@@ -1,7 +1,7 @@
 package artoria.util;
 
 import artoria.codec.CodecUtils;
-import artoria.file.FileUtils;
+import artoria.io.util.FileUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 

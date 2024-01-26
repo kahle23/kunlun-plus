@@ -1,6 +1,6 @@
 package artoria.generator.code;
 
-import artoria.beans.BeanUtils;
+import artoria.data.bean.BeanUtils;
 import artoria.exception.ExceptionUtils;
 import artoria.generator.Generator;
 import artoria.generator.code.support.java.SimpleFileBuilder;

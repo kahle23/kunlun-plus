@@ -2,8 +2,8 @@ package artoria.mock;
 
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
-import artoria.test.entity.other.Book;
-import artoria.test.entity.system.User;
+import artoria.test.pojo.entity.other.Book;
+import artoria.test.pojo.entity.system.User;
 import artoria.util.TypeUtils;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
