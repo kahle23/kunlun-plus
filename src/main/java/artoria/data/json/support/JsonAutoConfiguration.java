@@ -11,7 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The json tools auto configuration.
+ * The json tools auto-configuration.
  * @author Kahle
  */
 @Configuration
