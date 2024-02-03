@@ -2,7 +2,7 @@ package artoria.data.xml.support;
 
 import artoria.data.xml.XmlClassAlias;
 import artoria.data.xml.XmlFieldAlias;
-import artoria.data.xml.XmlProvider;
+import artoria.data.xml.XmlHandler;
 import artoria.entity.Student;
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
@@ -13,9 +13,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XStreamXmlProviderTest {
-    private static final Logger log = LoggerFactory.getLogger(XStreamXmlProviderTest.class);
-    private final XmlProvider xmlProvider = new XStreamXmlProvider();
+public class XStreamXmlHandlerTest {
+    private static final Logger log = LoggerFactory.getLogger(XStreamXmlHandlerTest.class);
+    private final XmlHandler xmlHandler = new XStreamXmlHandler();
 
     @Test
     public void test1() {
@@ -30,9 +30,9 @@ public class XStreamXmlProviderTest {
                 new XmlClassAlias("xml", List.class),
         };
 
-        String xmlString = xmlProvider.toXmlString(list, arguments);
+        String xmlString = xmlHandler.toXmlString(list, arguments);
         log.info("\n{}", xmlString);
-        List<Student> parseList = xmlProvider.parseObject(xmlString, List.class, arguments);
+        List<Student> parseList = xmlHandler.parseObject(xmlString, List.class, arguments);
         log.info("\n{}", JSON.toJSONString(parseList, true));
     }
 

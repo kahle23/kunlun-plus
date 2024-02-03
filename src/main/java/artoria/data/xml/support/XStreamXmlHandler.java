@@ -2,7 +2,6 @@ package artoria.data.xml.support;
 
 import artoria.data.xml.XmlClassAlias;
 import artoria.data.xml.XmlFieldAlias;
-import artoria.data.xml.XmlProvider;
 import artoria.util.ClassLoaderUtils;
 import artoria.util.ObjectUtils;
 import com.thoughtworks.xstream.XStream;
@@ -24,7 +23,11 @@ import java.util.Map;
 
 import static artoria.common.Constants.TWENTY;
 
-public class XStreamXmlProvider implements XmlProvider {
+/**
+ * The xml conversion handler based on XStream.
+ * @author Kahle
+ */
+public class XStreamXmlHandler extends AbstractXmlHandler {
     private static final XppDriver XPP_DRIVER = new InternalXppDriver();
 
     private XStream createXStream() {

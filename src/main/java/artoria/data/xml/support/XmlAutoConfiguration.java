@@ -9,8 +9,10 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
+import static artoria.data.xml.XmlUtils.getDefaultHandlerName;
+
 /**
- * Xml auto configuration.
+ * The xml tools auto-configuration.
  * @author Kahle
  */
 @Configuration
@@ -22,18 +24,19 @@ public class XmlAutoConfiguration implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() throws Exception {
         ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
         if (ClassUtils.isPresent(X_STREAM_CLASS, classLoader)) {
-            XmlUtils.setXmlProvider(new XStreamXmlProvider());
+            XStreamXmlHandler xmlHandler = new XStreamXmlHandler();
+            XmlUtils.registerHandler(getDefaultHandlerName(), xmlHandler);
+            XmlUtils.registerHandler("xstream", xmlHandler);
         }
 //        else if (ClassUtils.isPresent("", classLoader)) {
-//            XmlUtils.setXmlProvider();
+//            XmlUtils.registerHandler();
 //        }
-        else {
-            log.warn("Can not found \"xstream\", will keep default. ");
-        }
+        else { log.warn("Can not found any implementation, will keep default. "); }
     }
 
     @Override
     public void destroy() throws Exception {
+
     }
 
 }
