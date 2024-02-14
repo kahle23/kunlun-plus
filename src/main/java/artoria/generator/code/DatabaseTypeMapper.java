@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static artoria.common.Constants.LEFT_PARENTHESIS;
 import static artoria.common.Constants.ZERO;
-import static artoria.io.IOUtils.EOF;
+import static artoria.io.util.IOUtils.EOF;
 
 /**
  * Type mapping of the database to Java code.

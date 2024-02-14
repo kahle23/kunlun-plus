@@ -1,6 +1,6 @@
 package artoria.message.delay.support;
 
-import artoria.data.Pair;
+import artoria.data.tuple.Pair;
 import artoria.exception.ExceptionUtils;
 import artoria.message.MessageListener;
 import artoria.message.delay.DelayMessage;

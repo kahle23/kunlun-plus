@@ -1,7 +1,7 @@
 package artoria.io.oss.support;
 
 import artoria.common.Constants;
-import artoria.data.KeyValue;
+import artoria.data.tuple.KeyValue;
 import artoria.exception.ExceptionUtils;
 import artoria.io.oss.OssBase;
 import artoria.io.oss.OssInfo;
