@@ -1,7 +1,7 @@
 package artoria.renderer.support;
 
 import artoria.data.Dict;
-import artoria.data.PairImpl;
+import artoria.data.tuple.PairImpl;
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
 import artoria.renderer.RenderUtils;

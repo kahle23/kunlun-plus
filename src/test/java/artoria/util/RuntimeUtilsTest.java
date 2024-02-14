@@ -1,6 +1,6 @@
 package artoria.util;
 
-import artoria.io.IOUtils;
+import artoria.io.util.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 

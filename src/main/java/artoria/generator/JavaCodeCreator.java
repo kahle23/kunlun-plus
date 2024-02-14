@@ -1,8 +1,8 @@
 package artoria.generator;
 
 import artoria.exception.ExceptionUtils;
-import artoria.io.IOUtils;
 import artoria.io.util.FileUtils;
+import artoria.io.util.IOUtils;
 import artoria.logging.Logger;
 import artoria.logging.LoggerFactory;
 import artoria.renderer.TextRenderer;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static artoria.common.Constants.*;
-import static artoria.io.IOUtils.EOF;
+import static artoria.io.util.IOUtils.EOF;
 
 /**
  * Java code creator.

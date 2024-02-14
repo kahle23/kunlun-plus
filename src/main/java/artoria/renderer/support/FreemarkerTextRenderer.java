@@ -1,6 +1,6 @@
 package artoria.renderer.support;
 
-import artoria.data.Pair;
+import artoria.data.tuple.Pair;
 import artoria.exception.ExceptionUtils;
 import artoria.util.Assert;
 import artoria.util.CloseUtils;

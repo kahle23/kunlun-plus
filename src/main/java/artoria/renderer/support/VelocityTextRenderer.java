@@ -1,7 +1,6 @@
 package artoria.renderer.support;
 
-import artoria.data.Pair;
-import artoria.renderer.support.AbstractTextRenderer;
+import artoria.data.tuple.Pair;
 import artoria.util.Assert;
 import artoria.util.CloseUtils;
 import artoria.util.StringUtils;

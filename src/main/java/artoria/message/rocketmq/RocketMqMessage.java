@@ -2,7 +2,7 @@ package artoria.message.rocketmq;
 
 import artoria.data.json.JsonUtils;
 import artoria.exception.ExceptionUtils;
-import artoria.io.IOUtils;
+import artoria.io.util.IOUtils;
 import artoria.message.mq.MqMessage;
 import artoria.util.Assert;
 import artoria.util.ClassUtils;
