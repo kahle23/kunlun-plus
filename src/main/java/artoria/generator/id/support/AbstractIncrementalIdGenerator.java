@@ -4,8 +4,8 @@ import artoria.time.DateUtils;
 import artoria.util.Assert;
 import artoria.util.StringUtils;
 
-import static artoria.common.Constants.ZERO;
-import static artoria.common.Constants.ZERO_STR;
+import static artoria.common.constant.Numbers.STR_ZERO;
+import static artoria.common.constant.Numbers.ZERO;
 
 /**
  * The abstract incremental identifier generator.
@@ -59,7 +59,7 @@ public abstract class AbstractIncrementalIdGenerator
         int count;
         if (valid && (count = seqLength - identifier.length()) > ZERO) {
             for (; count > ZERO; count--) {
-                identifier.insert(ZERO, ZERO_STR);
+                identifier.insert(ZERO, STR_ZERO);
             }
         }
         // Handle date string.

@@ -1,7 +1,7 @@
 package artoria.codec.support;
 
-import static artoria.common.Constants.MINUS_ONE;
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.MINUS_ONE;
+import static artoria.common.constant.Numbers.ZERO;
 
 public class ApacheBase64 extends Base64 {
     private final org.apache.commons.codec.binary.Base64 apacheBase64;

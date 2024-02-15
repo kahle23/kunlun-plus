@@ -4,7 +4,7 @@ import artoria.renderer.support.FormatTextRenderer;
 import artoria.renderer.support.LoggerTextRenderer;
 import artoria.util.Assert;
 
-import static artoria.common.Constants.EMPTY_STRING;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
 
 /**
  * Log4j logger adapter.

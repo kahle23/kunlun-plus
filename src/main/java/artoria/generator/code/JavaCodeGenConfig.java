@@ -4,7 +4,7 @@ import artoria.renderer.TextRenderer;
 
 import java.util.*;
 
-import static artoria.common.Constants.UTF_8;
+import static artoria.common.constant.Charsets.STR_UTF_8;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableList;
@@ -33,8 +33,8 @@ public class JavaCodeGenConfig {
     private String jdbcPassword;
     private String jdbcCatalog;
 
-    private String templateCharset = UTF_8;
-    private String outputCharset = UTF_8;
+    private String templateCharset = STR_UTF_8;
+    private String outputCharset = STR_UTF_8;
     private String baseTemplatePath = "classpath:templates/generator/java/default";
     private String templateExtensionName = ".txt";
     private String basePackageName;

@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.concurrent.TimeUnit;
 
-import static artoria.common.Constants.ONE;
+import static artoria.common.constant.Numbers.ONE;
 
 /**
  * The redis incremental identifier generator.

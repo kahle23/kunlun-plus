@@ -18,7 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Charsets.STR_UTF_8;
+import static artoria.common.constant.Numbers.ONE;
+import static artoria.common.constant.Numbers.ZERO;
+import static artoria.common.constant.Symbols.*;
+import static artoria.common.constant.TimePatterns.UTC_MS;
 import static artoria.io.util.IOUtils.EOF;
 
 /**
@@ -30,8 +34,8 @@ public class JavaCodeCreator implements Serializable {
     private static final String CLASSPATH = "classpath:";
     private static Logger log = LoggerFactory.getLogger(JavaCodeCreator.class);
     private Map<String, Object> attributes = new HashMap<String, Object>();
-    private String templateCharset = DEFAULT_ENCODING_NAME;
-    private String outputCharset = DEFAULT_ENCODING_NAME;
+    private String templateCharset = STR_UTF_8;
+    private String outputCharset = STR_UTF_8;
     private String baseTemplatePath;
     private String templateName;
     private String templateExtensionName;
@@ -381,7 +385,7 @@ public class JavaCodeCreator implements Serializable {
         TextRenderer textRenderer = this.getTextRenderer();
         // Create template filled model.
         Map<String, Object> model = new HashMap<String, Object>(this.getAttributes());
-        model.put("generatedTime", DateUtils.format(FULL_DATETIME_PATTERN));
+        model.put("generatedTime", DateUtils.format(UTC_MS));
         model.put("table", tableMap);
         // Print log.
         String tmpString = "Generator \"{}\": rendering the java code corresponding to table \"{}\". ";

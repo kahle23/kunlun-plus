@@ -3,7 +3,10 @@ package artoria.mock;
 import artoria.util.RandomUtils;
 import artoria.util.StringUtils;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.SIX;
+import static artoria.common.constant.Numbers.THREE;
+import static artoria.common.constant.Symbols.BLANK_SPACE;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
 
 public class NameMocker implements Mocker<String> {
     private static final char[] NAME_CHAR_ARRAY = "abcdefghijklmnopqrstuvwxyz".toCharArray();

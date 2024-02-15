@@ -1,6 +1,6 @@
 package artoria.data.json.support;
 
-import artoria.common.Constants;
+import artoria.common.constant.Words;
 import artoria.data.json.JsonUtils;
 import artoria.entity.Student;
 import artoria.mock.MockUtils;
@@ -21,7 +21,7 @@ public class GsonHandlerTest {
 
     @Before
     public void init() {
-        JsonUtils.registerHandler(Constants.DEFAULT, new GsonHandler());
+        JsonUtils.registerHandler(Words.DEFAULT, new GsonHandler());
         data = MockUtils.mock(Student.class);
         for (int i = 0; i < 5; i++) {
             data1.add(MockUtils.mock(Student.class));
@@ -39,7 +39,7 @@ public class GsonHandlerTest {
 
     @Test
     public void test2() {
-        JsonUtils.registerHandler(Constants.DEFAULT, new GsonHandler());
+        JsonUtils.registerHandler(Words.DEFAULT, new GsonHandler());
         Student student = JsonUtils.parseObject(jsonString, Student.class);
         List<Student> list = JsonUtils.parseObject(jsonString1
                 , TypeUtils.parameterizedOf(List.class, Student.class));

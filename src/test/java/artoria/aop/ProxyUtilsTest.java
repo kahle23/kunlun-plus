@@ -2,7 +2,7 @@ package artoria.aop;
 
 import artoria.aop.support.CglibProxyHandler;
 import artoria.aop.support.SpringCglibProxyHandler;
-import artoria.common.Constants;
+import artoria.common.constant.Words;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class ProxyUtilsTest {
 
     @Test
     public void testCglibProxy() {
-        ProxyUtils.registerHandler(Constants.DEFAULT, new CglibProxyHandler());
+        ProxyUtils.registerHandler(Words.DEFAULT, new CglibProxyHandler());
         RealSubject subject = new RealSubject();
         Subject subjectProxy = ProxyUtils.proxy(new TestInterceptor(subject));
         log.info(subjectProxy.sayHello(name));
@@ -41,7 +41,7 @@ public class ProxyUtilsTest {
 
     @Test
     public void testSpringCglibProxy() {
-        ProxyUtils.registerHandler(Constants.DEFAULT, new SpringCglibProxyHandler());
+        ProxyUtils.registerHandler(Words.DEFAULT, new SpringCglibProxyHandler());
         RealSubject subject = new RealSubject();
         Subject subjectProxy = ProxyUtils.proxy(new TestInterceptor(subject));
         log.info(subjectProxy.sayHello(name));

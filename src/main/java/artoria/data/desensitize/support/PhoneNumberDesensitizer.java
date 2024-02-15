@@ -3,7 +3,8 @@ package artoria.data.desensitize.support;
 import artoria.data.desensitize.Desensitizer;
 import artoria.util.StringUtils;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.*;
+import static artoria.common.constant.Symbols.ASTERISK;
 
 public class PhoneNumberDesensitizer implements Desensitizer {
     private static final Integer PHONE_NUMBER_LENGTH = 11;

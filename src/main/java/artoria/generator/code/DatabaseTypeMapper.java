@@ -6,8 +6,8 @@ import artoria.util.StringUtils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static artoria.common.Constants.LEFT_PARENTHESIS;
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.ZERO;
+import static artoria.common.constant.Symbols.LEFT_PARENTHESIS;
 import static artoria.io.util.IOUtils.EOF;
 
 /**

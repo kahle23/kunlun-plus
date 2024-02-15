@@ -19,7 +19,12 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Charsets.STR_UTF_8;
+import static artoria.common.constant.Numbers.*;
+import static artoria.common.constant.Symbols.*;
+import static artoria.common.constant.TimePatterns.Y4MD2MI_HMS2CO_S3;
+import static artoria.common.constant.Words.GET;
+import static artoria.common.constant.Words.SET;
 import static artoria.io.util.IOUtils.EOF;
 
 /**
@@ -53,8 +58,8 @@ public class JavaCodeGenerator implements Serializable {
     private Set<String> reservedTables = new HashSet<String>();
     private Set<String> excludedTables = new HashSet<String>();
     private DatabaseClient databaseClient;
-    private String templateCharset = DEFAULT_ENCODING_NAME;
-    private String outputCharset = DEFAULT_ENCODING_NAME;
+    private String templateCharset = STR_UTF_8;
+    private String outputCharset = STR_UTF_8;
     private String baseTemplatePath = "classpath:templates/generator/java/default";
     private String templateExtensionName = ".txt";
     private String baseOutputPath;
@@ -65,7 +70,7 @@ public class JavaCodeGenerator implements Serializable {
 
     public JavaCodeGenerator() {
         this.addAttribute("author", "artoria-extend");
-        this.addAttribute("date", DateUtils.format(FULL_DATETIME_PATTERN));
+        this.addAttribute("date", DateUtils.format(Y4MD2MI_HMS2CO_S3));
     }
 
     public Set<String> getRemovedTableNamePrefixes() {

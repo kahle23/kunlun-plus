@@ -12,7 +12,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
 import java.util.*;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.TWENTY;
+import static artoria.common.constant.Numbers.ZERO;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
 
 /**
  * Excel tools and excel object.

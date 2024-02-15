@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.*;
 
 public class CaffeineCacheTest {
     private static Logger log = LoggerFactory.getLogger(CaffeineCacheTest.class);

@@ -2,7 +2,7 @@ package artoria.aop.support;
 
 import artoria.aop.ProxyHandler;
 import artoria.aop.ProxyUtils;
-import artoria.common.Constants;
+import artoria.common.constant.Words;
 import artoria.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,12 @@ public class CglibAopAutoConfiguration implements InitializingBean {
         ProxyHandler proxyHandler;
         if (ClassUtils.isPresent("net.sf.cglib.proxy.MethodInterceptor")) {
             ProxyUtils.registerHandler("cglib", proxyHandler = new CglibProxyHandler());
-            ProxyUtils.registerHandler(Constants.DEFAULT, proxyHandler);
+            ProxyUtils.registerHandler(Words.DEFAULT, proxyHandler);
             log.info("The cglib proxy handler was initialized success. ");
         }
         if (ClassUtils.isPresent("org.springframework.cglib.proxy.MethodInterceptor")) {
             ProxyUtils.registerHandler("spring-cglib", proxyHandler = new SpringCglibProxyHandler());
-            ProxyUtils.registerHandler(Constants.DEFAULT, proxyHandler);
+            ProxyUtils.registerHandler(Words.DEFAULT, proxyHandler);
             log.info("The spring cglib proxy factory was initialized success. ");
         }
     }

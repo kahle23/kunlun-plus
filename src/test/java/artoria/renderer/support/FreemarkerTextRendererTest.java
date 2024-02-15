@@ -7,7 +7,7 @@ import artoria.logging.LoggerFactory;
 import artoria.renderer.RenderUtils;
 import org.junit.Test;
 
-import static artoria.common.Constants.UTF_8;
+import static artoria.common.constant.Charsets.STR_UTF_8;
 
 public class FreemarkerTextRendererTest {
     private static final Logger log = LoggerFactory.getLogger(FreemarkerTextRendererTest.class);
@@ -27,7 +27,7 @@ public class FreemarkerTextRendererTest {
         log.info(RenderUtils.renderToString(rendererName, source, data));
         log.info(RenderUtils.renderToString(rendererName, source1, data));
         log.info(RenderUtils.renderToString(rendererName,
-                new PairImpl<String, String>("testFreemarker.ftl", UTF_8), data));
+                new PairImpl<String, String>("testFreemarker.ftl", STR_UTF_8), data));
     }
 
 }

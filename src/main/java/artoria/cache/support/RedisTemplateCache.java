@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static artoria.common.Constants.COLON;
+import static artoria.common.constant.Symbols.COLON;
 
 public class RedisTemplateCache extends AbstractCache {
     private static final Logger log = LoggerFactory.getLogger(RedisTemplateCache.class);

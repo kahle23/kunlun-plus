@@ -3,7 +3,10 @@ package artoria.data.desensitize.support;
 import artoria.data.desensitize.Desensitizer;
 import artoria.util.StringUtils;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.FOUR;
+import static artoria.common.constant.Numbers.ZERO;
+import static artoria.common.constant.Symbols.ASTERISK;
+import static artoria.common.constant.Symbols.BLANK_SPACE;
 
 public class BankCardNumberDesensitizer implements Desensitizer {
     private final String cover;

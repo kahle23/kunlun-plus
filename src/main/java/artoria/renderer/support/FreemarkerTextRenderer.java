@@ -17,7 +17,10 @@ import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Charsets.STR_UTF_8;
+import static artoria.common.constant.Numbers.*;
+import static artoria.common.constant.Symbols.DOT;
+import static artoria.common.constant.Symbols.SLASH;
 import static artoria.util.ObjectUtils.cast;
 
 /**
@@ -70,7 +73,7 @@ public class FreemarkerTextRenderer extends AbstractTextRenderer {
                 Pair<String, String> pair = cast(template);
                 String encoding = pair.getRight();
                 String path = pair.getLeft();
-                if (StringUtils.isBlank(encoding)) { encoding = DEFAULT_ENCODING_NAME; }
+                if (StringUtils.isBlank(encoding)) { encoding = STR_UTF_8; }
                 Template tp = configuration.getTemplate(path, encoding);
                 tp.process(data, writer);
             }

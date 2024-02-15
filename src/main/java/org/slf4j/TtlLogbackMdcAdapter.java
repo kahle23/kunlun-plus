@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static artoria.common.Constants.TWENTY;
+import static artoria.common.constant.Numbers.TWENTY;
 
 /**
  * A <em>Mapped Diagnostic Context</em>, or MDC in short, is an instrument for

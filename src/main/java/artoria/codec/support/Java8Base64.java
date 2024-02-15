@@ -2,8 +2,8 @@ package artoria.codec.support;
 
 import artoria.util.ArrayUtils;
 
-import static artoria.common.Constants.MINUS_ONE;
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.MINUS_ONE;
+import static artoria.common.constant.Numbers.ZERO;
 
 public class Java8Base64 extends Base64 {
     private final java.util.Base64.Encoder encoder;

@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static artoria.common.Constants.NORM_DATETIME_MS_PATTERN;
+import static artoria.common.constant.TimePatterns.NORM_DATETIME_MS;
 
 public abstract class AbstractScriptBasedHutoolHttpInvokeHandler extends AbstractScriptBasedHttpInvokeHandler {
 
@@ -79,7 +79,7 @@ public abstract class AbstractScriptBasedHutoolHttpInvokeHandler extends Abstrac
         HttpResponse execute = request.execute();
 
         RawOutput rawOutput = new RawOutput();
-        rawOutput.setTime(DateUtils.format(NORM_DATETIME_MS_PATTERN));
+        rawOutput.setTime(DateUtils.format(NORM_DATETIME_MS));
         rawOutput.setCharset(execute.charset());
         rawOutput.setRawString(execute.body());
         rawOutput.setStatusCode(execute.getStatus());

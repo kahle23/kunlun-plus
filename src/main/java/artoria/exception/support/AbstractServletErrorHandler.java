@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static artoria.common.Constants.DEFAULT_ENCODING_NAME;
+import static artoria.common.constant.Charsets.STR_UTF_8;
 import static java.lang.Boolean.FALSE;
 
 public abstract class AbstractServletErrorHandler implements ServletErrorHandler {
@@ -38,7 +38,7 @@ public abstract class AbstractServletErrorHandler implements ServletErrorHandler
                                      HttpServletResponse response,
                                      String htmlString) {
         // response write html
-        response.setContentType(TEXT_HTML + "; charset=" + DEFAULT_ENCODING_NAME);
+        response.setContentType(TEXT_HTML + "; charset=" + STR_UTF_8);
         try { response.getWriter().write(htmlString); }
         catch (IOException e) { throw ExceptionUtils.wrap(e); }
         // no return

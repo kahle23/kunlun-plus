@@ -7,7 +7,7 @@ import artoria.util.Assert;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.*;
 import static artoria.util.ObjectUtils.cast;
 
 /**
