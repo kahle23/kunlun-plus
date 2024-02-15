@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.ZERO;
 
 /**
  * The elasticsearch rest client auto configuration.

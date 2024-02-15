@@ -3,7 +3,7 @@ package artoria.data.validation.support;
 import artoria.data.validation.Validator;
 import artoria.util.StringUtils;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Numbers.*;
 
 /**
  * The bank card number luhn validator.

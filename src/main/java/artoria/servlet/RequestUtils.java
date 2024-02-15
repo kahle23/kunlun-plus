@@ -9,8 +9,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-import static artoria.common.Constants.COMMA;
-import static artoria.common.Constants.UNKNOWN;
+import static artoria.common.constant.Symbols.COMMA;
+import static artoria.common.constant.Words.UNKNOWN;
 
 /**
  * Request tools.

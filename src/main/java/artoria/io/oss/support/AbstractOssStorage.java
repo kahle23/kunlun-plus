@@ -1,6 +1,7 @@
 package artoria.io.oss.support;
 
-import artoria.common.Constants;
+import artoria.common.constant.Charsets;
+import artoria.common.constant.Symbols;
 import artoria.data.tuple.KeyValue;
 import artoria.exception.ExceptionUtils;
 import artoria.io.oss.OssBase;
@@ -74,7 +75,7 @@ public abstract class AbstractOssStorage extends AbstractDataStorage implements 
                 Object value = keyValue.getValue();
                 Object key = keyValue.getKey();
                 OssBase ossBase = getOssBase(key);
-                InputStream inputStream = convertToStream(value, Constants.UTF_8);
+                InputStream inputStream = convertToStream(value, Charsets.STR_UTF_8);
                 ossObject = new OssObjectImpl(ossBase.getBucketName(), ossBase.getObjectKey());
                 ((OssObjectImpl) ossObject).setObjectContent(inputStream);
             }
@@ -89,9 +90,9 @@ public abstract class AbstractOssStorage extends AbstractDataStorage implements 
     }
 
     protected String mergePrefixAndKey(String urlPrefix, String objectKey) {
-        if (!urlPrefix.endsWith(Constants.SLASH) &&
-                !objectKey.startsWith(Constants.SLASH)) {
-            return urlPrefix + Constants.SLASH + objectKey;
+        if (!urlPrefix.endsWith(Symbols.SLASH) &&
+                !objectKey.startsWith(Symbols.SLASH)) {
+            return urlPrefix + Symbols.SLASH + objectKey;
         }
         else { return urlPrefix + objectKey; }
     }

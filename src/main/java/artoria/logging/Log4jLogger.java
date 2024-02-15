@@ -3,7 +3,7 @@ package artoria.logging;
 import artoria.renderer.support.FormatTextRenderer;
 import org.apache.log4j.Logger;
 
-import static artoria.common.Constants.TWO;
+import static artoria.common.constant.Numbers.TWO;
 
 /**
  * Log4j logger.

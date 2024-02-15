@@ -10,7 +10,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 import static artoria.codec.CodecUtils.BASE64;
-import static artoria.common.Constants.MINUS_ONE;
+import static artoria.common.constant.Numbers.MINUS_ONE;
 import static java.lang.Boolean.TRUE;
 
 /**

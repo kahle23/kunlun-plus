@@ -14,8 +14,8 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
-import static artoria.common.Constants.EMPTY_STRING;
-import static artoria.common.Constants.QUESTION_MARK;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
+import static artoria.common.constant.Symbols.QUESTION_MARK;
 import static artoria.util.StringUtils.isNotBlank;
 
 /**

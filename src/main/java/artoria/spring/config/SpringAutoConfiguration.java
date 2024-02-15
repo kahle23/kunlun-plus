@@ -12,8 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 
-import static artoria.common.Constants.DEFAULT_CHARSET_NAME;
-import static artoria.common.Constants.SIXTEEN;
+import static artoria.common.constant.Charsets.STR_DEFAULT_CHARSET;
+import static artoria.common.constant.Numbers.SIXTEEN;
 import static org.springframework.core.Ordered.HIGHEST_PRECEDENCE;
 
 /**
@@ -34,7 +34,7 @@ public class SpringAutoConfiguration implements ApplicationContextAware, Initial
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        log.info("The default charset for the current run environment is {}. ", DEFAULT_CHARSET_NAME);
+        log.info("The default charset for the current run environment is {}. ", STR_DEFAULT_CHARSET);
     }
 
     @Override

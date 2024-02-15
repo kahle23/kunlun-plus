@@ -19,8 +19,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-import static artoria.common.Constants.TWO;
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.TWO;
+import static artoria.common.constant.Numbers.ZERO;
 
 /**
  * Barcode encode and decode tools.

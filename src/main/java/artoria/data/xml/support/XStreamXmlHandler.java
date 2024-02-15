@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import static artoria.common.Constants.TWENTY;
+import static artoria.common.constant.Numbers.TWENTY;
 
 /**
  * The xml conversion handler based on XStream.

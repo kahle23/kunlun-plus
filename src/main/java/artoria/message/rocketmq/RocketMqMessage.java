@@ -13,7 +13,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Collection;
 
-import static artoria.common.Constants.UTF_8;
+import static artoria.common.constant.Charsets.UTF_8;
 
 public class RocketMqMessage implements MqMessage {
 
@@ -90,7 +90,7 @@ public class RocketMqMessage implements MqMessage {
 
     public RocketMqMessage setBody(Object body) {
 
-        return setBody(body, Charset.forName(UTF_8));
+        return setBody(body, UTF_8);
     }
 
     public RocketMqMessage setBody(Object body, Charset charset) {

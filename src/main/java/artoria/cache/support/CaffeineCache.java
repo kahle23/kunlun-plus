@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import static artoria.common.Constants.FIFTY;
-import static artoria.common.Constants.ZERO;
+import static artoria.common.constant.Numbers.FIFTY;
+import static artoria.common.constant.Numbers.ZERO;
 import static artoria.util.ObjectUtils.cast;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 

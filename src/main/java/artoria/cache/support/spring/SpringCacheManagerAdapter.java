@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static artoria.common.Constants.TWENTY;
+import static artoria.common.constant.Numbers.TWENTY;
 
 public class SpringCacheManagerAdapter implements CacheManager {
     private final Map<String, Cache> cacheMap;

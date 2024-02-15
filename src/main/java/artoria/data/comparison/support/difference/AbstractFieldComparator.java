@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static artoria.common.Constants.EMPTY_STRING;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
 
 /**
  * The abstract field comparator.

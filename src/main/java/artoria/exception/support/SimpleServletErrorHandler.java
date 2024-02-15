@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Charsets.STR_UTF_8;
+import static artoria.common.constant.Symbols.EMPTY_STRING;
+import static artoria.common.constant.Symbols.SLASH;
 import static java.lang.Boolean.FALSE;
 
 /**
@@ -73,7 +75,7 @@ public class SimpleServletErrorHandler implements ServletErrorHandler {
             modelAndView.addObject("errorMessage", errorCode.getDescription());
             return modelAndView;
         }
-        response.setContentType(TEXT_HTML + "; charset=" + DEFAULT_ENCODING_NAME);
+        response.setContentType(TEXT_HTML + "; charset=" + STR_UTF_8);
         String html =
         "<!DOCTYPE HTML>\n" +
         "<html>\n" +

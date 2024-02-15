@@ -7,7 +7,9 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import java.util.List;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Symbols.BLANK_SPACE;
+import static artoria.common.constant.Symbols.COMMA;
+import static artoria.common.constant.Words.UNKNOWN;
 
 public abstract class AbstractFilter {
 

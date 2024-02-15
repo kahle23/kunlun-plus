@@ -6,7 +6,7 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 import java.util.Map;
 
-import static artoria.common.Constants.FIFTY;
+import static artoria.common.constant.Numbers.FIFTY;
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.SOFT;
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.WEAK;
 

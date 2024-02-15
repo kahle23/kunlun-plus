@@ -17,8 +17,8 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
 
-import static artoria.common.Constants.DEFAULT_CHARSET_NAME;
-import static artoria.common.Constants.DEFAULT_ENCODING_NAME;
+import static artoria.common.constant.Charsets.STR_DEFAULT_CHARSET;
+import static artoria.common.constant.Charsets.STR_UTF_8;
 import static artoria.util.ObjectUtils.cast;
 import static org.apache.velocity.app.Velocity.FILE_RESOURCE_LOADER_CACHE;
 import static org.apache.velocity.app.Velocity.RESOURCE_LOADER;
@@ -38,8 +38,8 @@ public class VelocityTextRenderer extends AbstractTextRenderer {
 
     static {
         Properties properties = new Properties();
-        properties.setProperty(INPUT_ENCODING, DEFAULT_CHARSET_NAME);
-        properties.setProperty(OUTPUT_ENCODING, DEFAULT_CHARSET_NAME);
+        properties.setProperty(INPUT_ENCODING, STR_DEFAULT_CHARSET);
+        properties.setProperty(OUTPUT_ENCODING, STR_DEFAULT_CHARSET);
         properties.setProperty(RESOURCE_LOADER, "file, class, jar");
         properties.setProperty(FILE_LOADER_CLASS, "org.apache.velocity.runtime.resource.loader.FileResourceLoader");
         properties.setProperty(CLASS_LOADER_CLASS, "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -118,7 +118,7 @@ public class VelocityTextRenderer extends AbstractTextRenderer {
             else if (template instanceof Pair) {
                 Pair<String, String> pair = cast(template);
                 String encoding = pair.getRight();
-                if (StringUtils.isBlank(encoding)) { encoding = DEFAULT_ENCODING_NAME; }
+                if (StringUtils.isBlank(encoding)) { encoding = STR_UTF_8; }
                 String path = pair.getLeft();
                 if (isInit) {
                     Velocity.mergeTemplate(path, encoding, context, writer);

@@ -4,8 +4,8 @@ import artoria.io.util.IOUtils;
 
 import java.io.*;
 
-import static artoria.common.Constants.DEFAULT_CHARSET_NAME;
-import static artoria.common.Constants.NEWLINE;
+import static artoria.common.constant.Charsets.STR_DEFAULT_CHARSET;
+import static artoria.common.constant.Symbols.NEWLINE;
 
 @Deprecated
 public class RuntimeUtils {
@@ -37,7 +37,7 @@ public class RuntimeUtils {
 
     public static String run(Process process)
             throws IOException {
-        return run(process, DEFAULT_CHARSET_NAME);
+        return run(process, STR_DEFAULT_CHARSET);
     }
 
     public static String run(Process process, String encoding)
@@ -55,7 +55,7 @@ public class RuntimeUtils {
 
     public static String run(Process process, long runtime)
             throws IOException {
-        return run(process, runtime, DEFAULT_CHARSET_NAME);
+        return run(process, runtime, STR_DEFAULT_CHARSET);
     }
 
     public static String run(Process process, long runtime, String encoding)
@@ -84,7 +84,7 @@ public class RuntimeUtils {
 
     public static String run(String command)
             throws IOException {
-        return run(command, DEFAULT_CHARSET_NAME);
+        return run(command, STR_DEFAULT_CHARSET);
     }
 
     public static String run(String command, String encoding)
@@ -94,7 +94,7 @@ public class RuntimeUtils {
 
     public static String run(String command, long runtime)
             throws IOException {
-        return run(command, runtime, DEFAULT_CHARSET_NAME);
+        return run(command, runtime, STR_DEFAULT_CHARSET);
     }
 
     public static String run(String command, long runtime, String encoding)

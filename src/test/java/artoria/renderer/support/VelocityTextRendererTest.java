@@ -7,7 +7,7 @@ import artoria.logging.LoggerFactory;
 import artoria.renderer.RenderUtils;
 import org.junit.Test;
 
-import static artoria.common.Constants.UTF_8;
+import static artoria.common.constant.Charsets.STR_UTF_8;
 
 public class VelocityTextRendererTest {
     private static final Logger log = LoggerFactory.getLogger(VelocityTextRendererTest.class);
@@ -27,7 +27,7 @@ public class VelocityTextRendererTest {
         log.info(RenderUtils.renderToString(rendererName, source, "source", data));
         log.info(RenderUtils.renderToString(rendererName, source1, "source1", data));
         log.info(RenderUtils.renderToString(rendererName
-                , new PairImpl<String, String>("testVelocity.vm", UTF_8), data));
+                , new PairImpl<String, String>("testVelocity.vm", STR_UTF_8), data));
     }
 
 }

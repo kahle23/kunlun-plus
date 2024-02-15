@@ -20,7 +20,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
 
-import static artoria.common.Constants.*;
+import static artoria.common.constant.Charsets.STR_UTF_8;
+import static artoria.common.constant.Numbers.*;
+import static artoria.common.constant.Symbols.*;
+import static artoria.common.constant.Words.GET;
+import static artoria.common.constant.Words.SET;
 import static artoria.io.util.IOUtils.EOF;
 
 @Deprecated
@@ -233,8 +237,8 @@ public class JavaCodeGenerator implements Generator {
             //
             buildContext.putAttributes(templateName, attributes);
             // Charset
-            buildContext.setTemplateCharset(templateName, UTF_8);
-            buildContext.setOutputCharset(templateName, UTF_8);
+            buildContext.setTemplateCharset(templateName, STR_UTF_8);
+            buildContext.setOutputCharset(templateName, STR_UTF_8);
             // SkipExisted
             buildContext.setSkipExisted(templateName, skipExisted);
             // businessPackageName

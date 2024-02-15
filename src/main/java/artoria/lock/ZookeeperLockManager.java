@@ -1,6 +1,6 @@
 package artoria.lock;
 
-import artoria.common.Constants;
+import artoria.common.constant.Numbers;
 import artoria.exception.ExceptionUtils;
 import artoria.util.Assert;
 import org.apache.curator.framework.CuratorFramework;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import static artoria.common.Constants.SLASH;
+import static artoria.common.constant.Symbols.SLASH;
 
 /**
  * The zookeeper reentrant lock manager.
@@ -115,7 +115,7 @@ public class ZookeeperLockManager implements LockManager {
     @Override
     public boolean tryLock(String lockName) {
 
-        return tryLock(lockName, Constants.FIVE_HUNDRED, TimeUnit.MILLISECONDS);
+        return tryLock(lockName, Numbers.FIVE_HUNDRED, TimeUnit.MILLISECONDS);
     }
 
     @Override
