@@ -1,13 +1,13 @@
 package ${table.serviceImplPackageName};
 
-import artoria.beans.BeanUtils;
-import artoria.util.CollectionUtils;
-import artoria.common.Paging;
-import artoria.util.PagingUtils;
-import artoria.common.Input;
-import artoria.common.PageResult;
-import artoria.common.Result;
-import artoria.exception.VerifyUtils;
+import kunlun.beans.BeanUtils;
+import kunlun.util.CollectionUtils;
+import kunlun.common.Paging;
+import kunlun.util.PagingUtils;
+import kunlun.common.Input;
+import kunlun.common.PageResult;
+import kunlun.common.Result;
+import kunlun.exception.VerifyUtils;
 import ${table.entityPackageName}.${table.entityClassName};
 import ${table.mapperPackageName}.${table.mapperClassName};
 import ${table.servicePackageName}.${table.serviceClassName};
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static artoria.common.Errors.PARAMETER_IS_REQUIRED;
+import static kunlun.common.Errors.PARAMETER_IS_REQUIRED;
 
 /**
  * ${table.serviceImplClassName}.

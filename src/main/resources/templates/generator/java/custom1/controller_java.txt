@@ -1,10 +1,10 @@
 package ${table.controllerPackageName};
 
-import artoria.beans.BeanUtils;
-import artoria.common.Input;
-import artoria.common.PageResult;
-import artoria.common.Result;
-import artoria.util.PagingUtils;
+import kunlun.beans.BeanUtils;
+import kunlun.common.Input;
+import kunlun.common.PageResult;
+import kunlun.common.Result;
+import kunlun.util.PagingUtils;
 import ${table.entityPackageName}.${table.entityClassName};
 import ${table.dtoPackageName}.${table.dtoClassName};
 import ${table.voPackageName}.${table.voClassName};

@@ -1,8 +1,8 @@
 package ${table.servicePackageName};
 
-import artoria.common.Input;
-import artoria.common.PageResult;
-import artoria.common.Result;
+import kunlun.common.Input;
+import kunlun.common.PageResult;
+import kunlun.common.Result;
 import ${table.entityPackageName}.${table.entityClassName};
 
 import java.util.List;

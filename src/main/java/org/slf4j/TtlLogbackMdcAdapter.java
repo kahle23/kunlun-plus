@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2018. the original author or authors.
+ * Kunlun is licensed under the "LICENSE" file in the project's root directory.
+ */
+
 package org.slf4j;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
@@ -8,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static artoria.common.constant.Numbers.TWENTY;
+import static kunlun.common.constant.Numbers.TWENTY;
 
 /**
  * A <em>Mapped Diagnostic Context</em>, or MDC in short, is an instrument for
