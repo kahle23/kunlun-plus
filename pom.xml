@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.kahle23</groupId>
-    <artifactId>artoria-extend</artifactId>
-    <version>1.0.0.20210919.beta</version>
+    <artifactId>kunlun-plus</artifactId>
+    <version>1.0.0.20240217.beta</version>
     <packaging>jar</packaging>
-    <name>artoria-extend</name>
-    <url>https://github.com/kahle23/artoria-extend</url>
-    <description>Artoria is a java technology framework based on the facade pattern.</description>
+    <name>kunlun-plus</name>
+    <url>https://github.com/kahle23/kunlun-plus</url>
+    <description>Kunlun is a java technology framework based on the facade pattern.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,8 +34,8 @@
     </developers>
 
     <scm>
-        <url>https://github.com/kahle23/artoria-extend</url>
-        <connection>scm:git:https://github.com/kahle23/artoria-extend.git</connection>
+        <url>https://github.com/kahle23/kunlun-plus</url>
+        <connection>scm:git:https://github.com/kahle23/kunlun-plus.git</connection>
         <developerConnection>https://github.com/kahle23</developerConnection>
     </scm>
 
@@ -55,13 +55,13 @@
 
     <dependencies>
 
-        <!-- ///// begin artoria //// -->
+        <!-- ///// begin kunlun //// -->
         <dependency>
             <groupId>io.github.kahle23</groupId>
-            <artifactId>artoria</artifactId>
-            <version>1.0.0.20210920g97.beta</version>
+            <artifactId>kunlun</artifactId>
+            <version>1.0.0.20240217.beta</version>
         </dependency>
-        <!-- ///// end artoria //// -->
+        <!-- ///// end kunlun //// -->
 
         <!-- ///// begin spring //// -->
         <dependency>
