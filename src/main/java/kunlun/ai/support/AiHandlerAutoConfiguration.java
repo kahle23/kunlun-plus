@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * The ai handler auto configuration.
+ * The AI handler auto-configuration.
  * @author Kahle
  */
 @Configuration

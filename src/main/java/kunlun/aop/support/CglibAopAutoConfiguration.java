@@ -15,7 +15,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The cglib aop auto configuration.
+ * The cglib aop auto-configuration.
  * @author Kahle
  */
 @Configuration

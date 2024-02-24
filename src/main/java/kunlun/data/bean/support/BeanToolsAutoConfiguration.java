@@ -17,7 +17,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The bean tools auto configuration.
+ * The bean tools auto-configuration.
  * @author Kahle
  */
 @Configuration

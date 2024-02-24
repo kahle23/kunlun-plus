@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * The validate auto configuration.
+ * The validate auto-configuration.
  * @author Kahle
  */
 @Configuration

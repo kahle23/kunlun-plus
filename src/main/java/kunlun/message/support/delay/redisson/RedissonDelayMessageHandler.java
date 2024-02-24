@@ -121,7 +121,7 @@ public class RedissonDelayMessageHandler extends AbstractClassicMessageHandler {
     }
 
     @Override
-    public Object operate(Object input, String name, Class<?> clazz) {
+    public Object execute(Object input, String name, Class<?> clazz) {
 
         throw new UnsupportedOperationException("This method is not supported! ");
     }

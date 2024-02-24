@@ -96,7 +96,7 @@ public class RocketMqMessageHandler extends AbstractClassicMessageHandler {
     }
 
     @Override
-    public Object operate(Object input, String name, Class<?> clazz) {
+    public Object execute(Object input, String name, Class<?> clazz) {
         if ("send".equals(name)) {
             return send(input, clazz);
         }

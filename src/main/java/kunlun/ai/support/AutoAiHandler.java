@@ -10,8 +10,8 @@ import kunlun.core.ArtificialIntelligence;
 public interface AutoAiHandler extends ArtificialIntelligence {
 
     /**
-     * Get the ai handler name.
-     * @return The ai handler name
+     * Get the AI handler name.
+     * @return The AI handler name
      */
     String getName();
 

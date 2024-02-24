@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * The database handler auto configuration.
+ * The database handler auto-configuration.
  * @author Kahle
  */
 @Configuration
