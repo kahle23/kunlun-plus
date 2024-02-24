@@ -19,7 +19,7 @@ import static kunlun.codec.CodecUtils.BASE64;
 import static kunlun.common.constant.Numbers.MINUS_ONE;
 
 /**
- * Base64 auto configuration.
+ * The base64 auto-configuration.
  * @see org.apache.commons.codec.binary.Base64
  * @author Kahle
  */

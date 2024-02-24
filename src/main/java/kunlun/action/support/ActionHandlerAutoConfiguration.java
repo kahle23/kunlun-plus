@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 
 /**
- * The action handler auto configuration.
+ * The action handler auto-configuration.
  * @author Kahle
  */
 @Configuration

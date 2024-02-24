@@ -31,7 +31,7 @@ import static kunlun.util.ObjectUtils.cast;
 
 /**
  * The abstract hutool small excel import action handler.
- * This class only supports small amount of data in excel files.
+ * This class only supports small amount of data in Excel files.
  * @param <P> The import parameter type
  * @param <D> The type of data parsed
  * @author Kahle
