@@ -56,7 +56,7 @@ public class PagingUtils {
             return new PageResult<List<T>>();
         }
         if (!(data instanceof Page)) {
-            return new PageResult<List<T>>(data);
+            return new PageResult<List<T>>(/*data*/);
         }
         Page page = (Page) data;
         PageResult<List<T>> result = new PageResult<List<T>>();
@@ -74,7 +74,7 @@ public class PagingUtils {
         }
         List<T> list = BeanUtils.beanToBeanInList(data, clazz);
         if (!(data instanceof Page)) {
-            return new PageResult<List<T>>(list);
+            return new PageResult<List<T>>(/*list*/);
         }
         Page page = (Page) data;
         PageResult<List<T>> result = new PageResult<List<T>>();

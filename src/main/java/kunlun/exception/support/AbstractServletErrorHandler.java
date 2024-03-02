@@ -67,7 +67,7 @@ public abstract class AbstractServletErrorHandler implements ServletErrorHandler
         String errorMessage; int respStatus = response.getStatus();
         errorMessage = throwable != null ? throwable.getMessage() :
                 "An error has occurred. (Response Status: " + respStatus + ") ";
-        return new Result<Object>(FALSE, null, errorMessage);
+        return new Result<Object>(FALSE, null, errorMessage, null);
     }
 
     @Override

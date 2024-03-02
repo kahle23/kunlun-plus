@@ -7,6 +7,7 @@ package kunlun.common;
 
 import kunlun.data.ErrorCode;
 
+@Deprecated
 public class SimpleErrorCode implements ErrorCode {
     private String description;
     private String code;
