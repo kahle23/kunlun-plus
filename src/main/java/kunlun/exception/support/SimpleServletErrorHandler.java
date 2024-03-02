@@ -7,6 +7,7 @@ package kunlun.exception.support;
 
 import kunlun.common.Errors;
 import kunlun.common.Result;
+import kunlun.data.CodeDefinition;
 import kunlun.data.ErrorCode;
 import kunlun.exception.BusinessException;
 import kunlun.exception.ExceptionUtils;
@@ -45,7 +46,7 @@ public class SimpleServletErrorHandler implements ServletErrorHandler {
         this.baseTemplatePath = baseTemplatePath;
     }
 
-    protected ErrorCode getErrorCode(HttpServletRequest request, HttpServletResponse response, Throwable throwable) {
+    protected CodeDefinition getErrorCode(HttpServletRequest request, HttpServletResponse response, Throwable throwable) {
         if (throwable == null) {
             int respStatus = response.getStatus();
             final String description = "An error has occurred. (Response Status: " + respStatus + ") ";
@@ -64,13 +65,13 @@ public class SimpleServletErrorHandler implements ServletErrorHandler {
             return Errors.INTERNAL_SERVER_ERROR;
         }
         BusinessException bizException = (BusinessException) throwable;
-        ErrorCode errorCode = bizException.getErrorCode();
+        CodeDefinition errorCode = bizException.getErrorCode();
         if (errorCode == null) { return Errors.INTERNAL_SERVER_ERROR; }
         return errorCode;
     }
 
     protected Object pageResult(HttpServletRequest request, HttpServletResponse response, Throwable throwable) {
-        ErrorCode errorCode = getErrorCode(request, response, throwable);
+        CodeDefinition errorCode = getErrorCode(request, response, throwable);
         int responseStatus = response.getStatus();
         if (!internalErrorPage) {
             String viewPath = baseTemplatePath + SLASH + responseStatus;
@@ -112,8 +113,8 @@ public class SimpleServletErrorHandler implements ServletErrorHandler {
         if (accept != null && accept.contains(TEXT_HTML)) {
             return pageResult(request, response, throwable);
         }
-        ErrorCode errorCode = getErrorCode(request, response, throwable);
-        return new Result<Object>(FALSE, errorCode.getCode(), errorCode.getDescription());
+        CodeDefinition errorCode = getErrorCode(request, response, throwable);
+        return new Result<Object>(FALSE, errorCode.getCode(), errorCode.getDescription(), null);
     }
 
 }
