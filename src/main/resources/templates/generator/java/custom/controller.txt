@@ -1,14 +1,14 @@
-package ${table.controllerPackageName};
+package ${controllerPackageName};
 
 import kunlun.beans.BeanUtils;
 import kunlun.common.Input;
 import kunlun.common.PageResult;
 import kunlun.common.Result;
 import kunlun.util.PagingUtils;
-import ${table.entityPackageName}.${table.entityClassName};
-import ${table.dtoPackageName}.${table.dtoClassName};
-import ${table.voPackageName}.${table.voClassName};
-import ${table.servicePackageName}.${table.serviceClassName};
+import ${entityPackageName}.${entityClassName};
+import ${dtoPackageName}.${dtoClassName};
+import ${voPackageName}.${voClassName};
+import ${servicePackageName}.${serviceClassName};
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,20 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ${table.controllerClassName}.
+ * ${controllerClassName}.
  * @author $!{author}
- * @date $!{date}
+ * @date $!{nowDate}
  */
 @Slf4j
 @Controller
-public class ${table.controllerClassName} {
+public class ${controllerClassName} {
 
     @Autowired
-    private ${table.serviceClassName} ${table.serviceObjectName};
+    private ${serviceClassName} ${serviceObjectName};
 
     /*@ResponseBody
     @RequestMapping(value = "/hello", method = RequestMethod.POST)
-    public Result<Object> hello(@RequestBody ${table.voClassName} ${table.voObjectName}) {
+    public Result<Object> hello(@RequestBody ${voClassName} ${voObjectName}) {
 
         return new Result<Object>("Hello, World! ");
     }*/

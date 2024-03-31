@@ -1,4 +1,4 @@
-package ${table.serviceImplPackageName};
+package ${serviceImplPackageName};
 
 import kunlun.beans.BeanUtils;
 import kunlun.util.CollectionUtils;
@@ -8,9 +8,9 @@ import kunlun.common.Input;
 import kunlun.common.PageResult;
 import kunlun.common.Result;
 import kunlun.exception.VerifyUtils;
-import ${table.entityPackageName}.${table.entityClassName};
-import ${table.mapperPackageName}.${table.mapperClassName};
-import ${table.servicePackageName}.${table.serviceClassName};
+import ${entityPackageName}.${entityClassName};
+import ${mapperPackageName}.${mapperClassName};
+import ${servicePackageName}.${serviceClassName};
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +21,15 @@ import java.util.List;
 import static kunlun.common.Errors.PARAMETER_IS_REQUIRED;
 
 /**
- * ${table.serviceImplClassName}.
+ * ${serviceImplClassName}.
  * @author $!{author}
- * @date $!{date}
+ * @date $!{nowDate}
  */
 @Slf4j
 @Service
-public class ${table.serviceImplClassName} implements ${table.serviceClassName} {
+public class ${serviceImplClassName} implements ${serviceClassName} {
 
     @Autowired
-    private ${table.mapperClassName} ${table.mapperObjectName};
+    private ${mapperClassName} ${mapperObjectName};
 
 }

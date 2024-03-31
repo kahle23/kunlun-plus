@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.generator.project.support.java;
+package kunlun.generator.render.support.java;
 
 public abstract class AbstractSpringBootMavenProjectGenerator extends AbstractJavaMavenProjectGenerator {
 
