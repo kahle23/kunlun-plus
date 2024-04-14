@@ -3,19 +3,18 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.exception;
+package kunlun.exception.support;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Exception properties.
+ * The exception properties.
  * @author Kahle
  */
-@Deprecated // TODO: can delete
 @ConfigurationProperties(prefix = "kunlun.exception")
 public class ExceptionProperties {
     /**
-     * Enabled default exception handler.
+     * Enabled unified exception handler.
      */
     private Boolean enabled;
     /**
@@ -23,7 +22,7 @@ public class ExceptionProperties {
      */
     private Boolean internalErrorPage = true;
     /**
-     * Error display page base template path.
+     * The error page base template path.
      */
     private String baseTemplatePath = "/error";
 

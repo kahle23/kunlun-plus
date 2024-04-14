@@ -10,7 +10,7 @@ kunlun.ai.support.AiHandlerAutoConfiguration,\
 kunlun.db.support.DbHandlerAutoConfiguration,\
 kunlun.codec.support.Base64AutoConfiguration,\
 kunlun.logging.support.LoggingAutoConfiguration,\
-kunlun.exception.ExceptionAutoConfiguration,\
+kunlun.exception.support.ExceptionAutoConfiguration,\
 kunlun.mock.support.JMockDataAutoConfiguration,\
 kunlun.cache.support.spring.SpringCacheAdapterAutoConfiguration,\
 kunlun.message.support.mq.rocketmq.RocketMqListenerAutoConfiguration,\

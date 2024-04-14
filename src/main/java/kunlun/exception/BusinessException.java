@@ -14,6 +14,8 @@ import kunlun.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static kunlun.common.constant.Numbers.FIVE_HUNDRED;
+
 /**
  * The business exception.
  * @author Kahle
@@ -42,7 +44,7 @@ public class BusinessException extends UncheckedException {
         if (defaultErrorCode != null) { return defaultErrorCode; }
         synchronized (BusinessException.class) {
             if (defaultErrorCode != null) { return defaultErrorCode; }
-            setDefaultErrorCode(500);
+            setDefaultErrorCode(FIVE_HUNDRED);
         }
         return defaultErrorCode;
     }
