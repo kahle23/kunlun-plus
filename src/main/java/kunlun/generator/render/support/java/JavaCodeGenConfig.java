@@ -84,11 +84,16 @@ public class JavaCodeGenConfig implements RenderGenerator.Config {
         columnTypeToJavaTypeMap.put("bigint",   "java.lang.Long");
         columnTypeToJavaTypeMap.put("float",    "java.lang.Float");
         columnTypeToJavaTypeMap.put("double",   "java.lang.Double");
+        columnTypeToJavaTypeMap.put("decimal",  "java.math.BigDecimal");
         columnTypeToJavaTypeMap.put("bit",      "java.lang.Boolean");
         columnTypeToJavaTypeMap.put("date",     "java.util.Date");
         columnTypeToJavaTypeMap.put("time",     "java.util.Date");
         columnTypeToJavaTypeMap.put("timestamp","java.util.Date");
         columnTypeToJavaTypeMap.put("datetime", "java.util.Date");
+        columnTypeToJavaTypeMap.put("tinyint unsigned",  "java.lang.Integer");
+        columnTypeToJavaTypeMap.put("smallint unsigned", "java.lang.Integer");
+        columnTypeToJavaTypeMap.put("int unsigned",      "java.lang.Integer");
+        columnTypeToJavaTypeMap.put("bigint unsigned",   "java.lang.Long");
     }
 
     public Dict getColumnTypeToJavaTypeMap() {

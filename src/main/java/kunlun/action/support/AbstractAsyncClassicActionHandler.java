@@ -16,12 +16,6 @@ import kunlun.util.ObjectUtils;
 public abstract class AbstractAsyncClassicActionHandler
         extends AbstractAutoClassicActionHandler implements AsyncSupportHandler {
 
-    @Deprecated
-    public AbstractAsyncClassicActionHandler(String actionName, Class<?> registeredClass) {
-
-        super(actionName, registeredClass);
-    }
-
     public AbstractAsyncClassicActionHandler(String actionName) {
 
         super(actionName);

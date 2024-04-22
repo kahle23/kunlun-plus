@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Simple exception handler.
+ * The simple spring exception handler.
  * @author Kahle
  */
 @ControllerAdvice

@@ -35,6 +35,7 @@ public class JavaCodeGenerator extends AbstractRenderFileGenerator {
     protected static final String PACKAGE_NAME_KEY_TAIL = "PackageName";
     protected static final String CLASS_NAME_KEY_TAIL   = "ClassName";
     protected static final String OBJECT_NAME_KEY_TAIL  = "ObjectName";
+    protected static final String ENTITY_NAME_KEY_TAIL  = "EntityName";
 
     /**
      * Get the entity name in java based on the table name.
@@ -167,6 +168,8 @@ public class JavaCodeGenerator extends AbstractRenderFileGenerator {
             String fileSuffix = withLeftDot(templateConfig.getFileSuffix());
             // Set package name.
             attributes.put(templateName + PACKAGE_NAME_KEY_TAIL, basePackageName + bizPackageName);
+            // Set entity name.
+            attributes.put(templateName + ENTITY_NAME_KEY_TAIL, entityName);
             // Set class name.
             String className = entityName + nameTail;
             attributes.put(templateName + CLASS_NAME_KEY_TAIL, className);

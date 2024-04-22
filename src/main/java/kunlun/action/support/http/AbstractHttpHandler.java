@@ -12,11 +12,6 @@ import java.lang.reflect.Type;
 
 public abstract class AbstractHttpHandler extends AbstractAutoClassicActionHandler implements HttpHandler {
 
-    public AbstractHttpHandler(String actionName, Class<?> inputType) {
-
-        super(actionName, inputType);
-    }
-
     public AbstractHttpHandler(String actionName) {
 
         super(actionName);

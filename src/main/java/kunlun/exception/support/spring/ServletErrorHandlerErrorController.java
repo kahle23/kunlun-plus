@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Simple error controller.
+ * The simple spring error controller.
  * @author Kahle
  */
 @Controller
