@@ -32,7 +32,7 @@ public abstract class AbstractScriptBasedJdbcTemplateInvokeHandler extends Abstr
         return sql;
     }
 
-    protected Page<Map<String, Object>> byPageNumber(String sql, Map<String, Object> params) {
+    protected Object byPageNumber(String sql, Map<String, Object> params) {
         // Extract params and calc.
         Dict dict = Dict.of(params);
         int pageSize = dict.getInteger("pageSize", TEN);
@@ -49,7 +49,7 @@ public abstract class AbstractScriptBasedJdbcTemplateInvokeHandler extends Abstr
         return Page.of(pageNum, pageSize, pageCount, count, mapList);
     }
 
-    protected Page<Map<String, Object>> byScrollId(String sql, Map<String, Object> params) {
+    protected Object byScrollId(String sql, Map<String, Object> params) {
         // Extract params and fill.
         Dict dict = Dict.of(params);
         int pageSize = dict.getInteger("pageSize", TEN);
@@ -66,6 +66,13 @@ public abstract class AbstractScriptBasedJdbcTemplateInvokeHandler extends Abstr
         }
         return Page.of(idObj != null ? String.valueOf(idObj) : null, pageSize, mapList);
     }
+
+    /*
+    * Regarding the issue of camel case and underscores, firstly for input parameters,
+    *       no matter what the parameters are, they ultimately only serve as placeholders in SQL.
+    * For output parameters, they can be converted to camel case using the 'as' method in SQL,
+    *       or by overriding doInvoke, to perform another conversion on the return values.
+    * */
 
     @Override
     protected void doInvoke(InvokeContext context) {

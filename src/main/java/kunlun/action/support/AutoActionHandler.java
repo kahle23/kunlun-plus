@@ -6,32 +6,17 @@
 package kunlun.action.support;
 
 import kunlun.action.ActionHandler;
-import kunlun.core.handler.ConfigSupportHandler;
-
-import java.util.LinkedHashMap;
 
 /**
  * The automated action handler.
  * @author Kahle
  */
-public interface AutoActionHandler extends ActionHandler, ConfigSupportHandler {
-    // TODO: ConfigSupportHandler will delete
+public interface AutoActionHandler extends ActionHandler {
 
     /**
      * Get the action handler name.
      * @return The action name
      */
     String getName();
-
-    @Deprecated
-    class HandlerConfigImpl extends LinkedHashMap<String, String> implements HandlerConfig {
-
-        @Override
-        public String getProperty(String name) {
-
-            return get(name);
-        }
-
-    }
 
 }

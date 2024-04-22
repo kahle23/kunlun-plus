@@ -11,6 +11,8 @@ import kunlun.renderer.support.VelocityTextRenderer;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static java.util.Arrays.asList;
+
 /**
  * The java code generator Test.
  * @author Kahle
@@ -27,8 +29,8 @@ public class JavaCodeGeneratorTest {
         loaderConfig.setUsername("root");
         loaderConfig.setPassword("root");
         loaderConfig.setCatalog("demo");
-        //loaderConfig.setExcludedTables(Arrays.asList("t_test"));
-        //loaderConfig.setReservedTables(Arrays.asList("t_user"));
+        //loaderConfig.getExcludedTables().add("t_test");
+        loaderConfig.getReservedTables().addAll(asList("account_book_records", "c_messages"));
         // Java code generator config.
         JavaCodeGenConfig genConfig = new JavaCodeGenConfig();
         genConfig.setTableLoader(new JdbcTableLoader());

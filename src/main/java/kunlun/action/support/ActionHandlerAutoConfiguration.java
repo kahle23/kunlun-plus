@@ -6,7 +6,6 @@
 package kunlun.action.support;
 
 import kunlun.action.ActionUtils;
-import kunlun.core.handler.ConfigSupportHandler;
 import kunlun.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +34,6 @@ public class ActionHandlerAutoConfiguration {
                 continue;
             }
             ActionUtils.registerHandler(actionName, actionHandler);
-            // ---- TODO: Will delete
-            ConfigSupportHandler.HandlerConfig config = actionHandler.getConfig();
-            String registeredClass = null;
-            if (config != null) {
-                registeredClass = config.getProperty("registeredClass");
-            }
-            if (StringUtils.isNotBlank(registeredClass)) {
-                registeredClass = "class:" + registeredClass.trim();
-                ActionUtils.registerHandler(registeredClass, actionHandler);
-            }
-            // ----
         }
     }
 
