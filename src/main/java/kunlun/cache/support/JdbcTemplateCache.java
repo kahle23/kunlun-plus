@@ -5,6 +5,7 @@
 
 package kunlun.cache.support;
 
+import kunlun.common.constant.Nulls;
 import kunlun.common.constant.Numbers;
 import kunlun.util.CollectionUtils;
 import org.slf4j.Logger;
@@ -21,21 +22,23 @@ import static kunlun.common.constant.Numbers.ZERO;
 public class JdbcTemplateCache extends AbstractJdbcCache {
     private static final Logger log = LoggerFactory.getLogger(JdbcTemplateCache.class);
 
-    public JdbcTemplateCache(String name, Object cacheConfig) {
+    public JdbcTemplateCache(JdbcCacheConfig cacheConfig) {
 
-        super(name, cacheConfig, null);
+        super(cacheConfig, Nulls.OBJ);
     }
 
-    public JdbcTemplateCache(String name, Object cacheConfig, JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateCache(JdbcCacheConfig cacheConfig, JdbcTemplate jdbcTemplate) {
 
-        super(name, cacheConfig, jdbcTemplate);
+        super(cacheConfig, jdbcTemplate);
     }
 
     @Override
     protected Map<String, Object> queryRecord(Object key) {
         String sql = String.format("select `%s`, `%s` from `%s` where `%s` = ? and `%s` = ?; "
-            , getFieldCacheValue(), getFieldExpireTime(), getTableName(), getFieldCacheName(), getFieldCacheKey());
-        List<Map<String, Object>> maps = getJdbcExecutor().queryForList(sql, getName(), key);
+                , getConfig().getFieldCacheValue(), getConfig().getFieldExpireTime()
+                , getConfig().getTableName(), getConfig().getFieldCacheName()
+                , getConfig().getFieldCacheKey());
+        List<Map<String, Object>> maps = getNative().queryForList(sql, getConfig().getName(), key);
         if (CollectionUtils.isEmpty(maps)) { return null; }
         return maps.get(Numbers.ZERO);
     }
@@ -43,43 +46,51 @@ public class JdbcTemplateCache extends AbstractJdbcCache {
     @Override
     protected boolean existRecord(Object key) {
         String sql = String.format("select count(0) from `%s` where `%s` = ? and `%s` = ?; "
-                , getTableName(), getFieldCacheName(), getFieldCacheKey());
-        Integer count = getJdbcExecutor().queryForObject(sql, new Object[]{getName(), key}, Integer.class);
+                , getConfig().getTableName(), getConfig().getFieldCacheName()
+                , getConfig().getFieldCacheKey());
+        Integer count = getNative().queryForObject(
+                sql, new Object[]{getConfig().getName(), key}, Integer.class);
         return count != null && count > ZERO;
     }
 
     @Override
     protected boolean saveRecord(Object key, Object value, Date expireTime) {
         String sql = String.format("insert into `%s`(`%s`, `%s`, `%s`, `%s`) VALUES (?, ?, ?, ?); "
-            , getTableName(), getFieldCacheName(), getFieldCacheKey(), getFieldCacheValue(), getFieldExpireTime());
-        return getJdbcExecutor().update(sql, getName(), key, value, expireTime) == ONE;
+                , getConfig().getTableName(), getConfig().getFieldCacheName()
+                , getConfig().getFieldCacheKey(), getConfig().getFieldCacheValue()
+                , getConfig().getFieldExpireTime());
+        return getNative().update(sql, getConfig().getName(), key, value, expireTime) == ONE;
     }
 
     @Override
     protected boolean updateRecord(Object key, Object value, Date expireTime) {
         String sql = String.format("update `%s` set `%s` = ?, `%s` = ? where `%s` = ? and `%s` = ?; "
-            , getTableName(), getFieldCacheValue(), getFieldExpireTime(), getFieldCacheName(), getFieldCacheKey());
-        return getJdbcExecutor().update(sql, value, expireTime, getName(), key) == ONE;
+                , getConfig().getTableName(), getConfig().getFieldCacheValue()
+                , getConfig().getFieldExpireTime(), getConfig().getFieldCacheName()
+                , getConfig().getFieldCacheKey());
+        return getNative().update(sql, value, expireTime, getConfig().getName(), key) == ONE;
     }
 
     @Override
     protected boolean updateExpireTime(Object key, Date expireTime) {
         String sql = String.format("update `%s` set `%s` = ? where `%s` = ? and `%s` = ?; "
-                , getTableName(), getFieldExpireTime(), getFieldCacheName(), getFieldCacheKey());
-        return getJdbcExecutor().update(sql, expireTime, getName(), key) == ONE;
+                , getConfig().getTableName(), getConfig().getFieldExpireTime()
+                , getConfig().getFieldCacheName(), getConfig().getFieldCacheKey());
+        return getNative().update(sql, expireTime, getConfig().getName(), key) == ONE;
     }
 
     @Override
     protected boolean deleteRecord(Object key) {
         String sql = String.format("delete from `%s` where `%s` = ? and `%s` = ?; "
-                , getTableName(), getFieldCacheName(), getFieldCacheKey());
-        return getJdbcExecutor().update(sql, getName(), key) == ONE;
+                , getConfig().getTableName(), getConfig().getFieldCacheName()
+                , getConfig().getFieldCacheKey());
+        return getNative().update(sql, getConfig().getName(), key) == ONE;
     }
 
     @Override
-    public JdbcTemplate getJdbcExecutor() {
+    public JdbcTemplate getNative() {
 
-        return (JdbcTemplate) super.getJdbcExecutor();
+        return (JdbcTemplate) super.getNative();
     }
 
 }

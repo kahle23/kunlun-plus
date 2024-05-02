@@ -5,7 +5,6 @@
 
 package kunlun.cache.support;
 
-import kunlun.data.Dict;
 import kunlun.data.ReferenceType;
 import kunlun.util.ThreadUtils;
 import org.junit.Ignore;
@@ -16,13 +15,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 public class SpringSimpleCacheTest {
-    private static Logger log = LoggerFactory.getLogger(SpringSimpleCacheTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringSimpleCacheTest.class);
 
     @Ignore
     @Test
     public void testConcurrentModificationException() {
-        final SpringSimpleCache cache =
-                new SpringSimpleCache(Dict.of("referenceType", ReferenceType.SOFT));
+        SimpleCacheConfig cacheConfig = new SimpleCacheConfig();
+        cacheConfig.setReferenceType(ReferenceType.SOFT);
+        final SpringSimpleCache cache = new SpringSimpleCache(cacheConfig);
 //        cache.setRecordLog(true);
         long start = System.currentTimeMillis();
         new Thread(new Runnable() {

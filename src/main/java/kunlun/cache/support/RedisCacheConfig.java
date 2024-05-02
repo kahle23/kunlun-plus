@@ -3,15 +3,21 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.cache.support.config;
+package kunlun.cache.support;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-public class RedisCacheConfig {
+/**
+ * The redis cache configuration.
+ * @author Kahle
+ */
+public class RedisCacheConfig implements Serializable {
     private String name;
     private String lockManager;
-    private Long timeToLive;
+    private Long   timeToLive;
     private TimeUnit timeToLiveUnit;
+    private Object redisExecutor;
 
     public String getName() {
 
@@ -51,6 +57,16 @@ public class RedisCacheConfig {
     public void setTimeToLiveUnit(TimeUnit timeToLiveUnit) {
 
         this.timeToLiveUnit = timeToLiveUnit;
+    }
+
+    public Object getRedisExecutor() {
+
+        return redisExecutor;
+    }
+
+    public void setRedisExecutor(Object redisExecutor) {
+
+        this.redisExecutor = redisExecutor;
     }
 
 }

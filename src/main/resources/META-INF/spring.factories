@@ -12,7 +12,6 @@ kunlun.codec.support.Base64AutoConfiguration,\
 kunlun.logging.support.LoggingAutoConfiguration,\
 kunlun.exception.support.ExceptionAutoConfiguration,\
 kunlun.mock.support.JMockDataAutoConfiguration,\
-kunlun.cache.support.spring.SpringCacheAdapterAutoConfiguration,\
 kunlun.message.support.mq.rocketmq.RocketMqListenerAutoConfiguration,\
 kunlun.property.support.PropertySourceAutoConfiguration,\
 kunlun.convert.ConversionAutoConfiguration,\
@@ -22,6 +21,8 @@ kunlun.data.validation.support.config.ValidateAutoConfiguration,\
 kunlun.action.support.nlp.hanlp.HankcsHanLpAutoConfiguration,\
 kunlun.action.support.nlp.similarity.XmTextSimilarityAutoConfiguration,\
 kunlun.spring.config.async.SpringAsyncConfigurerSupport,\
+kunlun.spring.config.cache.CacheAutoConfiguration,\
+kunlun.spring.config.cache.adapter.SpringCacheAdapterAutoConfiguration,\
 kunlun.spring.config.elasticsearch.RestClientAutoConfiguration,\
 kunlun.spring.config.feign.FeignSupportAutoConfiguration,\
 kunlun.spring.config.hystrix.RequestContextHystrixAutoConfiguration,\

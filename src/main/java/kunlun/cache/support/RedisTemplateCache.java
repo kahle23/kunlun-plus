@@ -6,12 +6,10 @@
 package kunlun.cache.support;
 
 import kunlun.cache.AbstractCache;
-import kunlun.data.Dict;
 import kunlun.data.bean.BeanUtils;
 import kunlun.util.Assert;
 import kunlun.util.CollectionUtils;
 import kunlun.util.MapUtils;
-import kunlun.util.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,50 +19,44 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static kunlun.common.constant.Symbols.COLON;
+import static kunlun.util.ObjectUtils.cast;
 
 public class RedisTemplateCache extends AbstractCache {
     private static final Logger log = LoggerFactory.getLogger(RedisTemplateCache.class);
     private static final String KEY_PREFIX = "_cache:";
     private final RedisTemplate<String, Object> redisTemplate;
-    private final String lockManager;
-    private final String name;
-    protected final TimeUnit timeToLiveUnit;
-    protected final Long timeToLive;
+    private final RedisCacheConfig cacheConfig;
 
-    public RedisTemplateCache(String name, Object cacheConfig) {
+    public RedisTemplateCache(RedisCacheConfig cacheConfig) {
 
-        this(name, cacheConfig, null);
+        this(cacheConfig, null);
     }
 
-    public RedisTemplateCache(String name, Object cacheConfig, RedisTemplate<String, Object> redisTemplate) {
-        Assert.notBlank(name, "Parameter \"name\" must not null. ");
-        this.name = name;
-        Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
-        if (redisTemplate == null) {
-            redisTemplate = ObjectUtils.cast(config.get("redisTemplate"));
-        }
-        Assert.notNull(redisTemplate, "Parameter \"redisTemplate\" must not null. ");
-        this.redisTemplate = redisTemplate;
-        this.lockManager = config.getString("lockManager");
-        // Process the timeToLive and the timeToLiveUnit.
-        this.timeToLiveUnit = config.get("timeToLiveUnit", TimeUnit.class);
-        this.timeToLive = config.getLong("timeToLive");
+    public RedisTemplateCache(RedisCacheConfig cacheConfig, RedisTemplate<String, Object> redisExecutor) {
+        // Validate the cache config.
+        Assert.notNull(cacheConfig, "Parameter \"cacheConfig\" must not null. ");
+        Assert.notBlank(cacheConfig.getName(), "Parameter \"cacheConfig.name\" must not blank. ");
+        this.cacheConfig = (cacheConfig = BeanUtils.beanToBean(cacheConfig, RedisCacheConfig.class));
+        // Process redis executor.
+        if (redisExecutor != null) { cacheConfig.setRedisExecutor(redisExecutor); }
+        Assert.notNull(cacheConfig.getRedisExecutor(), "Parameter \"redisExecutor\" must not null. ");
+        this.redisTemplate = cast(cacheConfig.getRedisExecutor());
     }
 
-    public String getName() {
+    public RedisCacheConfig getConfig() {
 
-        return name;
+        return cacheConfig;
     }
 
     @Override
     protected String getLockManager() {
 
-        return lockManager;
+        return getConfig().getLockManager();
     }
 
     protected String getRedisKey(Object key) {
         Assert.notNull(key, "Parameter \"key\" must not null. ");
-        return KEY_PREFIX + getName() + COLON + key;
+        return KEY_PREFIX + getConfig().getName() + COLON + key;
     }
 
     @Override
@@ -88,8 +80,8 @@ public class RedisTemplateCache extends AbstractCache {
     @Override
     public Object put(Object key, Object value) {
         // if timeToLive is not null
-        if (timeToLive != null && timeToLiveUnit != null) {
-            return put(key, value, timeToLive, timeToLiveUnit);
+        if (getConfig().getTimeToLive() != null && getConfig().getTimeToLiveUnit() != null) {
+            return put(key, value, getConfig().getTimeToLive(), getConfig().getTimeToLiveUnit());
         }
         // if timeToLive is null
         ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
@@ -108,8 +100,8 @@ public class RedisTemplateCache extends AbstractCache {
     @Override
     public Object putIfAbsent(Object key, Object value) {
         // if timeToLive is not null
-        if (timeToLive != null && timeToLiveUnit != null) {
-            return putIfAbsent(key, value, timeToLive, timeToLiveUnit);
+        if (getConfig().getTimeToLive() != null && getConfig().getTimeToLiveUnit() != null) {
+            return putIfAbsent(key, value, getConfig().getTimeToLive(), getConfig().getTimeToLiveUnit());
         }
         // if timeToLive is null
         ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
@@ -138,10 +130,10 @@ public class RedisTemplateCache extends AbstractCache {
         }
         opsForValue.multiSet(newMap);
         // expire
-        if (timeToLive != null && timeToLiveUnit != null) {
+        if (getConfig().getTimeToLive() != null && getConfig().getTimeToLiveUnit() != null) {
             for (Map.Entry<String, Object> entry : newMap.entrySet()) {
                 String key = entry.getKey();
-                expire(key, timeToLive, timeToLiveUnit);
+                expire(key, getConfig().getTimeToLive(), getConfig().getTimeToLiveUnit());
             }
         }
     }

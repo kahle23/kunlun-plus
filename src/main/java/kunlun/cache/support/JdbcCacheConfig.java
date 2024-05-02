@@ -3,11 +3,18 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.cache.support.config;
+package kunlun.cache.support;
 
+import kunlun.core.Serializer;
+
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-public class JdbcCacheConfig {
+/**
+ * The jdbc cache configuration.
+ * @author Kahle
+ */
+public class JdbcCacheConfig implements Serializable {
     private String name;
     private String lockManager;
     private String tableName;
@@ -15,8 +22,19 @@ public class JdbcCacheConfig {
     private String fieldCacheValue;
     private String fieldCacheName;
     private String fieldCacheKey;
-    private Long timeToLive;
+    private Long   timeToLive;
     private TimeUnit timeToLiveUnit;
+    private Object jdbcExecutor;
+    private Serializer serializer;
+
+    public JdbcCacheConfig(String name) {
+
+        this.name = name;
+    }
+
+    public JdbcCacheConfig() {
+
+    }
 
     public String getName() {
 
@@ -106,6 +124,26 @@ public class JdbcCacheConfig {
     public void setTimeToLiveUnit(TimeUnit timeToLiveUnit) {
 
         this.timeToLiveUnit = timeToLiveUnit;
+    }
+
+    public Object getJdbcExecutor() {
+
+        return jdbcExecutor;
+    }
+
+    public void setJdbcExecutor(Object jdbcExecutor) {
+
+        this.jdbcExecutor = jdbcExecutor;
+    }
+
+    public Serializer getSerializer() {
+
+        return serializer;
+    }
+
+    public void setSerializer(Serializer serializer) {
+
+        this.serializer = serializer;
     }
 
 }

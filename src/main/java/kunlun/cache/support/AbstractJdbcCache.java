@@ -6,10 +6,9 @@
 package kunlun.cache.support;
 
 import kunlun.cache.AbstractCache;
-import kunlun.core.Serializer;
 import kunlun.data.Dict;
 import kunlun.data.bean.BeanUtils;
-import kunlun.serialize.support.Base64TextSerializer;
+import kunlun.data.serialize.support.Base64TextSerializer;
 import kunlun.util.Assert;
 import kunlun.util.StringUtils;
 import org.slf4j.Logger;
@@ -23,49 +22,46 @@ import static kunlun.common.constant.Numbers.ZERO;
 
 public abstract class AbstractJdbcCache extends AbstractCache {
     private static final Logger log = LoggerFactory.getLogger(AbstractJdbcCache.class);
-    private final Serializer serializer;
-    private final Object jdbcExecutor;
-    private final String lockManager;
-    private final String tableName;
-    private final String fieldExpireTime;
-    private final String fieldCacheValue;
-    private final String fieldCacheName;
-    private final String fieldCacheKey;
-    private final String name;
-    protected final TimeUnit timeToLiveUnit;
-    protected final Long timeToLive;
+    private final JdbcCacheConfig cacheConfig;
 
-    public AbstractJdbcCache(String name, Object cacheConfig, Object jdbcExecutor) {
-        Assert.notBlank(name, "Parameter \"name\" must not null. ");
-        this.name = name;
-        Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
-        if (jdbcExecutor == null) {
-            jdbcExecutor = config.get("jdbcExecutor");
+    public AbstractJdbcCache(JdbcCacheConfig cacheConfig, Object jdbcExecutor) {
+        // Validate the cache config.
+        Assert.notNull(cacheConfig, "Parameter \"cacheConfig\" must not null. ");
+        Assert.notBlank(cacheConfig.getName(), "Parameter \"cacheConfig.name\" must not blank. ");
+        this.cacheConfig = (cacheConfig = BeanUtils.beanToBean(cacheConfig, JdbcCacheConfig.class));
+        // Process jdbc executor and serializer.
+        if (jdbcExecutor != null) { cacheConfig.setJdbcExecutor(jdbcExecutor); }
+        Assert.notNull(cacheConfig.getJdbcExecutor(), "Parameter \"jdbcExecutor\" must not null. ");
+        if (cacheConfig.getSerializer() == null) {
+            cacheConfig.setSerializer(new Base64TextSerializer());
         }
-        Assert.notNull(jdbcExecutor, "Parameter \"jdbcExecutor\" must not null. ");
-        this.jdbcExecutor = jdbcExecutor;
-        Serializer serializer = (Serializer) config.get("serializer");
-        this.serializer = serializer != null ? serializer : new Base64TextSerializer();
-        this.lockManager = config.getString("lockManager");
-        this.tableName = config.getString("tableName", "t_cache");
-        this.fieldExpireTime = config.getString("fieldExpireTime", "expire_time");
-        this.fieldCacheValue = config.getString("fieldCacheValue", "value");
-        this.fieldCacheName = config.getString("fieldCacheName", "name");
-        this.fieldCacheKey = config.getString("fieldCacheKey", "key");
-        // Process the timeToLive and the timeToLiveUnit.
-        this.timeToLiveUnit = config.get("timeToLiveUnit", TimeUnit.class);
-        this.timeToLive = config.getLong("timeToLive");
+        // Process the table fields.
+        if (StringUtils.isBlank(cacheConfig.getTableName())) {
+            cacheConfig.setTableName("t_cache");
+        }
+        if (StringUtils.isBlank(cacheConfig.getFieldCacheName())) {
+            cacheConfig.setFieldCacheName("name");
+        }
+        if (StringUtils.isBlank(cacheConfig.getFieldCacheKey())) {
+            cacheConfig.setFieldCacheKey("key");
+        }
+        if (StringUtils.isBlank(cacheConfig.getFieldCacheValue())) {
+            cacheConfig.setFieldCacheValue("value");
+        }
+        if (StringUtils.isBlank(cacheConfig.getFieldExpireTime())) {
+            cacheConfig.setFieldExpireTime("expire_time");
+        }
     }
 
-    public String getName() {
+    public JdbcCacheConfig getConfig() {
 
-        return name;
+        return cacheConfig;
     }
 
     @Override
     protected String getLockManager() {
 
-        return lockManager;
+        return getConfig().getLockManager();
     }
 
     protected abstract Map<String, Object> queryRecord(Object key);
@@ -80,45 +76,10 @@ public abstract class AbstractJdbcCache extends AbstractCache {
 
     protected abstract boolean deleteRecord(Object key);
 
-    public Serializer getSerializer() {
-
-        return serializer;
-    }
-
-    public Object getJdbcExecutor() {
-
-        return jdbcExecutor;
-    }
-
-    public String getTableName() {
-
-        return tableName;
-    }
-
-    public String getFieldExpireTime() {
-
-        return fieldExpireTime;
-    }
-
-    public String getFieldCacheValue() {
-
-        return fieldCacheValue;
-    }
-
-    public String getFieldCacheName() {
-
-        return fieldCacheName;
-    }
-
-    public String getFieldCacheKey() {
-
-        return fieldCacheKey;
-    }
-
     @Override
     public Object getNative() {
 
-        return getJdbcExecutor();
+        return getConfig().getJdbcExecutor();
     }
 
     @Override
@@ -128,15 +89,15 @@ public abstract class AbstractJdbcCache extends AbstractCache {
         if (recordMap == null) { return null; }
         Dict record = Dict.of(recordMap);
         // expireTime
-        Date expireTime = record.get(getFieldExpireTime(), Date.class);
+        Date expireTime = record.get(getConfig().getFieldExpireTime(), Date.class);
         if (expireTime != null && new Date().after(expireTime)) {
-            // is expire (do not delete)
+            // is expired (do not delete)
             return null;
         }
         // value
-        String valueStr = record.getString(getFieldCacheValue());
+        String valueStr = record.getString(getConfig().getFieldCacheValue());
         if (StringUtils.isBlank(valueStr)) { return null; }
-        return getSerializer().deserialize(valueStr);
+        return getConfig().getSerializer().deserialize(valueStr);
     }
 
     @Override
@@ -148,12 +109,12 @@ public abstract class AbstractJdbcCache extends AbstractCache {
     @Override
     public Object put(Object key, Object value) {
         // if timeToLive is not null
-        if (timeToLive != null && timeToLiveUnit != null) {
-            return put(key, value, timeToLive, timeToLiveUnit);
+        if (getConfig().getTimeToLive() != null && getConfig().getTimeToLiveUnit() != null) {
+            return put(key, value, getConfig().getTimeToLive(), getConfig().getTimeToLiveUnit());
         }
         // if timeToLive is null
         Assert.notNull(key, "Parameter \"key\" must not null. ");
-        value = getSerializer().serialize(value);  boolean success;
+        value = getConfig().getSerializer().serialize(value);  boolean success;
         if (existRecord(key)) { success = updateRecord(key, value, null); }
         else { success = saveRecord(key, value, null); }
         Assert.state(success, "Put data failed. ");
@@ -166,7 +127,7 @@ public abstract class AbstractJdbcCache extends AbstractCache {
         Assert.notNull(key, "Parameter \"key\" must not null. ");
         Date expireTime = timeToLive > ZERO ?
                 new Date(currentTimeMillis() + timeUnit.toMillis(timeToLive)) : null;
-        value = getSerializer().serialize(value);  boolean success;
+        value = getConfig().getSerializer().serialize(value);  boolean success;
         if (existRecord(key)) { success = updateRecord(key, value, expireTime); }
         else { success = saveRecord(key, value, expireTime); }
         Assert.state(success, "Put data failed. ");
