@@ -3,8 +3,9 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.cache.support.spring;
+package kunlun.spring.config.cache.adapter;
 
+import kunlun.spring.cache.SpringCacheManagerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnProperty(name = "kunlun.cache.spring-adapter", havingValue = "true")
 @ConditionalOnMissingBean(org.springframework.cache.CacheManager.class)
 public class SpringCacheAdapterAutoConfiguration {
-    private static Logger log = LoggerFactory.getLogger(SpringCacheAdapterAutoConfiguration.class);
+    private static final Logger log = LoggerFactory.getLogger(SpringCacheAdapterAutoConfiguration.class);
 
     @Bean
     public CacheManager cacheManager() {

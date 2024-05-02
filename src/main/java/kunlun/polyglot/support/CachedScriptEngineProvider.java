@@ -35,7 +35,7 @@ public class CachedScriptEngineProvider extends ScriptEngineProvider {
 
     public CachedScriptEngineProvider() {
 
-        this(new SimpleCache(CachedScriptEngineProvider.class.getName()));
+        this(new SimpleCache());
     }
 
     public Cache getCache() {

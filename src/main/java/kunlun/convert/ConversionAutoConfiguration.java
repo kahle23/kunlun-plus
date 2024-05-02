@@ -6,8 +6,8 @@
 package kunlun.convert;
 
 import kunlun.cache.CacheUtils;
+import kunlun.cache.support.SimpleCacheConfig;
 import kunlun.cache.support.SpringSimpleCache;
-import kunlun.data.Dict;
 import kunlun.data.ReferenceType;
 import kunlun.util.MapUtils;
 import org.slf4j.Logger;
@@ -30,12 +30,9 @@ public class ConversionAutoConfiguration {
     public ConversionAutoConfiguration(ApplicationContext applicationContext) {
         log.info("Start handling the conversion service provider's cache...");
         String cacheName="cache-conversion-provider-cache";
-        // Build cache configuration.
-        Dict cacheConfig = Dict.of("referenceType", ReferenceType.SOFT);
-        cacheConfig.set("timeToLive", 4L);
-        cacheConfig.set("timeToLiveUnit", TimeUnit.HOURS);
         //
-        CacheUtils.registerCache(cacheName, new SpringSimpleCache(cacheConfig));
+        CacheUtils.registerCache(cacheName, new SpringSimpleCache(
+                new SimpleCacheConfig(ReferenceType.SOFT, 4L, TimeUnit.HOURS)));
         //
         ConversionService conversionService = ConversionUtils.getConversionService();
         ConversionUtils.setConversionService(new CacheConversionService(conversionService, cacheName));

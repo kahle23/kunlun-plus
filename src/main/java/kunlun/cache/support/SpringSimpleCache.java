@@ -11,19 +11,24 @@ import org.springframework.util.ConcurrentReferenceHashMap;
 
 import java.util.Map;
 
-import static kunlun.common.constant.Numbers.FIFTY;
+import static kunlun.common.constant.Numbers.SIXTEEN;
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.SOFT;
 import static org.springframework.util.ConcurrentReferenceHashMap.ReferenceType.WEAK;
 
+/**
+ * The memory cache simple implement by spring map.
+ * @author Kahle
+ */
 public class SpringSimpleCache extends SimpleCache {
 
-    public SpringSimpleCache(Object cacheConfig) {
+    public SpringSimpleCache(SimpleCacheConfig cacheConfig) {
 
         super(cacheConfig);
     }
 
     public SpringSimpleCache() {
 
+        super();
     }
 
     @Override
@@ -33,10 +38,10 @@ public class SpringSimpleCache extends SimpleCache {
             "Parameter \"referenceType\" must be only soft reference or weak reference. "
         );
         if (ReferenceType.SOFT.equals(referenceType)) {
-            return new ConcurrentReferenceHashMap<Object, ValueWrapper>(FIFTY, SOFT);
+            return new ConcurrentReferenceHashMap<Object, ValueWrapper>(SIXTEEN, SOFT);
         }
         else {
-            return new ConcurrentReferenceHashMap<Object, ValueWrapper>(FIFTY, WEAK);
+            return new ConcurrentReferenceHashMap<Object, ValueWrapper>(SIXTEEN, WEAK);
         }
     }
 

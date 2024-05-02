@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.cache.support.spring;
+package kunlun.spring.cache;
 
 import kunlun.cache.CacheUtils;
 import org.springframework.cache.Cache;

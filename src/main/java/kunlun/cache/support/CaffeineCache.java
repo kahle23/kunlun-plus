@@ -8,9 +8,7 @@ package kunlun.cache.support;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import kunlun.cache.AbstractCache;
-import kunlun.data.Dict;
 import kunlun.data.ReferenceType;
-import kunlun.data.bean.BeanUtils;
 import kunlun.exception.ExceptionUtils;
 import kunlun.util.Assert;
 
@@ -51,22 +49,21 @@ public class CaffeineCache extends AbstractCache {
 
     public CaffeineCache() {
 
-        this((Object) null);
+        this(new SimpleCacheConfig());
     }
 
-    public CaffeineCache(Object cacheConfig) {
-        // Process the cache config.
+    public CaffeineCache(SimpleCacheConfig cacheConfig) {
+        // Validate the cache config.
         Assert.notNull(cacheConfig, "Parameter \"cacheConfig\" must not null. ");
-        Dict config = Dict.of(BeanUtils.beanToMap(cacheConfig));
         // Build caffeine object.
         Caffeine<Object, Object> builder = Caffeine.newBuilder();
         builder.initialCapacity(FIFTY);
         // Process the capacity.
-        Long capacity = config.getLong("capacity");
+        Long capacity = cacheConfig.getCapacity();
         if (capacity != null && capacity > ZERO) { builder.maximumSize(capacity); }
         // Process the timeToLive and the timeToLiveUnit.
-        TimeUnit timeToLiveUnit = config.get("timeToLiveUnit", TimeUnit.class);
-        Long timeToLive = config.getLong("timeToLive");
+        TimeUnit timeToLiveUnit = cacheConfig.getTimeToLiveUnit();
+        Long timeToLive = cacheConfig.getTimeToLive();
         if (timeToLive != null) {
             Assert.notNull(timeToLiveUnit, "Parameter \"timeToLiveUnit\" must not null. ");
             Assert.isTrue(timeToLive > ZERO
@@ -74,8 +71,8 @@ public class CaffeineCache extends AbstractCache {
             builder.expireAfterWrite(timeToLive, timeToLiveUnit);
         }
         // Process the timeToIdle and the timeToIdleUnit.
-        TimeUnit timeToIdleUnit = config.get("timeToIdleUnit", TimeUnit.class);
-        Long timeToIdle = config.getLong("timeToIdle");
+        TimeUnit timeToIdleUnit = cacheConfig.getTimeToIdleUnit();
+        Long timeToIdle = cacheConfig.getTimeToIdle();
         if (timeToIdle != null) {
             Assert.notNull(timeToIdleUnit, "Parameter \"timeToIdleUnit\" must not null. ");
             Assert.isTrue(timeToIdle > ZERO
@@ -83,7 +80,7 @@ public class CaffeineCache extends AbstractCache {
             builder.expireAfterAccess(timeToIdle, timeToIdleUnit);
         }
         // Process the reference type (default null).
-        ReferenceType referenceType = config.get("referenceType", ReferenceType.class);
+        ReferenceType referenceType = cacheConfig.getReferenceType();
         if (ReferenceType.WEAK.equals(referenceType)) {
             builder.weakValues();
         }
