@@ -1,0 +1,19 @@
+package ${servicePackageName};
+
+import ${entityPackageName}.${entityClassName};
+import ${paramPackageName}.${paramClassName};
+import ${queryPackageName}.${queryClassName};
+import ${resultPackageName}.${resultClassName};
+import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
+
+/**
+ * $!{table.comment}的服务类.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+public interface ${serviceClassName} extends IService<${entityClassName}> {
+
+}

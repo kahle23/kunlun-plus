@@ -18,7 +18,7 @@ import static java.util.Arrays.asList;
  * @author Kahle
  */
 @Ignore
-public class JavaCodeGeneratorTest {
+public class CodeGeneratorTest {
 
     @Test
     public void generate() {
@@ -31,18 +31,21 @@ public class JavaCodeGeneratorTest {
         loaderConfig.setCatalog("demo");
         //loaderConfig.getExcludedTables().add("t_test");
         loaderConfig.getReservedTables().addAll(asList("account_book_records", "c_messages"));
+        loaderConfig.getPostConsumers().add(new JdbcTableLoader.MysqlTableCommentConsumer());
         // Java code generator config.
         JavaCodeGenConfig genConfig = new JavaCodeGenConfig();
         genConfig.setTableLoader(new JdbcTableLoader());
         genConfig.setTableLoaderConfig(loaderConfig);
         genConfig.getRemovedTableNamePrefixes().add("t_");
         genConfig.setFileLoader(new SimpleFileLoader());
+//        genConfig.setFileLoader(new JarFileLoader());
         genConfig.setRenderer(new VelocityTextRenderer());
-        genConfig.setBaseTemplatePath("classpath:templates/generator/java/custom");
+        genConfig.setBaseTemplatePath("classpath:templates/generator/spring-boot-mybatis-plus-standard");
         genConfig.setBaseOutputPath("src\\test\\java");
         genConfig.setXmlBaseOutputPath("src\\test\\resources\\mapper");
         genConfig.setBasePackageName("kunlun.generator.out");
         genConfig.getCustomAttributes().put("author", "Kahle");
+        genConfig.getCustomAttributes().put("useLombok", true);
         new JavaCodeGenerator().generate(genConfig);
     }
 

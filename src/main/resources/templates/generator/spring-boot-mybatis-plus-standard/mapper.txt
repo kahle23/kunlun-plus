@@ -1,0 +1,16 @@
+package ${mapperPackageName};
+
+import ${entityPackageName}.${entityClassName};
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
+
+/**
+ * $!{table.comment}的 Mapper 接口.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+public interface ${mapperClassName} extends BaseMapper<${entityClassName}> {
+
+}

@@ -1,0 +1,58 @@
+package ${entityPackageName};
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+#if($useLombok)
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+#end
+
+import java.io.Serializable;
+#foreach(${javaType} in ${table.javaTypeImports})
+import ${javaType};
+#end
+
+/**
+ * $!{table.comment}的数据库实体.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Data
+@EqualsAndHashCode(callSuper = false)
+#end
+@TableName("${table.name}")
+public class ${entityClassName} implements Serializable {
+
+    /* (Start) This will be overridden, please do not modify. */
+#foreach(${column} in ${table.columns})
+    /**
+     * $!{column.comment}
+     */
+#if($column.primaryKey)
+    @TableId(value = "${column.fieldName}", type = IdType.AUTO)
+    private ${column.javaType} ${column.fieldName};
+#else
+    private ${column.javaType} ${column.fieldName};
+#end
+#end
+#if(!$useLombok)
+
+#foreach(${column} in ${table.columns})
+
+    public void ${column.setterName}(${column.javaType} ${column.fieldName}) {
+
+        this.${column.fieldName} = ${column.fieldName};
+    }
+
+    public ${column.javaType} ${column.getterName}() {
+
+        return this.${column.fieldName};
+    }
+#end
+#end
+    /* (End) This will be overridden, please do not modify. */
+
+}

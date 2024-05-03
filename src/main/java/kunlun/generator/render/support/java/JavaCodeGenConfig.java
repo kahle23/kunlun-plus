@@ -37,10 +37,10 @@ public class JavaCodeGenConfig implements RenderGenerator.Config {
     private String xmlBaseOutputPath = "src\\main\\resources\\mapper";
     private String baseOutputPath = "src\\main\\java";
 
-    private String xmlStartOverrideTag = "<!-- **** (Start) This will be override, please do not modify. **** -->";
-    private String xmlEndOverrideTag = "<!-- **** (End) This will be override, please do not modify. **** -->";
-    private String javaStartOverrideTag = "/* (Start) This will be override, please do not modify. */";
-    private String javaEndOverrideTag = "/* (End) This will be override, please do not modify. */";
+    private String xmlStartOverrideTag = "<!-- **** (Start) This will be overridden, please do not modify. **** -->";
+    private String xmlEndOverrideTag = "<!-- **** (End) This will be overridden, please do not modify. **** -->";
+    private String javaStartOverrideTag = "/* (Start) This will be overridden, please do not modify. */";
+    private String javaEndOverrideTag = "/* (End) This will be overridden, please do not modify. */";
 
     private final Map<String, Object> customAttributes = new LinkedHashMap<String, Object>();
     private final Map<String, TemplateConfig> templateConfigs = new LinkedHashMap<String, TemplateConfig>();
@@ -67,11 +67,14 @@ public class JavaCodeGenConfig implements RenderGenerator.Config {
         // [entity]
         name = "entity"; tail = ""; pkgName = "pojo.entity";
         templateConfigs.put(name, new TemplateConfig(name, tail, javaSuffix, pkgName, FALSE));
-        // [dto]
-        name = "dto"; tail = "DTO"; pkgName = "pojo.dto";
+        // [result]
+        name = "result"; tail = "Result"; pkgName = "pojo.result";
         templateConfigs.put(name, new TemplateConfig(name, tail, javaSuffix, pkgName, FALSE));
-        // [vo]
-        name = "vo"; tail = "VO"; pkgName = "pojo.vo";
+        // [param]
+        name = "param"; tail = "Param"; pkgName = "pojo.param";
+        templateConfigs.put(name, new TemplateConfig(name, tail, javaSuffix, pkgName, FALSE));
+        // [query]
+        name = "query"; tail = "Query"; pkgName = "pojo.query";
         templateConfigs.put(name, new TemplateConfig(name, tail, javaSuffix, pkgName, FALSE));
         // >> The column type to java type map init.
         columnTypeToJavaTypeMap.put("char",     "java.lang.String");
