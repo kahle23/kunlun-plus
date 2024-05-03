@@ -1,0 +1,53 @@
+package ${controllerPackageName};
+
+import kunlun.common.Result;
+import kunlun.data.Dict;
+import kunlun.exception.util.VerifyUtils;
+#if(!$useLombok)
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+#end
+import ${entityPackageName}.${entityClassName};
+import ${paramPackageName}.${paramClassName};
+import ${queryPackageName}.${queryClassName};
+import ${resultPackageName}.${resultClassName};
+import ${servicePackageName}.${serviceClassName};
+#if($useLombok)
+import lombok.extern.slf4j.Slf4j;
+#end
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * $!{table.comment}的前端控制器.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Slf4j
+#end
+@Controller
+public class ${controllerClassName} {
+#if(!$useLombok)
+    private static final Logger log = LoggerFactory.getLogger(${controllerClassName}.class);
+#end
+
+    @Resource
+    private ${serviceClassName} ${serviceObjectName};
+
+    /*@ResponseBody
+    @RequestMapping(value = "/hello", method = RequestMethod.POST)
+    public Result<Object> hello(@RequestBody ${paramClassName} ${paramObjectName}) {
+
+        return Result.success("Hello, World! ");
+    }*/
+
+}
