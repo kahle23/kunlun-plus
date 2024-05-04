@@ -6,7 +6,6 @@
 package kunlun.aop.support.aspectj;
 
 import kunlun.core.Handler;
-import kunlun.core.annotation.NotRepeat;
 import kunlun.data.Dict;
 import kunlun.lock.LockUtils;
 import kunlun.util.Assert;
@@ -23,7 +22,7 @@ import static kunlun.common.constant.Symbols.*;
 
 /**
  * The abstract aspect for @NotRepeat base on aspectj.
- * @see NotRepeat
+ * @see kunlun.core.annotation.NotRepeat
  * @author Kahle
  */
 public abstract class AbstractNotRepeatAspect extends AbstractAspect {

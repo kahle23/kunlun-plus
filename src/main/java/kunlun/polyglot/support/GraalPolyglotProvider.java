@@ -71,11 +71,8 @@ public class GraalPolyglotProvider implements PolyglotProvider {
                 context = buildContext(name, config);
                 Value bindings = context.getBindings(name);
                 Dict dict = Dict.of(BeanUtils.beanToMap(data));
-                for (Map.Entry<Object, Object> entry : dict.entrySet()) {
-                    Object value = entry.getValue();
-                    Object key = entry.getKey();
-                    if (key == null) { continue; }
-                    bindings.putMember(String.valueOf(key), value);
+                for (Map.Entry<String, Object> entry : dict.entrySet()) {
+                    bindings.putMember(entry.getKey(), entry.getValue());
                 }
             }
             // Eval.
