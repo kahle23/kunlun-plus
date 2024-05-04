@@ -29,7 +29,7 @@ public class AiHandlerAutoConfiguration {
             if (aiHandler == null) { continue; }
             String handlerName = aiHandler.getName();
             if (StringUtils.isBlank(handlerName)) {
-                log.warn("The ai handler \"{}\"'s name is blank, it will be ignored. "
+                log.warn("The AI handler \"{}\"'s name is blank, it will be ignored. "
                         , aiHandler.getClass());
                 continue;
             }
