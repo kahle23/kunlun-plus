@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.kahle23</groupId>
     <artifactId>kunlun-plus</artifactId>
-    <version>1.0.0.20240217.beta</version>
+    <version>1.0.0.20240503.beta2</version>
     <packaging>jar</packaging>
     <name>kunlun-plus</name>
     <url>https://github.com/kahle23/kunlun-plus</url>
-    <description>Kunlun is a java technology framework based on the facade pattern.</description>
+    <description>Kunlun Plus is a Java technology framework that is encapsulated based on common business scenarios.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>io.github.kahle23</groupId>
             <artifactId>kunlun</artifactId>
-            <version>1.0.0.20240217.beta</version>
+            <version>1.0.0.20240503.beta2</version>
         </dependency>
         <!-- ///// end kunlun //// -->
 
@@ -621,6 +621,13 @@
             <artifactId>js</artifactId>
             <version>20.3.11</version>
             <!--<version>21.3.7</version>-->
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.0</version>
             <scope>provided</scope>
         </dependency>
 

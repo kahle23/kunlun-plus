@@ -8,11 +8,11 @@ package kunlun.mock.support;
 import com.github.jsonzou.jmockdata.DataConfig;
 import com.github.jsonzou.jmockdata.MockConfig;
 import com.github.jsonzou.jmockdata.mocker.BaseMocker;
-import kunlun.mock.MockProvider;
+import kunlun.data.mock.MockHandler;
 
 import java.lang.reflect.Type;
 
-public class JMockDataProvider implements MockProvider {
+public class JMockDataHandler implements MockHandler {
 
     @Override
     public Object mock(Type type, Object... arguments) {

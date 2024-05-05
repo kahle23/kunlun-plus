@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.data.validation.support.config;
+package kunlun.spring.config.data.validation;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

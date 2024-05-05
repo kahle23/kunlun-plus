@@ -1,9 +1,10 @@
-<h1 align="center">Kunlun</h1>
-<p align="center"><b>Kunlun 是一个基于门面模式的 Java 技术框架。</b></p>
+<h1 align="center">Kunlun Plus</h1>
+<p align="center"><b>Kunlun Plus 是一个基于常用业务场景进行封装的 Java 技术框架。</b></p>
+<!-- Kunlun Plus is a Java technology framework that is encapsulated based on common business scenarios. -->
 
 # 简介
 
-Kunlun 是一个基于门面模式的 Java 技术框架。它的设计思想是通过门面模式为使用者提供一个统一的接口去和其他模块交互。使用者不必了解其他模块的实现细节，并且使用者不会和具体的某种实现进行耦合，更利于扩展和维护。
+Kunlun Plus 是一个基于常用业务场景进行封装的 Java 技术框架。它的设计思想是通过门面模式为使用者提供一个统一的接口去和其他模块交互。使用者不必了解其他模块的实现细节，并且使用者不会和具体的某种实现进行耦合，更利于扩展和维护。
 <br /><br /><br />
 
 # 功能图

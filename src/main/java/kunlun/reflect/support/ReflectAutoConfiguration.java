@@ -7,8 +7,8 @@ package kunlun.reflect.support;
 
 import kunlun.aop.AbstractInterceptor;
 import kunlun.aop.ProxyUtils;
-import kunlun.data.bean.support.BeanToolsAutoConfiguration;
-import kunlun.reflect.ReflectProvider;
+import kunlun.spring.config.data.bean.BeanToolsAutoConfiguration;
+import kunlun.reflect.ReflectService;
 import kunlun.reflect.ReflectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +49,10 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ReflectProvider reflectProvider = ReflectUtils.getReflectProvider();
-        if (reflectProvider != null) {
-            ReflectProvider instance = ProxyUtils.proxy(new ReflectProviderInterceptor(reflectProvider));
-            ReflectUtils.setReflectProvider(instance);
+        ReflectService reflectService = ReflectUtils.getReflectService();
+        if (reflectService != null) {
+            ReflectService instance = ProxyUtils.proxy(new ReflectProviderInterceptor(reflectService));
+            ReflectUtils.setReflectService(instance);
             log.info("Add cache to reflect provider success. ");
         }
     }
@@ -61,10 +61,10 @@ public class ReflectAutoConfiguration implements InitializingBean, DisposableBea
     public void destroy() throws Exception {
     }
 
-    private static class ReflectProviderInterceptor extends AbstractInterceptor<ReflectProvider> {
+    private static class ReflectProviderInterceptor extends AbstractInterceptor<ReflectService> {
         private final Map<String, Object> cache;
 
-        public ReflectProviderInterceptor(ReflectProvider originalObject) {
+        public ReflectProviderInterceptor(ReflectService originalObject) {
             super(originalObject);
             this.cache = new ConcurrentReferenceHashMap<String, Object>(64, WEAK);
         }

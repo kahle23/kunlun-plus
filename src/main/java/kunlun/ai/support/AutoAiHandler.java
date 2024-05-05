@@ -7,7 +7,7 @@ package kunlun.ai.support;
 
 import kunlun.core.ArtificialIntelligence;
 
-public interface AutoAiHandler extends ArtificialIntelligence {
+public interface AutoAIHandler extends ArtificialIntelligence {
 
     /**
      * Get the AI handler name.

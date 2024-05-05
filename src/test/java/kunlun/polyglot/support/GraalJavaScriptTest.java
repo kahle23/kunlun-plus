@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 public class GraalJavaScriptTest {
     private static final Logger log = LoggerFactory.getLogger(GraalJavaScriptTest.class);
     private final String name = "js";
-    static { PolyglotUtils.setPolyglotProvider(new GraalPolyglotProvider()); }
+    static { PolyglotUtils.setPolyglotService(new GraalPolyglotService()); }
 
     @Test
     public void test1() {

@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.mock;
+package kunlun.data.mock;
 
 import com.alibaba.fastjson.JSON;
 import kunlun.logging.Logger;
@@ -23,7 +23,7 @@ public class MockUtilsTest {
 
     static {
 
-        MockUtils.setMockProvider(new JMockDataProvider());
+        MockUtils.registerHandler(MockUtils.getDefaultHandlerName(), new JMockDataHandler());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class MockUtilsTest {
 
     @Test
     public void testMock11() {
-        MockUtils.setMockProvider(new SimpleMockProvider1());
+        MockUtils.registerHandler(MockUtils.getDefaultHandlerName(), new SimpleMockHandler1());
         ClassMockerConfig classMockerConfig = new ClassMockerConfig();
         classMockerConfig.setType(User.class);
         Map<String, Mocker> map = new HashMap<String, Mocker>();

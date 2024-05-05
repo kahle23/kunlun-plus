@@ -5,7 +5,6 @@
 
 package kunlun.util;
 
-import kunlun.net.http.HttpMethod;
 import kunlun.net.http.HttpUtils;
 import kunlun.net.http.support.SimpleRequest;
 import org.junit.Ignore;
@@ -15,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static kunlun.net.http.HttpMethod.GET;
 
 @Ignore
 public class RegexUtilsTest {
@@ -76,7 +77,7 @@ public class RegexUtilsTest {
     @Test
     public void test5() throws Exception {
         List<String> list = RegexUtils.findAllALabel(
-                HttpUtils.execute(new SimpleRequest("https://bing.com", HttpMethod.GET)).getBodyAsString());
+                HttpUtils.execute(SimpleRequest.of(GET, "https://bing.com")).getBodyAsString());
         for (String s : list) {
             System.out.println(s);
         }
@@ -85,7 +86,7 @@ public class RegexUtilsTest {
     @Test
     public void test6() throws Exception {
         List<String> list = RegexUtils.findAllImgLabel(
-                HttpUtils.execute(new SimpleRequest("https://bing.com", HttpMethod.GET)).getBodyAsString());
+                HttpUtils.execute(SimpleRequest.of(GET, "https://bing.com")).getBodyAsString());
         for (String s : list) {
             System.out.println(s);
         }

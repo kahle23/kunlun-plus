@@ -6,6 +6,7 @@
 package kunlun.generator.render.support.java;
 
 import kunlun.db.jdbc.support.JdbcTableLoader;
+import kunlun.db.jdbc.support.function.MysqlTableCommentConsumer;
 import kunlun.io.file.support.SimpleFileLoader;
 import kunlun.renderer.support.VelocityTextRenderer;
 import org.junit.Ignore;
@@ -31,7 +32,7 @@ public class CodeGeneratorTest {
         loaderConfig.setCatalog("demo");
         //loaderConfig.getExcludedTables().add("t_test");
         loaderConfig.getReservedTables().addAll(asList("account_book_records", "c_messages"));
-        loaderConfig.getPostConsumers().add(new JdbcTableLoader.MysqlTableCommentConsumer());
+        loaderConfig.getPostConsumers().add(new MysqlTableCommentConsumer());
         // Java code generator config.
         JavaCodeGenConfig genConfig = new JavaCodeGenConfig();
         genConfig.setTableLoader(new JdbcTableLoader());

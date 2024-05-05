@@ -19,21 +19,21 @@ import java.util.concurrent.Callable;
  * The cached script engine provider.
  * @author Kahle
  */
-public class CachedScriptEngineProvider extends ScriptEngineProvider {
+public class CachedScriptEngineService extends ScriptEngineService {
     private final Cache cache;
 
-    public CachedScriptEngineProvider(ScriptEngineManager scriptEngineManager, Cache cache) {
+    public CachedScriptEngineService(ScriptEngineManager scriptEngineManager, Cache cache) {
         super(scriptEngineManager);
         Assert.notNull(cache, "Parameter \"cache\" must not null. ");
         this.cache = cache;
     }
 
-    public CachedScriptEngineProvider(Cache cache) {
+    public CachedScriptEngineService(Cache cache) {
 
         this(new ScriptEngineManager(), cache);
     }
 
-    public CachedScriptEngineProvider() {
+    public CachedScriptEngineService() {
 
         this(new SimpleCache());
     }
@@ -57,7 +57,7 @@ public class CachedScriptEngineProvider extends ScriptEngineProvider {
         return getCache().get(name, new Callable<ScriptEngine>() {
             @Override
             public ScriptEngine call() throws Exception {
-                return CachedScriptEngineProvider.super.getEngine(name, finalShared);
+                return CachedScriptEngineService.super.getEngine(name, finalShared);
             }
         });
     }

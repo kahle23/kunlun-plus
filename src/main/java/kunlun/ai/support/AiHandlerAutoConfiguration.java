@@ -5,7 +5,7 @@
 
 package kunlun.ai.support;
 
-import kunlun.ai.AiUtils;
+import kunlun.ai.AIUtils;
 import kunlun.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +19,13 @@ import java.util.Map;
  * @author Kahle
  */
 @Configuration
-public class AiHandlerAutoConfiguration {
-    private static final Logger log = LoggerFactory.getLogger(AiHandlerAutoConfiguration.class);
+public class AIHandlerAutoConfiguration {
+    private static final Logger log = LoggerFactory.getLogger(AIHandlerAutoConfiguration.class);
 
-    public AiHandlerAutoConfiguration(ApplicationContext appContext) {
+    public AIHandlerAutoConfiguration(ApplicationContext appContext) {
         // If not have beans, handlerMap is empty map, not is null.
-        Map<String, AutoAiHandler> handlerMap = appContext.getBeansOfType(AutoAiHandler.class);
-        for (AutoAiHandler aiHandler : handlerMap.values()) {
+        Map<String, AutoAIHandler> handlerMap = appContext.getBeansOfType(AutoAIHandler.class);
+        for (AutoAIHandler aiHandler : handlerMap.values()) {
             if (aiHandler == null) { continue; }
             String handlerName = aiHandler.getName();
             if (StringUtils.isBlank(handlerName)) {
@@ -33,7 +33,7 @@ public class AiHandlerAutoConfiguration {
                         , aiHandler.getClass());
                 continue;
             }
-            AiUtils.registerHandler(handlerName, aiHandler);
+            AIUtils.registerHandler(handlerName, aiHandler);
         }
     }
 

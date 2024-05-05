@@ -5,7 +5,7 @@
 
 package kunlun.action.support;
 
-import kunlun.core.handler.AsyncSupportHandler;
+import kunlun.core.handler.AsyncSupportedHandler;
 import kunlun.util.Assert;
 import kunlun.util.ObjectUtils;
 
@@ -14,7 +14,7 @@ import kunlun.util.ObjectUtils;
  * @author Kahle
  */
 public abstract class AbstractAsyncClassicActionHandler
-        extends AbstractAutoClassicActionHandler implements AsyncSupportHandler {
+        extends AbstractAutoClassicActionHandler implements AsyncSupportedHandler {
 
     public AbstractAsyncClassicActionHandler(String actionName) {
 

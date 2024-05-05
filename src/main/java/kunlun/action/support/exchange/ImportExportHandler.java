@@ -5,7 +5,7 @@
 
 package kunlun.action.support.exchange;
 
-import kunlun.core.handler.AsyncSupportHandler;
+import kunlun.core.handler.AsyncSupportedHandler;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
  * @param <D> The type of data fetched or parsed
  * @author Kahle
  */
-public interface ImportExportHandler<P, D> extends AsyncSupportHandler {
+public interface ImportExportHandler<P, D> extends AsyncSupportedHandler {
 
     /**
      * Push import or export task information.

@@ -3,9 +3,10 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.data.xml.support;
+package kunlun.spring.config.data.xml;
 
 import kunlun.data.xml.XmlUtils;
+import kunlun.data.xml.support.XStreamXmlHandler;
 import kunlun.util.ClassLoaderUtils;
 import kunlun.util.ClassUtils;
 import org.slf4j.Logger;

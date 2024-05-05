@@ -17,6 +17,7 @@ import java.util.List;
  * Paging tools.
  * @author Kahle
  */
+@Deprecated // TODO: Can delete
 public class PagingUtils {
 
     public static void startPage(int pageNum, int pageSize) {

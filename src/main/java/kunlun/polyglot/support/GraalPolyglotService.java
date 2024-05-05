@@ -7,7 +7,7 @@ package kunlun.polyglot.support;
 
 import kunlun.data.Dict;
 import kunlun.data.bean.BeanUtils;
-import kunlun.polyglot.PolyglotProvider;
+import kunlun.polyglot.PolyglotService;
 import kunlun.util.Assert;
 import kunlun.util.MapUtils;
 import org.graalvm.polyglot.Context;
@@ -26,7 +26,7 @@ import static kunlun.util.ObjectUtils.cast;
  * @see <a href="https://www.graalvm.org/latest/reference-manual/js/NashornMigrationGuide/">Migration Guide from Nashorn to GraalVM JavaScript</a>
  * @author Kahle
  */
-public class GraalPolyglotProvider implements PolyglotProvider {
+public class GraalPolyglotService implements PolyglotService {
 
     /**
      * Build graalvm context.

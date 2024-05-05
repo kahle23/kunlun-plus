@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.logging.support;
+package kunlun.spring.config.logging;
 
 import kunlun.util.ClassLoaderUtils;
 import kunlun.util.ClassUtils;
