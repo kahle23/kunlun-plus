@@ -3,9 +3,11 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.codec.support;
+package kunlun.spring.config.codec;
 
 import kunlun.codec.CodecUtils;
+import kunlun.codec.support.ApacheBase64;
+import kunlun.codec.support.Java8Base64;
 import kunlun.util.ClassLoaderUtils;
 import kunlun.util.ClassUtils;
 import org.slf4j.Logger;

@@ -5,8 +5,6 @@
 
 package kunlun.context.support;
 
-import kunlun.context.support.spring.ContextSupportRequestBodyAdvice;
-import kunlun.context.support.spring.ContextSupportResponseBodyAdvice;
 import kunlun.core.Context;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +53,7 @@ public interface ServletContext extends Context {
      * Set the http response body.
      * @param responseBody The http response body
      * @see org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice
-     * @see ContextSupportResponseBodyAdvice
+     * @see kunlun.spring.context.ContextSupportResponseBodyAdvice
      */
     void setResponseBody(Object responseBody);
 
@@ -69,7 +67,7 @@ public interface ServletContext extends Context {
      * Set the http request body.
      * @param requestBody The http request body
      * @see org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdvice
-     * @see ContextSupportRequestBodyAdvice
+     * @see kunlun.spring.context.ContextSupportRequestBodyAdvice
      */
     void setRequestBody(Object requestBody);
 

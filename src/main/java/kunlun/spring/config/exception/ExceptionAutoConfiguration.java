@@ -3,11 +3,12 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.exception.support;
+package kunlun.spring.config.exception;
 
 import kunlun.exception.ServletErrorHandler;
-import kunlun.exception.support.spring.ServletErrorHandlerErrorController;
-import kunlun.exception.support.spring.ServletErrorHandlerExceptionHandler;
+import kunlun.exception.support.SimpleServletErrorHandler;
+import kunlun.spring.exception.ServletErrorHandlerErrorController;
+import kunlun.spring.exception.ServletErrorHandlerExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

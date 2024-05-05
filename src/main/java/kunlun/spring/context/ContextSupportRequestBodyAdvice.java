@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.context.support.spring;
+package kunlun.spring.context;
 
 import kunlun.bean.BeanHolder;
 import kunlun.context.support.ServletContext;

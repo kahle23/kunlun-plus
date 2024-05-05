@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.security.support.spring.web;
+package kunlun.spring.security;
 
 import kunlun.core.handler.ResourceAccessPreHandler;
 import kunlun.util.Assert;

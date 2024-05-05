@@ -3,9 +3,10 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.db.support;
+package kunlun.spring.config.db;
 
 import kunlun.db.DbUtils;
+import kunlun.db.support.AutoDbHandler;
 import kunlun.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

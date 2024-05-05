@@ -14,17 +14,17 @@ public class Java8Base64 extends Base64 {
     private final java.util.Base64.Encoder encoder;
     private final java.util.Base64.Decoder decoder;
 
-    protected Java8Base64() {
+    public Java8Base64() {
 
         this(false, false, MINUS_ONE, null);
     }
 
-    protected Java8Base64(boolean urlSafe) {
+    public Java8Base64(boolean urlSafe) {
 
         this(urlSafe, false, MINUS_ONE, null);
     }
 
-    protected Java8Base64(boolean mime, int lineLength, byte[] lineSeparator) {
+    public Java8Base64(boolean mime, int lineLength, byte[] lineSeparator) {
 
         this(false, mime, lineLength, lineSeparator);
     }

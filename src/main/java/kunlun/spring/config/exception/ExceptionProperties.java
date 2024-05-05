@@ -3,7 +3,7 @@
  * Kunlun is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.exception.support;
+package kunlun.spring.config.exception;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

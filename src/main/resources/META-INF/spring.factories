@@ -6,11 +6,8 @@ kunlun.action.support.ActionHandlerAutoConfiguration,\
 kunlun.data.bean.support.BeanToolsAutoConfiguration,\
 kunlun.data.json.support.JsonAutoConfiguration,\
 kunlun.data.xml.support.XmlAutoConfiguration,\
-kunlun.ai.support.AiHandlerAutoConfiguration,\
-kunlun.db.support.DbHandlerAutoConfiguration,\
-kunlun.codec.support.Base64AutoConfiguration,\
+kunlun.ai.support.AIHandlerAutoConfiguration,\
 kunlun.logging.support.LoggingAutoConfiguration,\
-kunlun.exception.support.ExceptionAutoConfiguration,\
 kunlun.mock.support.JMockDataAutoConfiguration,\
 kunlun.message.support.mq.rocketmq.RocketMqListenerAutoConfiguration,\
 kunlun.property.support.PropertySourceAutoConfiguration,\
@@ -22,8 +19,11 @@ kunlun.action.support.nlp.hanlp.HankcsHanLpAutoConfiguration,\
 kunlun.action.support.nlp.similarity.XmTextSimilarityAutoConfiguration,\
 kunlun.spring.config.async.SpringAsyncConfigurerSupport,\
 kunlun.spring.config.cache.CacheAutoConfiguration,\
-kunlun.spring.config.cache.adapter.SpringCacheAdapterAutoConfiguration,\
+kunlun.spring.config.cache.SpringCacheAdapterAutoConfiguration,\
+kunlun.spring.config.codec.Base64AutoConfiguration,\
+kunlun.spring.config.db.DbHandlerAutoConfiguration,\
 kunlun.spring.config.elasticsearch.RestClientAutoConfiguration,\
+kunlun.spring.config.exception.ExceptionAutoConfiguration,\
 kunlun.spring.config.feign.FeignSupportAutoConfiguration,\
 kunlun.spring.config.hystrix.RequestContextHystrixAutoConfiguration,\
 kunlun.spring.config.swagger.SwaggerAutoConfiguration,\
