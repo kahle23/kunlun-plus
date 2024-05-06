@@ -73,7 +73,7 @@ public class OptionAutoConfiguration {
         }
         Cache cache = CacheUtils.getCache(cacheName);
         if (cache == null || cache instanceof NoCache) {
-            CacheUtils.registerCache(new SpringSimpleCache(cacheName,
+            CacheUtils.registerCache(cacheName, new SpringSimpleCache(
                     Dict.of("referenceType", ReferenceType.SOFT)
                             .set("timeToLive", timeToLive)
                             .set("timeToLiveUnit", timeUnit)));
