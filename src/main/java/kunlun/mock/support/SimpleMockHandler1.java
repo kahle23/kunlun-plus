@@ -5,7 +5,7 @@
 
 package kunlun.mock.support;
 
-import kunlun.data.mock.support.SimpleMockHandler;
+import kunlun.data.mock.support.SimpleMockGenerator;
 import kunlun.util.ArrayUtil;
 import kunlun.util.StrUtil;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.util.Collections.emptyMap;
 
-public class SimpleMockHandler1 extends SimpleMockHandler {
+public class SimpleMockHandler1 extends SimpleMockGenerator {
 
     protected Map<Class, ClassMockerConfig> parseFeatures(Object[] arguments) {
         if (ArrayUtil.isEmpty(arguments)) { return emptyMap(); }
