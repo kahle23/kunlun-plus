@@ -13,6 +13,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
+import kunlun.security.Token;
 
 import static kunlun.common.constant.Numbers.*;
 

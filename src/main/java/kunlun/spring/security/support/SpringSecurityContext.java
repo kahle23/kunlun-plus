@@ -4,7 +4,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import kunlun.core.AccessController;
 import kunlun.core.DataController;
 import kunlun.security.TokenManager;
-import kunlun.security.UserManager;
+import kunlun.security.UserService;
 import kunlun.security.support.AbstractSecurityContext;
 import kunlun.spring.context.SpringContext;
 import org.slf4j.MDC;
@@ -26,10 +26,10 @@ public class SpringSecurityContext extends AbstractSecurityContext implements Sp
 
     public SpringSecurityContext(ApplicationContext appContext,
                                  TokenManager tokenManager,
-                                 UserManager userManager,
+                                 UserService userService,
                                  AccessController accessController,
                                  DataController dataController) {
-        super(tokenManager, userManager, accessController, dataController, new TransmittableThreadLocal<Map<String, Object>>());
+        super(tokenManager, userService, accessController, dataController, new TransmittableThreadLocal<Map<String, Object>>());
         this.appContext = appContext;
         setServiceInfo(createServiceInfo());
     }

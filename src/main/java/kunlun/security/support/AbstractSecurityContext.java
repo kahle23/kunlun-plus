@@ -9,10 +9,9 @@ import cn.hutool.core.util.ObjUtil;
 import kunlun.context.support.AbstractServletContext;
 import kunlun.core.AccessController;
 import kunlun.core.DataController;
+import kunlun.data.json.support.jackson.util.JsonSceneUtil;
 import kunlun.generator.id.IdUtil;
-import kunlun.security.SecurityContext;
-import kunlun.security.TokenManager;
-import kunlun.security.UserManager;
+import kunlun.security.*;
 import kunlun.util.Assert;
 import kunlun.util.StrUtil;
 import org.slf4j.Logger;
@@ -32,8 +31,6 @@ import java.util.Map;
 import static kunlun.common.constant.Algorithms.UUID;
 import static kunlun.common.constant.Env.COMPUTER_NAME;
 import static kunlun.common.constant.Env.HOST_NAME;
-import static kunlun.security.TokenManager.Token;
-import static kunlun.security.UserManager.UserDetail;
 
 /**
  * The abstract security context.
@@ -52,22 +49,22 @@ public abstract class AbstractSecurityContext extends AbstractServletContext imp
     private final AccessController accessController;
     private final DataController dataController;
     private final TokenManager tokenManager;
-    private final UserManager userManager;
+    private final UserService userService;
     private ServiceInfo serviceInfo;
     private boolean accessLog = true;
 
     public AbstractSecurityContext(TokenManager tokenManager,
-                                   UserManager userManager,
+                                   UserService userService,
                                    AccessController accessController,
                                    DataController dataController,
                                    ThreadLocal<Map<String, Object>> threadLocal) {
         Assert.notNull(tokenManager, "Parameter \"tokenManager\" must not null. ");
-        Assert.notNull(userManager, "Parameter \"userManager\" must not null. ");
+        Assert.notNull(userService, "Parameter \"userService\" must not null. ");
         Assert.notNull(accessController, "Parameter \"accessController\" must not null. ");
         Assert.notNull(dataController, "Parameter \"dataController\" must not null. ");
         Assert.notNull(threadLocal, "Parameter \"threadLocal\" must not null. ");
         this.tokenManager = tokenManager;
-        this.userManager = userManager;
+        this.userService = userService;
         this.accessController = accessController;
         this.dataController = dataController;
         this.threadLocal = threadLocal;
@@ -176,7 +173,7 @@ public abstract class AbstractSecurityContext extends AbstractServletContext imp
         UserDetail userDetail = getProperty(USER_DETAIL_NAME, UserDetail.class);
         if (userDetail != null) { return userDetail; }
         if (getUserId() == null) { return null; }
-        userDetail = getUserManager().getUserDetail(getUserId(), getUserType());
+        userDetail = getUserService().getUserDetail(getUserId(), getUserType());
         if (userDetail == null) { return null; }
         setProperty(USER_DETAIL_NAME, userDetail);
         return userDetail;
@@ -185,13 +182,13 @@ public abstract class AbstractSecurityContext extends AbstractServletContext imp
     @Override
     public Collection<String> getPermissions() {
 
-        return getUserManager().getPermissions(getUserId(), getUserType());
+        return getUserService().getPermissions(getUserId(), getUserType());
     }
 
     @Override
     public Collection<String> getUserGroups(Object groupType) {
 
-        return getUserManager().getUserGroups(getUserId(), getUserType(), groupType);
+        return getUserService().getUserGroups(getUserId(), getUserType(), groupType);
     }
 
     @Override
@@ -213,9 +210,9 @@ public abstract class AbstractSecurityContext extends AbstractServletContext imp
     }
 
     @Override
-    public UserManager getUserManager() {
+    public UserService getUserService() {
 
-        return userManager;
+        return userService;
     }
 
     public boolean getAccessLog() {

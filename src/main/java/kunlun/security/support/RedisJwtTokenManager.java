@@ -5,6 +5,7 @@
 
 package kunlun.security.support;
 
+import kunlun.security.Token;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.concurrent.TimeUnit;

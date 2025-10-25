@@ -3,7 +3,7 @@ package kunlun.security.support;
 import cn.hutool.json.JSONUtil;
 import kunlun.logging.Logger;
 import kunlun.logging.LoggerFactory;
-import kunlun.security.TokenManager;
+import kunlun.security.Token;
 import org.junit.Test;
 
 import static kunlun.security.support.AbstractTokenManager.TokenImpl;
@@ -23,7 +23,7 @@ public class JwtTokenManagerTest {
     @Test
     public void testObtainToken() {
         String tokenStr = "eyJ1IjoxMjY0NjIyMDM5NjQyMjU2MjExLCJlIjoxNzM2NDk4OTQ4OTA2LCJ1dCI6NX0.mrgqSlaGIzO_gLkByV9E2YO4EXlH34KoMgCiTXaaLso";
-        TokenManager.Token token = tokenManager.parseToken(tokenStr);
+        Token token = tokenManager.parseToken(tokenStr);
         log.info("Obtain token: {}", JSONUtil.toJsonPrettyStr(token));
     }
 
