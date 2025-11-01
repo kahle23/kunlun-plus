@@ -16,7 +16,8 @@ import java.util.List;
  * The paging tools.
  * @author Kahle
  */
-public class PageUtil {
+@Deprecated
+public class PageUtil1 {
     private static Integer defaultPageSize = 15;
     private static Integer defaultPageNum = 1;
 
@@ -27,7 +28,7 @@ public class PageUtil {
 
     public static void setDefaultPageNum(Integer defaultPageNum) {
         Assert.notNull(defaultPageNum, "Parameter \"defaultPageNum\" must not null. ");
-        PageUtil.defaultPageNum = defaultPageNum;
+        PageUtil1.defaultPageNum = defaultPageNum;
     }
 
     public static Integer getDefaultPageSize() {
@@ -37,24 +38,24 @@ public class PageUtil {
 
     public static void setDefaultPageSize(Integer defaultPageSize) {
         Assert.notNull(defaultPageSize, "Parameter \"defaultPageSize\" must not null. ");
-        PageUtil.defaultPageSize = defaultPageSize;
+        PageUtil1.defaultPageSize = defaultPageSize;
     }
 
     // ====
 
     public static void startPage(Integer pageNum, Integer pageSize) {
 
-        PageUtil.startPage(pageNum, pageSize, true, null);
+        PageUtil1.startPage(pageNum, pageSize, true, null);
     }
 
     public static void startPage(Integer pageNum, Integer pageSize, boolean doCount) {
 
-        PageUtil.startPage(pageNum, pageSize, doCount, null);
+        PageUtil1.startPage(pageNum, pageSize, doCount, null);
     }
 
     public static void startPage(Integer pageNum, Integer pageSize, String orderBy) {
 
-        PageUtil.startPage(pageNum, pageSize, true, orderBy);
+        PageUtil1.startPage(pageNum, pageSize, true, orderBy);
     }
 
     public static void startPage(Integer pageNum, Integer pageSize, boolean doCount, String orderBy) {

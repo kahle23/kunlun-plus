@@ -20,22 +20,22 @@ public class PageUtils {
 
     public static Integer getDefaultPageNum() {
 
-        return PageUtil.getDefaultPageNum();
+        return PageUtil1.getDefaultPageNum();
     }
 
     public static void setDefaultPageNum(Integer defaultPageNum) {
 
-        PageUtil.setDefaultPageNum(defaultPageNum);
+        PageUtil1.setDefaultPageNum(defaultPageNum);
     }
 
     public static Integer getDefaultPageSize() {
 
-        return PageUtil.getDefaultPageSize();
+        return PageUtil1.getDefaultPageSize();
     }
 
     public static void setDefaultPageSize(Integer defaultPageSize) {
 
-        PageUtil.setDefaultPageSize(defaultPageSize);
+        PageUtil1.setDefaultPageSize(defaultPageSize);
     }
 
     // ====
