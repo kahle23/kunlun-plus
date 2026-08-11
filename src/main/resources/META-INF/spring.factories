@@ -27,6 +27,8 @@ kunlun.spring.generator.id.IdAutoConfiguration,\
 kunlun.spring.generator.id.RedisIdAutoConfiguration,\
 kunlun.spring.hystrix.RequestContextHystrixAutoConfiguration,\
 kunlun.spring.io.fileprocessor.FileProcessorThreadPoolAutoConfiguration,\
+kunlun.spring.message.RedissonDelayMessageAutoConfiguration,\
+kunlun.spring.message.RocketMqListenerAutoConfiguration,\
 kunlun.spring.message.MessageListenerAutoConfiguration,\
 kunlun.spring.swagger.SwaggerAutoConfiguration,\
 kunlun.spring.web.cors.SpringWebCorsFilterAutoConfiguration,\
