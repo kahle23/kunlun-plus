@@ -46,7 +46,7 @@ public abstract class AbstractServletErrorHandler implements ServletErrorHandler
                         "    Error Code: " + errorCode + "<br />\n" : "") +
                 "    Error Message: " + errorMessage + "<br />\n" +
                 "    Please check the log for details if necessary. <br />\n" +
-                "    Powered by kunlun-plus. <br />\n" +
+                "    Powered by baibao. <br />\n" +
                 "</body>\n" +
                 "</html>\n";
         // response write html.

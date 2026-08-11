@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.kahle23</groupId>
-    <artifactId>kunlun-plus</artifactId>
-    <version>1.0.26_2</version>
+    <artifactId>baibao</artifactId>
+    <version>1.0.26_3</version>
     <packaging>jar</packaging>
-    <name>kunlun-plus</name>
-    <url>https://github.com/kahle23/kunlun-plus</url>
-    <description>Kunlun Plus is a Java technology framework that is encapsulated based on common business scenarios.</description>
+    <name>baibao</name>
+    <url>https://github.com/kahle23/baibao</url>
+    <description>Baibao is a Java technology framework that is encapsulated based on common business scenarios.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,8 +34,8 @@
     </developers>
 
     <scm>
-        <url>https://github.com/kahle23/kunlun-plus</url>
-        <connection>scm:git:https://github.com/kahle23/kunlun-plus.git</connection>
+        <url>https://github.com/kahle23/baibao</url>
+        <connection>scm:git:https://github.com/kahle23/baibao.git</connection>
         <developerConnection>https://github.com/kahle23</developerConnection>
     </scm>
 
@@ -55,11 +55,12 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- jackson-bom 统一钉版：annotations=2.22, core/databind=2.22.0 -->
+            <!-- jackson-bom 钉版 2.11.1：向下兼容消费者(downstream 运行期 jackson 2.11.1)，
+                 避免 2.13+ 才有的 com.fasterxml.jackson.core.JacksonException 导致的 ClassNotFoundException -->
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.22.0</version>
+                <version>2.11.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
