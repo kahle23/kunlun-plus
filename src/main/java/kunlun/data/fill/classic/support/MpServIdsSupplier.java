@@ -6,7 +6,9 @@
 package kunlun.data.fill.classic.support;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.extension.service.IService;
+import kunlun.common.constant.Nil;
 import kunlun.core.function.Consumer;
 import kunlun.core.function.Function;
 import kunlun.spring.util.SpringUtil;
@@ -22,6 +24,25 @@ import java.util.Map;
  * @author Kahle
  */
 public class MpServIdsSupplier<T> extends BaseServDataSupplier<IService<T>, T> {
+
+    public static MpServIdsSupplier<Object> of(String beanName, String fieldName) {
+
+        return of(beanName, fieldName, Nil.<Consumer<Map<String, Object>>>g());
+    }
+
+    public static MpServIdsSupplier<Object> of(String beanName, final String fieldName,
+                                               Consumer<Map<String, Object>> dataProcessor) {
+        //noinspection unchecked
+        IService<Object> service = SpringUtil.getBean(beanName, IService.class);
+//        Function<Object, Object> keyMapper = item-> ReflectUtil.getFieldValue(item, fieldName);
+        Function<Object, Object> keyMapper = new Function<Object, Object>() {
+            @Override
+            public Object apply(Object item) {
+                return ReflectUtil.getFieldValue(item, fieldName);
+            }
+        };
+        return new MpServIdsSupplier<Object>(service, keyMapper, dataProcessor);
+    }
 
     public static <T> MpServIdsSupplier<T> of(Class<? extends IService<T>> clazz, Function<T, Object> keyMapper,
                                               Consumer<Map<String, Object>> dataProcessor) {
