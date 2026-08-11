@@ -24,6 +24,7 @@ import net.sf.jsqlparser.parser.JSqlParser;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.FromItem;
+import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static kunlun.common.constant.Numbers.ZERO;
+import static kunlun.common.constant.Symbols.DOT;
 
 /**
  * The abstract JSqlParser-based data controller.
@@ -160,6 +162,13 @@ public abstract class AbstractJSqlParserDataController extends AbstractSqlBasedD
         }
     }
 
+    private String obtainAlias(String fieldName) {
+        if (StrUtil.isBlank(fieldName)) { return null; }
+        int indexOf = fieldName.indexOf(DOT);
+        if (indexOf <= ZERO) { return null; }
+        return fieldName.substring(ZERO, indexOf);
+    }
+
     public void processPlainSelect(PlainSelect plainSelect, Context context) {
         if (context == null) { return; }
         SimpleRule rule = (SimpleRule) context.getRule();
@@ -171,6 +180,20 @@ public abstract class AbstractJSqlParserDataController extends AbstractSqlBasedD
         String nowFromTable = fromItem instanceof Table
                 ? ((Table) fromItem).getName() : (fromItem != null ? String.valueOf(fromItem) : null);
         if (StrUtil.isBlank(nowFromTable)) { return; }
+        // from table alias
+        String fromTableAlias = fromItem.getAlias() != null ? fromItem.getAlias().getName() : null;
+        List<String> tableAliases = new ArrayList<String>();
+        if (CollUtil.isNotEmpty(plainSelect.getJoins())) {
+            for (Join join : plainSelect.getJoins()) {
+                if (join == null) { continue; }
+                FromItem rightItem = join.getRightItem();
+                if (rightItem == null || rightItem.getAlias() == null) { continue; }
+                tableAliases.add(rightItem.getAlias().getName());
+            }
+        }
+        if (StrUtil.isNotBlank(fromTableAlias)) {
+            tableAliases.add(fromTableAlias);
+        }
         //
         Collection<ColumnCfg> configs = new ArrayList<ColumnCfg>();
         switch (rule.getDataScope()) {
@@ -189,6 +212,15 @@ public abstract class AbstractJSqlParserDataController extends AbstractSqlBasedD
                         userIdFields = getDefaultUserIdFields();
                     }
                     for (String str : userIdFields) {
+                        String alias = obtainAlias(str);
+                        // 如果字段包含表别名（表别名不为空），表别名必须是 SQL 中存在的
+                        if (StrUtil.isNotBlank(alias) && !tableAliases.contains(alias)) {
+                            continue;
+                        }
+                        // 如果字段的表别名是空的，from table 有别名，则给字段拼上
+                        if (StrUtil.isBlank(alias) && StrUtil.isNotBlank(fromTableAlias)) {
+                            str = fromTableAlias + DOT + str;
+                        }
                         configs.add(new ColumnCfg(Op.EQ, str, userId));
                     }
                 }
@@ -222,6 +254,15 @@ public abstract class AbstractJSqlParserDataController extends AbstractSqlBasedD
                         orgIdFields = getDefaultOrgIdFields();
                     }
                     for (String str : orgIdFields) {
+                        String alias = obtainAlias(str);
+                        // 如果字段包含表别名（表别名不为空），表别名必须是 SQL 中存在的
+                        if (StrUtil.isNotBlank(alias) && !tableAliases.contains(alias)) {
+                            continue;
+                        }
+                        // 如果字段的表别名是空的，from table 有别名，则给字段拼上
+                        if (StrUtil.isBlank(alias) && StrUtil.isNotBlank(fromTableAlias)) {
+                            str = fromTableAlias + DOT + str;
+                        }
                         configs.add(new ColumnCfg(Op.IN, str, userGroups));
                     }
                 }
