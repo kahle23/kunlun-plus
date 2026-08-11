@@ -1,0 +1,67 @@
+package ${editParamPackageName};
+
+import kunlun.core.annotation.FieldMeta;
+#if($useLombok)
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+#end
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+#foreach(${javaType} in ${table.javaTypeImports})
+import ${javaType};
+#end
+
+/**
+ * $!{table.comment}的编辑操作的入参对象.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Data
+@NoArgsConstructor
+#end
+public class ${editParamClassName} implements Serializable {
+
+#foreach(${column} in ${table.columns})
+    /**
+     * $!{column.comment}
+     */
+#if(!$!column.nullable)
+#if($column.javaType=="String")
+    @NotBlank(message = "$!{column.comment}不能为空")
+#else
+    @NotNull(message = "$!{column.comment}不能为空")
+#end
+#end
+    @FieldMeta(description = "$!{column.comment}")
+    private ${column.javaType} ${column.fieldName};
+#end
+#if(!$useLombok)
+
+#foreach(${column} in ${table.columns})
+
+    public void ${column.setterName}(${column.javaType} ${column.fieldName}) {
+
+        this.${column.fieldName} = ${column.fieldName};
+    }
+
+    public ${column.javaType} ${column.getterName}() {
+
+        return this.${column.fieldName};
+    }
+#end
+
+    @Override
+    public String toString() {
+        return "${paramClassName}{" +
+#set($temp = 0)#foreach(${column} in ${table.columns})
+                "#if($temp > 0), #end#set($temp = $temp + 1)${column.fieldName}='" + ${column.fieldName} + '\'' +
+#end
+                '}';
+    }
+#end
+
+}

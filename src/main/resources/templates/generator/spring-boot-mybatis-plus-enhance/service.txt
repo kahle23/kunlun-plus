@@ -1,0 +1,52 @@
+package ${servicePackageName};
+
+import baibao.db.jdbc.mybatisplus.base.BaseService;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.yulichang.base.MPJBaseService;
+import kunlun.common.Page;
+import kunlun.io.fileprocessor.ProcResult;
+import org.springframework.web.multipart.MultipartFile;
+import ${entityPackageName}.${entityClassName};
+import ${addParamPackageName}.${addParamClassName};
+import ${editParamPackageName}.${editParamClassName};
+import ${queryPackageName}.${queryClassName};
+import ${resultPackageName}.${resultClassName};
+import ${smpResultPackageName}.${smpResultClassName};
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+/**
+ * $!{table.comment}的服务类.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+public interface ${serviceClassName} extends BaseService<${entityClassName}
+        , ${addParamClassName}, ${editParamClassName}, ${queryClassName}, ${resultClassName}> {
+
+//    /**
+//     * $!{table.comment}的自定义的查询
+//     *
+//     * @param query 查询条件
+//     * @return 查询结果
+//     */
+//    List<${resultClassName}> customQuery(${queryClassName} query);
+
+    /**
+     * 批量导入$!{table.comment}数据.
+     * @param file 导入的文件
+     * @return 导入任务信息
+     */
+    ProcResult importRecords(MultipartFile file);
+
+    /**
+     * 批量导出$!{table.comment}数据.
+     * @param query 查询条件
+     * @return 导出任务信息
+     */
+    ProcResult exportRecords(${queryClassName} query);
+
+}

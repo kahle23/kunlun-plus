@@ -1,0 +1,141 @@
+<template>
+	<el-dialog v-model="visible" :title="!dataForm.id ? '新增' : '编辑'" :close-on-click-modal="false" draggable>
+		<el-form ref="dataFormRef" :model="dataForm" :rules="dataRules" label-width="120px" @keyup.enter="submitHandle()">
+			<el-row>
+				<el-col :span="12">
+#foreach(${column} in ${table.columns})
+#if($column.fieldName=="deleteStatus"
+          or $column.fieldName.equals('platform')
+          or $column.fieldName.equals('tenantId')
+          or $column.fieldName.equals('ownerId')
+          or $column.fieldName.equals('ownOrgId')
+          or $column.fieldName.equals('createUser')
+          or $column.fieldName.equals('createTime')
+          or $column.fieldName.equals('modifyUser')
+          or $column.fieldName.equals('modifyTime'))
+#elseif($column.comment.contains('图')
+      or $column.comment.contains('头像'))
+          <el-form-item prop="${column.fieldName}" label="$!{column.comment}">
+            <div class="${column.fieldName}">
+              <ma-upload-image :drag="false" width="120px" height="120px"
+                               v-model:image-url="dataForm.${column.fieldName}"
+                               @success="(file:any) => {handleSuccess(file)}"
+              >
+                <template #empty>
+                  <el-icon><Plus /></el-icon>
+                </template>
+              </ma-upload-image>
+            </div>
+          </el-form-item>
+#else
+          <el-form-item prop="${column.fieldName}" label="$!{column.comment}">
+            <el-input v-model="dataForm.${column.fieldName}"></el-input>
+          </el-form-item>
+#end
+#end
+				</el-col>
+				<!--<el-col :span="12">
+					<el-form-item prop="name" label="用户名">
+						<el-input v-model="dataForm.name"></el-input>
+					</el-form-item>
+				</el-col>-->
+			</el-row>
+		</el-form>
+		<template #footer>
+			<el-button @click="visible = false">取消</el-button>
+			<el-button type="primary" @click="submitHandle()">确定</el-button>
+		</template>
+	</el-dialog>
+</template>
+
+<script setup lang="ts">
+import { reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus/es'
+import { use${entityClassName}Api, use${entityClassName}SubmitApi } from '@/api/purview/${entityClassName}'
+
+const emit = defineEmits(['refreshDataList'])
+
+const visible = ref(false)
+const dataFormRef = ref()
+
+const dataForm = reactive({
+#foreach(${column} in ${table.columns})
+#if($column.fieldName=="deleteStatus"
+          or $column.fieldName.equals('platform')
+          or $column.fieldName.equals('tenantId')
+          or $column.fieldName.equals('ownerId')
+          or $column.fieldName.equals('ownOrgId')
+          or $column.fieldName.equals('createUser')
+          or $column.fieldName.equals('createTime')
+          or $column.fieldName.equals('modifyUser')
+          or $column.fieldName.equals('modifyTime'))
+#else
+	${column.fieldName}: '', // $!{column.comment}
+#end
+#end
+})
+
+const init = (id?: number) => {
+	visible.value = true
+	dataForm.id = ''
+
+	// 重置表单数据
+	if (dataFormRef.value) {
+		dataFormRef.value.resetFields()
+	}
+
+	// id 存在则为修改
+	if (id) {
+		get${entityClassName}(id)
+	}
+}
+
+// 获取信息
+const get${entityClassName} = (id: number) => {
+	use${entityClassName}Api(id).then(res => {
+		Object.assign(dataForm, res.data)
+	})
+}
+
+const dataRules = ref({
+#foreach(${column} in ${table.columns})
+#if($column.fieldName=="deleteStatus"
+          or $column.fieldName.equals('platform')
+          or $column.fieldName.equals('tenantId')
+          or $column.fieldName.equals('ownerId')
+          or $column.fieldName.equals('ownOrgId')
+          or $column.fieldName.equals('createUser')
+          or $column.fieldName.equals('createTime')
+          or $column.fieldName.equals('modifyUser')
+          or $column.fieldName.equals('modifyTime')
+          or $column.fieldName.equals('id'))
+#elseif(!$!column.nullable)
+	// $!{column.comment}
+	${column.fieldName}: [{ required: true, message: '$!{column.comment}不能为空', trigger: 'blur' }],
+#end
+#end
+})
+
+// 表单提交
+const submitHandle = () => {
+	dataFormRef.value.validate((valid: boolean) => {
+		if (!valid) {
+			return false
+		}
+		use${entityClassName}SubmitApi(dataForm).then(() => {
+			ElMessage.success({
+				message: '操作成功',
+				duration: 500,
+				onClose: () => {
+					visible.value = false
+					emit('refreshDataList')
+				}
+			})
+		})
+	})
+}
+
+defineExpose({
+	init
+})
+</script>

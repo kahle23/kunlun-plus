@@ -1,0 +1,95 @@
+/*
+ * Copyright (c) 2019. the original author or authors.
+ * BaiBao is licensed under the "LICENSE" file in the project's root directory.
+ */
+
+package baibao.extension.bank.support.supfree;
+
+import baibao.extension.bank.BankCard;
+import baibao.extension.bank.BankCardQuery;
+import kunlun.action.AbstractAction;
+import kunlun.net.http.HttpMethod;
+import kunlun.net.http.HttpResponse;
+import kunlun.net.http.HttpUtil;
+import kunlun.net.http.support.SimpleRequest;
+import kunlun.util.CollUtil;
+import kunlun.util.StrUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static kunlun.common.constant.Numbers.*;
+
+/**
+ * Bank card information provider based on website "bankcard.supfree.net".
+ * @author Kahle
+ */
+public class SupfreeBankCardAction extends AbstractAction {
+    private static final Logger log = LoggerFactory.getLogger(SupfreeBankCardAction.class);
+
+    private String cutoutValue(String data) {
+        if (StrUtil.isBlank(data)) { return null; }
+        int indexOf = data.indexOf("：");
+        if (indexOf != -1 && indexOf < data.length()) {
+            data = data.substring(indexOf + 1);
+        }
+        return data.trim();
+    }
+
+    @Override
+    public Object execute(String strategy, Object input, Object[] arguments) {
+        String bankCardNumber = null;
+        try {
+            BankCardQuery bankCardIssuerQuery = (BankCardQuery) input;
+            bankCardNumber = bankCardIssuerQuery.getBankCardNumber();
+            SimpleRequest request = new SimpleRequest();
+            request.setMethod(HttpMethod.GET);
+            request.setUrl("https://bankcard.supfree.net/tongku.asp?cardno=" + bankCardNumber);
+            HttpResponse response = HttpUtil.execute(request);
+            String html = response.getBodyAsString("GB2312");
+            Document document = Jsoup.parse(html);
+
+            Elements cdivElements = document.getElementsByClass("cdiv");
+            if (CollUtil.isEmpty(cdivElements)) { return null; }
+            if (cdivElements.size() < TWO) { return null; }
+            Element cdivElement = cdivElements.get(ONE);
+            log.info(
+                    "Find \"{}\" in \"bankcard.supfree.net\", and result is \"{}\". "
+                    , bankCardNumber
+                    , cdivElement.text()
+            );
+            Elements pElements = cdivElement.getElementsByTag("p");
+            if (CollUtil.isEmpty(pElements)) { return null; }
+            if (pElements.size() < SEVEN) { return null; }
+
+            String issuerIdentificationNumber = cutoutValue(pElements.get(ZERO).text());
+            String bankName = cutoutValue(pElements.get(ONE).text());
+            String organizationCode = cutoutValue(pElements.get(TWO).text());
+            String bankCardName = cutoutValue(pElements.get(THREE).text());
+            String bankCardType = cutoutValue(pElements.get(FOUR).text());
+            String bankCardNumberLength = cutoutValue(pElements.get(SIX).text());
+            if (bankCardNumberLength != null && bankCardNumberLength.contains("位")) {
+                int endIndex = bankCardNumberLength.length() - ONE;
+                bankCardNumberLength = bankCardNumberLength.substring(ZERO, endIndex);
+            }
+
+            BankCard bankCard = new BankCard();
+            bankCard.setBankCardNumber(bankCardNumber);
+            bankCard.setBankName(bankName);
+            bankCard.setOrganizationCode(organizationCode);
+            bankCard.setBankCardName(bankCardName);
+            bankCard.setBankCardType(bankCardType);
+            bankCard.setIssuerIdentificationNumber(issuerIdentificationNumber);
+            bankCard.setBankCardNumberLength(bankCardNumberLength);
+            return bankCard;
+        }
+        catch (Exception e) {
+            log.info("Failed to find \"{}\" in \"bankcard.supfree.net\". ", bankCardNumber, e);
+            return null;
+        }
+    }
+
+}

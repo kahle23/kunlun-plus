@@ -1,0 +1,116 @@
+package ${queryPackageName};
+
+import baibao.common.dto.base.BaseQuery;
+import kunlun.data.json.support.jackson.annotation.JsonSceneDeserialize;
+import kunlun.data.json.support.jackson.model.Scene;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+#if($useLombok)
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+#end
+import java.io.Serializable;
+import java.util.List;
+#foreach(${javaType} in ${table.javaTypeImports})
+import ${javaType};
+#end
+
+/**
+ * $!{table.comment}的查询对象.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+#end
+public class ${queryClassName} extends BaseQuery implements Serializable {
+
+
+#foreach(${column} in ${table.columns})
+#set($curColumnComment = $column.comment.toLowerCase() +'-'+ $column.name.toLowerCase())
+#if($column.fieldName=="deleteStatus")
+#elseif($curColumnComment.contains('code')
+            or $curColumnComment.contains('number')
+            or $curColumnComment.contains('编号')
+            or $curColumnComment.contains('编码')
+            or $curColumnComment.contains('id')
+            or $curColumnComment.contains('状态'))
+    /**
+     * $!{column.comment}
+     */
+    @JsonSceneDeserialize(Scene.SINGLE_TO_LIST)
+    private List<${column.javaType}> ${column.fieldName}List;
+#elseif($curColumnComment.contains('name')
+            or $curColumnComment.contains('名称')
+            or $curColumnComment.contains('账号')
+            or $curColumnComment.contains('邮箱')
+            or $curColumnComment.contains('手机')
+            or $curColumnComment.contains('姓名'))
+    /**
+     * $!{column.comment}（支持模糊搜索）
+     */
+    private ${column.javaType} ${column.fieldName}Like;
+#else
+    /**
+     * $!{column.comment}
+     */
+    private ${column.javaType} ${column.fieldName};
+#end
+#end
+#if(!$useLombok)
+
+#foreach(${column} in ${table.columns})
+#set($curColumnComment = $column.comment.toLowerCase() +'-'+ $column.name.toLowerCase())
+#if($column.fieldName=="deleteStatus")
+#elseif($curColumnComment.contains('code')
+            or $curColumnComment.contains('number')
+            or $curColumnComment.contains('编号')
+            or $curColumnComment.contains('编码')
+            or $curColumnComment.contains('id')
+            or $curColumnComment.contains('状态'))
+
+    public void ${column.setterName}List(List<${column.javaType}> ${column.fieldName}List) {
+
+        this.${column.fieldName}List = ${column.fieldName}List;
+    }
+
+    public List<${column.javaType}> ${column.getterName}List() {
+
+        return this.${column.fieldName}List;
+    }
+#elseif($curColumnComment.contains('name')
+            or $curColumnComment.contains('名称')
+            or $curColumnComment.contains('账号')
+            or $curColumnComment.contains('邮箱')
+            or $curColumnComment.contains('手机')
+            or $curColumnComment.contains('姓名'))
+
+    public void ${column.setterName}Like(${column.javaType} ${column.fieldName}Like) {
+
+        this.${column.fieldName}Like = ${column.fieldName}Like;
+    }
+
+    public ${column.javaType} ${column.getterName}Like() {
+
+        return this.${column.fieldName}Like;
+    }
+#else
+
+    public void ${column.setterName}(${column.javaType} ${column.fieldName}) {
+
+        this.${column.fieldName} = ${column.fieldName};
+    }
+
+    public ${column.javaType} ${column.getterName}() {
+
+        return this.${column.fieldName};
+    }
+#end
+#end
+#end
+
+}

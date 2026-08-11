@@ -1,0 +1,199 @@
+package ${controllerPackageName};
+
+import baibao.common.dto.EnableDTO;
+import baibao.common.dto.LongIdsDTO;
+import baibao.common.enums.QueryMode;
+import cn.hutool.core.collection.CollUtil;
+import kunlun.common.Page;
+import kunlun.common.Result;
+import kunlun.core.annotation.OperationLog;
+import kunlun.util.PageUtil;
+import kunlun.io.fileprocessor.ProcResult;
+import kunlun.core.annotation.Permission;
+import kunlun.data.Dict;
+import kunlun.data.bean.BeanUtil;
+import kunlun.data.validation.support.javax.group.Create;
+import kunlun.data.validation.support.javax.group.Query;
+import kunlun.data.validation.support.javax.group.Update;
+import kunlun.exception.util.VerifyUtil;
+import lombok.Data;
+#if($useLombok)
+import lombok.extern.slf4j.Slf4j;
+#end
+#if(!$useLombok)
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+#end
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import ${entityPackageName}.${entityClassName};
+import ${addParamPackageName}.${addParamClassName};
+import ${editParamPackageName}.${editParamClassName};
+import ${queryPackageName}.${queryClassName};
+import ${resultPackageName}.${resultClassName};
+import ${smpResultPackageName}.${smpResultClassName};
+import ${servicePackageName}.${serviceClassName};
+
+import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+
+/**
+ * $!{table.comment}的前端控制器. 【请配置mybatis-plus的逻辑删除（版本3.5以上）；并引入mybatis-plus-join；】
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Slf4j
+#end
+@RestController
+@RequestMapping("/${table.name}")
+public class ${controllerClassName} {
+#if(!$useLombok)
+    private static final Logger log = LoggerFactory.getLogger(${controllerClassName}.class);
+#end
+
+    @Resource
+    private ${serviceClassName} ${serviceObjectName};
+
+    /**
+     * $!{table.comment}数据-增加（待完善）
+     *
+     * @param param 待增加的数据
+     * @return 增加的记录的ID
+     */
+    @OperationLog(name = "$!{table.comment}数据-增加")
+    @PostMapping("/add")
+    public Result<Number> add(@RequestBody @Validated ${addParamClassName} param) {
+
+        return Result.success(${serviceObjectName}.addRecord(param));
+    }
+
+    /**
+     * $!{table.comment}数据-编辑（待完善）
+     *
+     * @param param 待编辑的数据
+     * @return 操作结果
+     */
+    @OperationLog(name = "$!{table.comment}数据-编辑")
+    @PostMapping("/edit")
+    public Result<Void> edit(@RequestBody @Validated ${editParamClassName} param) {
+        ${serviceObjectName}.editRecord(param);
+        return Result.success();
+    }
+
+    /**
+     * $!{table.comment}数据-删除（待完善）
+     *
+     * @param param 待删除的数据
+     * @return 操作结果
+     */
+    @OperationLog(name = "$!{table.comment}数据-删除")
+    @PostMapping("/delete")
+    public Result<Void> delete(@RequestBody @Validated LongIdsDTO param) {
+        ${serviceObjectName}.deleteByLongIds(param.getIds());
+        return Result.success();
+    }
+
+    /**
+     * $!{table.comment}数据-启用/禁用（待完善）
+     *
+     * @param param 待启用/禁用的数据
+     * @return 操作结果
+     */
+    @OperationLog(name = "$!{table.comment}数据-启用/禁用")
+    @PostMapping("/enable")
+    public Result<Void> enable(@RequestBody @Validated EnableDTO param) {
+//        ${serviceObjectName}.enable(${entityClassName}::getId
+//                , param.getRecordId(), ${entityClassName}::getEnabled, param.getEnabled());
+        return Result.success();
+    }
+
+    /**
+     * $!{table.comment}数据-详情（待完善）
+     *
+     * @param recordId $!{table.comment}的ID
+     * @return 查询到的$!{table.comment}详情
+     */
+    @OperationLog(name = "$!{table.comment}数据-详情")
+    @GetMapping("/{recordId}")
+    public Result<${resultClassName}> detail(@PathVariable("recordId") Long recordId) {
+
+        return Result.success(${serviceObjectName}.detailById(recordId));
+    }
+
+    /**
+     * $!{table.comment}数据-列表查询（待完善）
+     * （该方法一定要慎重，别出现全表查询的情况）
+     *
+     * @param query 查询条件
+     * @return 查询结果
+     */
+    @OperationLog(name = "$!{table.comment}数据-列表查询")
+    @PostMapping("/query-list")
+    public Result<List<${smpResultClassName}>> queryList(@RequestBody @Validated ${queryClassName} query) {
+        query.setQueryMode(QueryMode.SIMPLE);
+        List<${resultClassName}> list = ${serviceObjectName}.queryList(query);
+        return Result.success(BeanUtil.beanToBeanInList(list, ${smpResultClassName}.class));
+    }
+
+    /**
+     * $!{table.comment}数据-分页列表（待完善）
+     *
+     * @param query 查询条件
+     * @return 查询结果
+     */
+//    @Permission("${table.name}:data")
+    @OperationLog(name = "$!{table.comment}数据-分页列表")
+    @PostMapping("/query-page")
+    public Result<Page<${smpResultClassName}>> queryPage(@RequestBody @Validated ${queryClassName} query) {
+        Page<${resultClassName}> page = ${serviceObjectName}.queryPage(query);
+        return Result.success(PageUtil.handleResult(page, ${smpResultClassName}.class));
+    }
+
+    /**
+     * $!{table.comment}数据-滚动分页（待完善）
+     *
+     * @param query 查询条件
+     * @return 查询结果
+     */
+//    @Permission("${table.name}:data")
+    @OperationLog(name = "$!{table.comment}数据-滚动分页")
+    @PostMapping("/scroll-page")
+    public Result<Page<${smpResultClassName}>> scrollPage(@RequestBody @Validated ${queryClassName} query) {
+        Page<${resultClassName}> page = ${serviceObjectName}.queryScrollPage(query, ${entityClassName}::getId);
+        return Result.success(PageUtil.handleResult(page, ${smpResultClassName}.class));
+    }
+
+    /**
+     * $!{table.comment}数据-导入（待完善）
+     *
+     * @param file 导入的文件
+     * @return 导入任务信息
+     */
+    @OperationLog(name = "$!{table.comment}数据-导入")
+    @PostMapping("/import")
+    public Result<ProcResult> importRecords(@RequestParam("file") MultipartFile file) {
+
+        return Result.success(${serviceObjectName}.importRecords(file));
+    }
+
+    /**
+     * $!{table.comment}数据-导出（待完善）
+     *
+     * @param query 查询条件
+     * @return 导出任务信息
+     */
+    @OperationLog(name = "$!{table.comment}数据-导出")
+    @PostMapping("/export")
+    public Result<ProcResult> exportRecords(@RequestBody @Validated ${queryClassName} query) {
+
+        return Result.success(${serviceObjectName}.exportRecords(query));
+    }
+
+}

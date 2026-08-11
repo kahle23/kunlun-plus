@@ -1,0 +1,56 @@
+package ${smpResultPackageName};
+
+#if($useLombok)
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+#end
+import java.io.Serializable;
+#foreach(${javaType} in ${table.javaTypeImports})
+import ${javaType};
+#end
+
+/**
+ * $!{table.comment}的简单结果对象.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Data
+@NoArgsConstructor
+#end
+public class ${smpResultClassName} implements Serializable {
+
+#foreach(${column} in ${table.columns})
+    /**
+     * $!{column.comment}
+     */
+    private ${column.javaType} ${column.fieldName};
+#end
+#if(!$useLombok)
+
+#foreach(${column} in ${table.columns})
+
+    public void ${column.setterName}(${column.javaType} ${column.fieldName}) {
+
+        this.${column.fieldName} = ${column.fieldName};
+    }
+
+    public ${column.javaType} ${column.getterName}() {
+
+        return this.${column.fieldName};
+    }
+#end
+
+    @Override
+    public String toString() {
+        return "${resultClassName}{" +
+#set($temp = 0)#foreach(${column} in ${table.columns})
+                "#if($temp > 0), #end#set($temp = $temp + 1)${column.fieldName}='" + ${column.fieldName} + '\'' +
+#end
+                '}';
+    }
+#end
+
+}

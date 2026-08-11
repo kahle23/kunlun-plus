@@ -1,0 +1,71 @@
+package ${entityPackageName};
+
+import com.baomidou.mybatisplus.annotation.*;
+#if($useLombok)
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+#end
+
+import java.io.Serializable;
+#foreach(${javaType} in ${table.javaTypeImports})
+import ${javaType};
+#end
+
+/**
+ * $!{table.comment}的数据库实体.
+ *
+ * @author $!{author}
+ * @since $!{nowDate}
+ */
+#if($useLombok)
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+#end
+@TableName("${table.name}")
+public class ${entityClassName} implements Serializable {
+
+    /* (Start) This will be overridden, please do not modify. */
+#foreach(${column} in ${table.columns})
+    /**
+     * $!{column.comment}
+     */
+#if($column.primaryKey)
+    @TableId(value = "${column.fieldName}", type = IdType.AUTO)
+    private ${column.javaType} ${column.fieldName};
+#elseif($column.fieldName.equals('platform')
+            or $column.fieldName.equals('tenantId')
+            or $column.fieldName.equals('ownerId')
+            or $column.fieldName.equals('ownOrgId')
+            or $column.fieldName.equals('createUser')
+            or $column.fieldName.equals('createTime')
+            or $column.fieldName.equals('deleteStatus'))
+    @TableField(fill = FieldFill.INSERT)
+    private ${column.javaType} ${column.fieldName};
+#elseif($column.fieldName.equals('modifyUser')
+            or $column.fieldName.equals('modifyTime'))
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private ${column.javaType} ${column.fieldName};
+#else
+    private ${column.javaType} ${column.fieldName};
+#end
+#end
+#if(!$useLombok)
+
+#foreach(${column} in ${table.columns})
+
+    public void ${column.setterName}(${column.javaType} ${column.fieldName}) {
+
+        this.${column.fieldName} = ${column.fieldName};
+    }
+
+    public ${column.javaType} ${column.getterName}() {
+
+        return this.${column.fieldName};
+    }
+#end
+#end
+    /* (End) This will be overridden, please do not modify. */
+
+}

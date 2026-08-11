@@ -1,0 +1,178 @@
+<template>
+	<el-card class="layout-query">
+		<el-form ref="queryRef" :inline="true" :model="state.queryForm">
+#foreach(${column} in ${table.columns})
+#set($curColumnComment = $column.comment.toLowerCase() +'-'+ $column.name.toLowerCase())
+#if($column.fieldName=="deleteStatus"
+            or $column.fieldName.equals('platform')
+            or $column.fieldName.equals('tenantId')
+            or $column.fieldName.equals('ownerId')
+            or $column.fieldName.equals('ownOrgId')
+            or $column.fieldName.equals('createUser')
+            or $column.fieldName.equals('createTime')
+            or $column.fieldName.equals('modifyUser')
+            or $column.fieldName.equals('modifyTime'))
+#elseif($curColumnComment.contains('code')
+            or $curColumnComment.contains('number')
+            or $curColumnComment.contains('编号')
+            or $curColumnComment.contains('编码')
+            or $curColumnComment.contains('id')
+            or $curColumnComment.contains('状态'))
+      <el-form-item prop="${column.fieldName}List">
+        <el-input v-model="state.queryForm.${column.fieldName}List" placeholder="$!{column.comment}"></el-input>
+      </el-form-item>
+#elseif($curColumnComment.contains('name')
+            or $curColumnComment.contains('名称')
+            or $curColumnComment.contains('账号')
+            or $curColumnComment.contains('邮箱')
+            or $curColumnComment.contains('手机')
+            or $curColumnComment.contains('姓名'))
+      <el-form-item prop="${column.fieldName}Like">
+        <el-input v-model="state.queryForm.${column.fieldName}Like" placeholder="$!{column.comment}"></el-input>
+      </el-form-item>
+#else
+      <el-form-item prop="${column.fieldName}">
+        <el-input v-model="state.queryForm.${column.fieldName}" placeholder="$!{column.comment}"></el-input>
+      </el-form-item>
+#end
+#end
+			<el-form-item>
+				<el-button icon="Search" type="primary" @click="getDataList()">查询</el-button>
+			</el-form-item>
+			<el-form-item>
+				<el-button icon="RefreshRight" @click="reset(queryRef)">重置</el-button>
+			</el-form-item>
+		</el-form>
+	</el-card>
+
+	<el-card>
+		<el-space>
+			<el-space>
+				<el-button icon="Plus" type="primary" @click="addOrUpdateHandle()">新增</el-button>
+			</el-space>
+			<el-space v-auth="'sys:user:import'">
+				<ma-upload-excel action="/sys/user/import">
+					<el-button plain icon="Upload">导入</el-button>
+				</ma-upload-excel>
+			</el-space>
+			<el-space>
+				<el-button v-auth="'sys:user:export'" plain icon="Download" @click="downloadHandle(urlPrefix + '/export')">导出</el-button>
+			</el-space>
+			<el-space>
+				<el-button v-auth="'sys:user:delete'" icon="Delete" plain type="danger" @click="deleteBatchHandle()">批量删除</el-button>
+			</el-space>
+		</el-space>
+
+		<el-table
+			v-loading="state.dataListLoading"
+			show-overflow-tooltip
+			:data="state.dataList"
+			border
+			class="layout-table"
+			@selection-change="selectionChangeHandle"
+		>
+      <!-- <el-table-column type="selection" header-align="center" align="center" width="50"></el-table-column> -->
+      <!-- <ma-dict-column prop="status" label="状态" dict-type="user_status"></ma-dict-column> -->
+#foreach(${column} in ${table.columns})
+#if($column.fieldName=="deleteStatus"
+            or $column.fieldName.equals('platform')
+            or $column.fieldName.equals('tenantId')
+            or $column.fieldName.equals('ownerId')
+            or $column.fieldName.equals('ownOrgId'))
+#elseif($column.comment.contains('图')
+      or $column.comment.contains('头像'))
+      <el-table-column prop="${column.fieldName}" label="$!{column.comment}" header-align="center" align="center">
+        <template #default="scope">
+          <el-image v-if="scope.row.${column.fieldName}" style="width: 30px; height: 30px; z-index: 100; border: 1px solid #e4e7ed;" :src="scope.row.${column.fieldName}" :preview-src-list="[scope.row.${column.fieldName}]" :preview-teleported="true">
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"></i>
+            </div>
+          </el-image>
+          <!-- <div class="el-image" v-else style="width: 30px; height: 30px; z-index: 100; text-align: center; border: 1px solid #e4e7ed;"></div> -->
+        </template>
+      </el-table-column>
+#else
+      <el-table-column prop="${column.fieldName}" label="$!{column.comment}" header-align="center" align="center"></el-table-column>
+#end
+#end
+			<el-table-column label="操作" fixed="right" header-align="center" align="center" width="250">
+				<template #default="scope">
+					<el-button type="primary" link @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+					<el-button type="primary" link @click="deleteBatchHandle(scope.row.id)">删除</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
+		<el-pagination
+			:current-page="state.page"
+			:page-sizes="state.pageSizes"
+			:page-size="state.limit"
+			:total="state.total"
+			layout="total, sizes, prev, pager, next, jumper"
+			@size-change="sizeChangeHandle"
+			@current-change="currentChangeHandle"
+		>
+		</el-pagination>
+	</el-card>
+	<!-- 弹窗, 新增 / 修改 -->
+	<add-or-update ref="addOrUpdateRef" @refresh-data-list="getDataList"></add-or-update>
+</template>
+
+<script setup lang="ts" name="${entityClassName}Index">
+import { IHooksOptions } from '@/hooks/interface'
+import { reactive, ref } from 'vue'
+import { useCrud } from '@/hooks'
+import AddOrUpdate from './add-or-update.vue'
+
+const urlPrefix = '/${table.name}';
+const state: IHooksOptions = reactive({
+  dataListUrl: urlPrefix + '/search',
+	deleteUrl: urlPrefix + '',
+  detailUrl: urlPrefix + '',
+	queryForm: {
+#foreach(${column} in ${table.columns})
+#set($curColumnComment = $column.comment.toLowerCase() +'-'+ $column.name.toLowerCase())
+#if($column.fieldName=="deleteStatus"
+            or $column.fieldName.equals('platform')
+            or $column.fieldName.equals('tenantId')
+            or $column.fieldName.equals('ownerId')
+            or $column.fieldName.equals('ownOrgId')
+            or $column.fieldName.equals('createUser')
+            or $column.fieldName.equals('createTime')
+            or $column.fieldName.equals('modifyUser')
+            or $column.fieldName.equals('modifyTime'))
+#elseif($curColumnComment.contains('code')
+            or $curColumnComment.contains('number')
+            or $curColumnComment.contains('编号')
+            or $curColumnComment.contains('编码')
+            or $curColumnComment.contains('id')
+            or $curColumnComment.contains('状态'))
+		${column.fieldName}List: '', // $!{column.comment}
+#elseif($curColumnComment.contains('name')
+            or $curColumnComment.contains('名称')
+            or $curColumnComment.contains('账号')
+            or $curColumnComment.contains('邮箱')
+            or $curColumnComment.contains('手机')
+            or $curColumnComment.contains('姓名'))
+		${column.fieldName}Like: '', // $!{column.comment}
+#else
+		${column.fieldName}: '', // $!{column.comment}
+#end
+#end
+	}
+})
+
+const queryRef = ref()
+const addOrUpdateRef = ref()
+const addOrUpdateHandle = (id?: number) => {
+	addOrUpdateRef.value.init(id)
+}
+
+const handleClick = (orgId: any[]) => {
+	state.queryForm.orgId = orgId
+	getDataList()
+}
+
+const treeVisible = ref(false)
+
+const { getDataList, selectionChangeHandle, sizeChangeHandle, currentChangeHandle, deleteBatchHandle, downloadHandle, reset } = useCrud(state)
+</script>
