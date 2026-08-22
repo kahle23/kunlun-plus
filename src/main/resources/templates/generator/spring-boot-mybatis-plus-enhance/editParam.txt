@@ -1,8 +1,10 @@
 package ${editParamPackageName};
 
+import baibao.common.dto.base.BaseEditParam;
 import kunlun.core.annotation.FieldMeta;
 #if($useLombok)
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 #end
@@ -22,8 +24,9 @@ import ${javaType};
 #if($useLombok)
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 #end
-public class ${editParamClassName} implements Serializable {
+public class ${editParamClassName} extends BaseEditParam implements Serializable {
 
 #foreach(${column} in ${table.columns})
     /**

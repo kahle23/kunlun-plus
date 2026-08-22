@@ -6,6 +6,7 @@
 package baibao.db.jdbc.mybatisplus.base;
 
 import baibao.common.dto.DragSortDTO;
+import baibao.common.dto.base.BaseEditParam;
 import baibao.common.dto.base.BaseQuery;
 import baibao.common.enums.QueryMode;
 import cn.hutool.core.collection.CollUtil;
@@ -49,6 +50,9 @@ import static kunlun.util.StrUtil.isNotBlank;
 
 /**
  * BaseServiceImpl
+ * 通用约定：本基类通过反射读写实体的"id"字段并按 Long 处理，
+ * 即实体主键须为名为 id 的 Long 型字段；不满足该约定的实体，
+ * 请覆写 refGetId、refSetId、refSetIds 方法，或不继承本类。
  * @author Kahle
  */
 @SuppressWarnings({"unused"})
@@ -102,6 +106,16 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
         // 返回 query 对象
         return query;
+    }
+
+    /**
+     * 查询对象的判空兜底（统一口径：query 为空时用默认实例，各入口行为一致）.
+     * @param query 查询对象
+     * @return 非空的查询对象
+     */
+    protected Q prepareQuery(Q query) {
+        if (query != null) { return query; }
+        return ReflectUtil.newInstance(getQueryClass());
     }
 
     @Override
@@ -180,6 +194,17 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         throw new UnsupportedOperationException(format);
     }
 
+    /**
+     * 从编辑入参中提取待置空字段（入参继承 BaseEditParam 且携带非空 clearFields 时才有效）.
+     * @param param 编辑入参
+     * @return 待置空的字段名集合，无需置空时返回 null
+     */
+    protected Collection<String> extractClearFields(E param) {
+        if (!(param instanceof BaseEditParam)) { return null; }
+        Collection<String> clearFields = ((BaseEditParam) param).getClearFields();
+        return CollUtil.isNotEmpty(clearFields) ? clearFields : null;
+    }
+
     @Override
     public Long addRecord(A param) {
         // 参数校验和常量声明
@@ -191,8 +216,8 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         isTrue(save(entity), recordSaveFailure);
         // 从对象中获取ID字段
         Long id = refGetId(entity);
-        // 构建变更日志
-        changeLog(id, Nil.OBJ, param, getEditParamClass(), mtd);
+        // 构建变更日志（新增事件统一按入参对象和 AddParam 口径记录）
+        changeLog(id, Nil.OBJ, param, getAddParamClass(), mtd);
         return id;
     }
 
@@ -210,12 +235,12 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
         // 批量保存数据（创建人、更新人会自动填充）
         isTrue(saveBatch(entityList), recordSaveFailure);
-        // 提取Ids
+        // 提取Ids（params 与 entityList 按下标一一对应，日志统一按入参对象和 AddParam 口径记录）
         List<Long> ids = new ArrayList<>();
         Long id;
-        for (T entity : entityList) {
-            ids.add(id = refGetId(entity));
-            changeLog(id, Nil.OBJ, entity, getEditParamClass(), mtd);
+        for (int i = ZERO; i < entityList.size(); i++) {
+            ids.add(id = refGetId(entityList.get(i)));
+            changeLog(id, Nil.OBJ, params.get(i), getAddParamClass(), mtd);
         }
         return ids;
     }
@@ -232,8 +257,16 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         notNull(oldEntity, recordNotExist);
         // 转换成实体
         T entity = fromEditParam(BeanUtil.beanToBean(oldEntity, getResultClass()), param);
-        // 更新款式信息表数据（更新人会自动填充）
-        isTrue(updateById(entity), recordUpdateFailure);
+        // 待置空字段
+        Collection<String> clearFields = extractClearFields(param);
+        // 更新款式信息表数据（更新人会自动填充）：
+        // 携带置空字段时与更新合并成同一条 UPDATE（updateAndClearById，主键取自实体），
+        // 单笔写库完成"更新 + 置空"，失败即抛出
+        if (clearFields == null) {
+            isTrue(updateById(entity), recordUpdateFailure);
+        } else {
+            isTrue(updateAndClearById(entity, clearFields), recordUpdateFailure);
+        }
         // 构建变更日志
         changeLog(id, oldEntity, param, getEditParamClass(), mtd);
     }
@@ -282,8 +315,13 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         ));
         // 声明待增加、待编辑、待删除的集合
         List<T> willAdd = new ArrayList<>(), willEdit = new ArrayList<>();
-        List<Long> willDel = new ArrayList<>();
+        Set<Long> willDel = new LinkedHashSet<>();
         Map<String, Exception> errors = new LinkedHashMap<>();
+        // 携带置空字段的编辑项（与更新合并成单条 UPDATE，不进批量更新集合）
+        Map<Long, T> willClearEntity = new LinkedHashMap<>();
+        Map<Long, Collection<String>> willClearFields = new LinkedHashMap<>();
+        // 编辑失败的旧记录的ID集合（编辑失败 != 删除，这些记录不能进入待删除集合）
+        Set<Long> errorIds = new HashSet<>();
         // 遍历，区分待增加的和待编辑的（基础：所有数据都是传入的）
         for (E param : params) {
             // 构建 Map 的 key，并且查询 旧数据
@@ -298,7 +336,14 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
                     refSetId(param, id = refGetId(old));
                     // 旧对象不为空，则是【编辑】
                     T e = fromEditParam(old, param);
-                    willEdit.add(e);
+                    // 携带置空字段的编辑项单独收集（后续与更新合并成单条 UPDATE），其余照常批量编辑
+                    Collection<String> clearFields = extractClearFields(param);
+                    if (clearFields == null) {
+                        willEdit.add(e);
+                    } else {
+                        willClearEntity.put(id, e);
+                        willClearFields.put(id, clearFields);
+                    }
                     // 构建变更日志
                     changeLog(id, old, param, getEditParamClass(), mtd);
                 } catch (Exception e) {
@@ -313,20 +358,25 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
                     // 设值 id 到 param（如果 id 是在 fromAddParam 生成的，则可以带出去）
                     // （自增ID就不考虑了，毕竟有点折腾，而且批量更新方法的入参中提取新增的数据的ID的概率太小了）
                     refSetId(param, id = refGetId(e));
-                    // 构建变更日志
-                    changeLog(id, Nil.OBJ, e, getAddParamClass(), mtd);
+                    // 构建变更日志（新增事件统一按入参对象和 AddParam 口径记录）
+                    changeLog(id, Nil.OBJ, param, getAddParamClass(), mtd);
                 } catch (Exception e) {
                     if (!ignoreSingleError) { throw e; }
                     else { log.debug(ERROR, error = e); }
                 }
             }
             // 记录错误对象
-            if (error != null) { errors.put(mapKey, error); }
+            if (error != null) {
+                errors.put(mapKey, error);
+                if (old != null) { errorIds.add(refGetId(old)); }
+            }
         }
-        // 区分待删除的（查询到的 - 当前的）
+        // 区分待删除的（查询到的 - 当前的，编辑失败的记录除外）
         if (!skipDelete && CollUtil.isNotEmpty(oldList)) {
-            willDel.addAll(oldList.stream().map(this::refGetId).distinct().collect(Collectors.toList()));
-            willDel.removeAll(willEdit.stream().map(this::refGetId).distinct().collect(Collectors.toList()));
+            willDel.addAll(oldList.stream().map(this::refGetId).collect(Collectors.toSet()));
+            willDel.removeAll(willEdit.stream().map(this::refGetId).collect(Collectors.toSet()));
+            willDel.removeAll(willClearEntity.keySet());
+            willDel.removeAll(errorIds);
         }
         // 进行批量增加、批量编辑和批量删除
         if (!skipDelete && CollUtil.isNotEmpty(willDel)) {
@@ -341,6 +391,12 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
         if (CollUtil.isNotEmpty(willAdd)) { isTrue(saveBatch(willAdd), recordSaveFailure); }
         if (CollUtil.isNotEmpty(willEdit)) { isTrue(updateBatchById(willEdit), recordUpdateFailure); }
+        // 携带置空字段的编辑项：与更新合并成同一条 UPDATE（updateAndClearById，主键取自实体），
+        // 失败即抛出，整个批量编辑回滚
+        for (Map.Entry<Long, T> entry : willClearEntity.entrySet()) {
+            isTrue(updateAndClearById(entry.getValue(), willClearFields.get(entry.getKey()))
+                    , recordUpdateFailure);
+        }
         // 错误信息返回
         return errors;
     }
@@ -352,15 +408,19 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         isTrue(enabledVal != null && (enabledVal == ZERO || enabledVal == ONE)
                 , "启用/禁用状态值不能为空，且只能是0或1！");
         notNull(value, recordIdNotNull);
-        // 查询数据（已经配置逻辑删除了）
-        T oldEntity = getById(value);
-        notNull(oldEntity, recordNotExist);
-        // 已经是预期状态
-        if (ObjUtil.equal(enabled.apply(oldEntity), enabledVal)) { return; }
+        // 统一按集合处理（value 兼容单值和集合两种传法）
+        Collection<?> values = value instanceof Collection ? (Collection<?>) value : singletonList(value);
+        notEmpty(values, recordIdNotNull);
+        // 查询数据（存在性检查与更新条件用同一个字段，已经配置逻辑删除了）
+        List<T> oldList = list(Wrappers.lambdaQuery(getEntityClass()).in(field, values));
+        // 传入的每一个值都必须能查到记录（field 语义上是唯一标识，数量对得上即全部存在）
+        isTrue(oldList.size() >= new HashSet<>(values).size(), recordNotExist);
+        // 已经是预期状态（查出的记录全部达标才跳过，部分达标则统一拉齐）
+        if (oldList.stream().allMatch(item -> ObjUtil.equal(enabled.apply(item), enabledVal))) { return; }
         // 更新状态
         isTrue(update(ReflectUtil.newInstance(getEntityClass()), Wrappers.lambdaUpdate(getEntityClass())
                 .set(enabled, enabledVal)
-                .in(field, value)
+                .in(field, values)
         ), recordUpdateFailure);
     }
 
@@ -373,6 +433,10 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         sorts = sorts.stream().filter(Objects::nonNull)
                 .filter(item -> Objects.nonNull(item.getSort()))
                 .collect(Collectors.toList());
+        // 全部无效时无需更新（避免空集合走批量更新的不确定行为）
+        if (CollUtil.isEmpty(sorts)) { return false; }
+        // 逐项校验（id 是更新定位键，缺失会导致该条排序静默丢失）
+        for (DragSortDTO item : sorts) { validateToThrow(item); }
         // 将 sorts 中的 sort 取出来重新排序
         List<Long> ascSortList = sorts.stream().map(DragSortDTO::getSort)
                 .sorted().collect(Collectors.toList());
@@ -424,6 +488,7 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
     }
 
+    @Deprecated
     @Override
     public R detailById(Serializable id) {
         /*// 参数校验
@@ -443,13 +508,6 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         return result;*/
         return getById2(id);
     }
-
-//    @Deprecated
-//    @Override
-//    public R detailById1(Serializable id) {
-//
-//        return getById1(id, Nil.g());
-//    }
 
     @Override
     public R getById1(Serializable id) {
@@ -522,6 +580,7 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
     @Override
     public long queryCount(Q query) {
         // 参数校验，默认值处理
+        query = prepareQuery(query);
         validateToThrow(query);
         // 查询
         return count(buildQueryWrapper(query));
@@ -536,15 +595,19 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
     @Override
     public Page<R> queryPage(Q query) {
         // 参数校验，默认值处理
+        query = prepareQuery(query);
         validateToThrow(query);
+        // 构建查询条件（必须先于分页：条件构建若抛异常，
+        // 分页插件的 ThreadLocal 会残留并污染该线程后续的查询）
+        MPJLambdaWrapper<T> queryWrapper = buildQueryWrapper(query);
         // 分页
         if (query.isPaged()) {
             PageUtil.startPage(query.getPageNum(), query.getPageSize());
         }
         // 查询
-        List<T> list = list(buildQueryWrapper(query));
-        // 判空+结果处理
-        if (CollUtil.isEmpty(list)) { return Page.of(); }
+        List<T> list = list(queryWrapper);
+        // 判空+结果处理（空结果也走统一组装：data 为空集合而非 null，分页场景保留 total = 0）
+        if (CollUtil.isEmpty(list)) { return PageUtil.handleResult(list, getResultClass()); }
         Page<R> result = PageUtil.handleResult(list, getResultClass());
         // 添加序号
         if (query.isPaged()) {
@@ -562,29 +625,32 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
     public Page<R> queryScrollPage(Q query, SFunction<T, ?> idField) {
         // 参数校验，默认值处理
         Assert.notNull(idField);
+        query = prepareQuery(query);
         validateToThrow(query);
+        // 浅拷贝一份查询对象再使用，避免就地修改调用方传入的对象（调用方可能复用同一 query）
+        query = BeanUtil.beanToBean(query, getQueryClass());
         // 是否正序，true 正序，false 倒序
         if (query.getScrollByAsc() == null) {
             query.setScrollByAsc(false);
         }
-        // 分页
+        // 分页大小（非法值回落默认；超过上限直接报错，防止误传或恶意的超大 pageSize 拖垮内存）
         String  scrollId = query.getScrollId();
         Integer pageSize = query.getPageSize();
-        if (pageSize == null) { pageSize = PageUtil.getDefaultPageSize(); }
-        // 查询
+        if (pageSize == null || pageSize < ONE) { pageSize = PageUtil.getDefaultPageSize(); }
+        Integer maxPageSize = PageUtil.getMaxPageSize();
+        isTrue(pageSize <= maxPageSize, "分页大小不能超过%s！", maxPageSize);
+        // 查询（滚动条件是本方法的核心语义，恒定生效，不受 paged 开关影响）
         MPJLambdaWrapper<T> queryWrapper = buildQueryWrapper(query);
-        if (query.isPaged()) {
-            if (query.getScrollByAsc()) {
-                // 正序
-                queryWrapper.gt(isNotBlank(scrollId), idField, scrollId)
-                        .orderByAsc(idField)
-                        .last("limit " + pageSize);
-            } else {
-                // 倒序
-                queryWrapper.lt(isNotBlank(scrollId), idField, scrollId)
-                        .orderByDesc(idField)
-                        .last("limit " + pageSize);
-            }
+        if (query.getScrollByAsc()) {
+            // 正序
+            queryWrapper.gt(isNotBlank(scrollId), idField, scrollId)
+                    .orderByAsc(idField)
+                    .last("limit " + pageSize);
+        } else {
+            // 倒序
+            queryWrapper.lt(isNotBlank(scrollId), idField, scrollId)
+                    .orderByDesc(idField)
+                    .last("limit " + pageSize);
         }
         List<T> list = list(queryWrapper);
         // 判空+结果处理
@@ -611,7 +677,8 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
 
     @Override
     public List<R> queryList(Q query) {
-        if (query == null) { query = ReflectUtil.newInstance(getQueryClass()); }
+        // 浅拷贝一份再关闭分页，避免就地修改调用方传入的查询对象（调用方可能复用同一 query）
+        query = BeanUtil.beanToBean(prepareQuery(query), getQueryClass());
         query.setPaged(false);
         return queryPage(query).getData();
     }

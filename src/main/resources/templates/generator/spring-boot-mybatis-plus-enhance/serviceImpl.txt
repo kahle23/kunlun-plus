@@ -123,6 +123,7 @@ public class ${serviceImplClassName} extends BaseServiceImpl<${mapperClassName},
             isFalse(existBy(${entityClassName}::getCode
                     , param.getCode(), ${entityClassName}::getId, param.getId()), "该编码已存在！");
         }*/
+        // 需要置空字段时，前端在 param.clearFields 传入属性名集合，由 BaseServiceImpl 更新成功后统一置空
         super.editRecord(param);
     }
 

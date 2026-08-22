@@ -9,7 +9,6 @@ kunlun.spring.data.xml.XmlAutoConfiguration,\
 kunlun.spring.logging.LoggingAutoConfiguration,\
 kunlun.mock.support.JMockDataAutoConfiguration,\
 kunlun.convert.ConversionAutoConfiguration,\
-kunlun.reflect.support.ReflectAutoConfiguration,\
 kunlun.data.desensitize.support.DesensitizeAutoConfiguration,\
 kunlun.spring.data.validation.ValidateAutoConfiguration,\
 kunlun.spring.data.property.PropertySourceAutoConfiguration,\
