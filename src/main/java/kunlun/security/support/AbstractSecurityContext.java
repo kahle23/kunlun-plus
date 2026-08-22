@@ -89,6 +89,11 @@ public abstract class AbstractSecurityContext extends AbstractServletContext imp
             log.info("#Trace Start request: {} ,remoteAddr: {}"
                     , getRequestInfo().getServletPath(), getRequestInfo().getRemoteAddr());
         }
+        // todo 临时方案，走拦截器之类的，感觉上下文不是一个好方案
+        String jsonScene = request.getParameter("_jsonScene");
+        if (StrUtil.isNotBlank(jsonScene)) {
+            JsonSceneUtil.setCurrentConfig(jsonScene);
+        }
     }
 
     @Override

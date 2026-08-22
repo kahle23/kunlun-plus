@@ -43,7 +43,7 @@ public @interface Permission {
 
     /**
      * The data permission's permission code.
-     * @return The permission code
+     * @return The permission code // todo 数据权限 因为是类似于改造 SQL 等，不太适合注解，目前碰到的是 注解一加，因为SQL查询多，可能部分SQL也挂上数据权限了，导致查询出问题了，类似于 pageHelper 的思路，再考虑考虑有没有别的方案
      */
     String data() default "";
 

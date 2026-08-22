@@ -17,6 +17,7 @@ kunlun.spring.async.SpringAsyncConfigurerSupport,\
 kunlun.spring.cache.CacheAutoConfiguration,\
 kunlun.spring.cache.SpringCacheAdapterAutoConfiguration,\
 kunlun.spring.codec.Base64AutoConfiguration,\
+kunlun.spring.context.ContextServletAutoConfiguration,\
 kunlun.spring.db.DbHandlerAutoConfiguration,\
 kunlun.spring.elasticsearch.RestClientAutoConfiguration,\
 kunlun.spring.exception.ExceptionAutoConfiguration,\
@@ -29,6 +30,9 @@ kunlun.spring.io.fileprocessor.FileProcessorThreadPoolAutoConfiguration,\
 kunlun.spring.message.RedissonDelayMessageAutoConfiguration,\
 kunlun.spring.message.RocketMqListenerAutoConfiguration,\
 kunlun.spring.message.MessageListenerAutoConfiguration,\
+kunlun.spring.security.ResourceAccessPreHandleConfiguration,\
+kunlun.spring.security.ResponseDataFilteringConfiguration,\
+kunlun.spring.security.SecurityAutoConfiguration,\
 kunlun.spring.swagger.SwaggerAutoConfiguration,\
 kunlun.spring.web.cors.SpringWebCorsFilterAutoConfiguration,\
 kunlun.spring.xxljob.XxlJobAutoConfiguration,\
