@@ -218,6 +218,9 @@ public class ${serviceImplClassName} extends BaseServiceImpl<${mapperClassName},
 #end
                 // 排序需要增加判断条件 isNull(query.getScrollByAsc())，是为了滚动分页查询而服务的
                 //.orderByDesc(ObjUtil.isNull(query.getScrollByAsc()), ${entityClassName}::getCreateTime)
+                //（同理：前端传了自定义排序 query.getSortFields() 时走自定义排序，未传才走这里的默认排序，
+                // 由 BaseServiceImpl.queryPage 统一应用自定义排序，此处加条件守卫避免默认排序抢占优先级）
+                //.orderByDesc(CollUtil.isEmpty(query.getSortFields()), ${entityClassName}::getCreateTime)
         ;
     }
 

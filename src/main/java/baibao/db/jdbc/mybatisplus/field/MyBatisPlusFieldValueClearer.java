@@ -3,7 +3,7 @@
  * BaiBao is licensed under the "LICENSE" file in the project's root directory.
  */
 
-package kunlun.db.jdbc.mybatisplus;
+package baibao.db.jdbc.mybatisplus.field;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;

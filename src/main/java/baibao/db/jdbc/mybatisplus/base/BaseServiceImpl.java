@@ -9,6 +9,8 @@ import baibao.common.dto.DragSortDTO;
 import baibao.common.dto.base.BaseEditParam;
 import baibao.common.dto.base.BaseQuery;
 import baibao.common.enums.QueryMode;
+import kunlun.data.sort.SortField;
+import kunlun.data.sort.SortUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
@@ -600,6 +602,8 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         // 构建查询条件（必须先于分页：条件构建若抛异常，
         // 分页插件的 ThreadLocal 会残留并污染该线程后续的查询）
         MPJLambdaWrapper<T> queryWrapper = buildQueryWrapper(query);
+        // 应用前端的自定义排序（未传排序参数时无操作；字段未命中白名单时跳过该项并告警）
+        applySort(queryWrapper, getEntityClass(), query.getSortFields(), Nil.g());
         // 分页
         if (query.isPaged()) {
             PageUtil.startPage(query.getPageNum(), query.getPageSize());
@@ -710,6 +714,39 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
      * @return 查询条件
      */
     protected abstract MPJLambdaWrapper<T> buildQueryWrapper(Q query);
+
+    /**
+     * 应用自定义排序：默认经 {@link SortUtil} 门面按排序目标类型路由执行（与门面同形，便于覆写）.
+     * <p>主表与跨表（联表属性唯一命中时自动输出 别名.列名）排序零配置；虚拟/计算排序键
+     * （CASE WHEN、算式、子查询，库里不存在这一列的）与跨表重名消歧，覆写本方法在 options 为空时
+     * 补充"字段名 → 列名/列表达式"映射（经约定 key {@code MyBatisPlusSorter.OPTION_COLUMN_MAPPING} 传入），例如：
+     * <pre>{@code
+     * private static final Map<String, String> SORT_EXPR_MAP = new HashMap<>();
+     * static {
+     *     SORT_EXPR_MAP.put("unpaidAmount", "(total_amount - paid_amount)");  // 虚拟排序键：算出来的列
+     *     SORT_EXPR_MAP.put("name", "t.name");                               // 重名消歧：明确用主表
+     * }
+     *
+     * @Override
+     * protected boolean applySort(MPJLambdaWrapper<PaymentRecord> wrapper, Class<?> entityClass,
+     *         List<SortField> sortFields, Map<String, Object> options) {
+     *     if (CollUtil.isEmpty(options)) {
+     *         options = Dict.of(MyBatisPlusSorter.OPTION_COLUMN_MAPPING, SORT_EXPR_MAP);
+     *     }
+     *     return super.applySort(wrapper, entityClass, sortFields, options);
+     * }
+     * }</pre>
+     *
+     * @param wrapper 查询条件（排序目标）
+     * @param entityClass 实体类型
+     * @param sortFields 排序参数（可为空，为空时无操作）
+     * @param options 通用扩展选项（命名选项包，可为 null）
+     * @return 有任意一项排序实际生效返回 true
+     */
+    protected boolean applySort(MPJLambdaWrapper<T> wrapper, Class<?> entityClass, List<SortField> sortFields,
+                                Map<String, Object> options) {
+        return SortUtil.applySort(wrapper, entityClass, sortFields, options);
+    }
 
     /**
      * 统一的业务数据的处理逻辑
