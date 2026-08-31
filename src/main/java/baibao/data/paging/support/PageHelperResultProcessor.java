@@ -10,9 +10,9 @@ public class PageHelperResultProcessor extends PageResultProcessorImpl {
 
     @Override
     public <T> Page<T> process(List<T> data) {
-        if (data == null) { return Page.of(); }
+        if (data == null) { return createPage(); }
         if (!(data instanceof com.github.pagehelper.Page)) {
-            return Page.of(data);
+            return createPage(data);
         }
         @SuppressWarnings("rawtypes")
         com.github.pagehelper.Page page = (com.github.pagehelper.Page) data;
@@ -24,10 +24,10 @@ public class PageHelperResultProcessor extends PageResultProcessorImpl {
 
     @Override
     public <F, T> Page<T> process(List<F> data, Class<T> clazz) {
-        if (data == null) { return Page.of(); }
+        if (data == null) { return createPage(); }
         List<T> list = BeanUtil.beanToBeanInList(data, clazz);
         if (!(data instanceof com.github.pagehelper.Page)) {
-            return Page.of(list);
+            return createPage(list);
         }
         @SuppressWarnings("rawtypes")
         com.github.pagehelper.Page page = (com.github.pagehelper.Page) data;

@@ -9,8 +9,6 @@ import baibao.common.dto.DragSortDTO;
 import baibao.common.dto.base.BaseEditParam;
 import baibao.common.dto.base.BaseQuery;
 import baibao.common.enums.QueryMode;
-import kunlun.data.sort.SortField;
-import kunlun.data.sort.SortUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjUtil;
@@ -23,6 +21,8 @@ import kunlun.common.Page;
 import kunlun.common.constant.Nil;
 import kunlun.core.function.BiConsumer;
 import kunlun.data.bean.BeanUtil;
+import kunlun.data.sort.SortField;
+import kunlun.data.sort.SortUtil;
 import kunlun.db.jdbc.mybatisplus.base.ServiceImpl;
 import kunlun.util.Assert;
 import kunlun.util.PageUtil;
@@ -300,6 +300,11 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
                                              boolean skipDelete) {
         // 参数校验和常量声明
         notNull(params, paramIsRequired);
+        // 过滤 null 入参（null 项过 JSR-303 校验会抛晦涩异常；过滤后为空则按参数错误处理，
+        // 避免空入参配待删除差集误删全部旧数据）
+        // todo 感觉可以抽一个方法，就是 noNullElements 系列
+        params = params.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        notEmpty(params, paramIsRequired);
         for (E p : params) { validateToThrow(p); }
         final String mtd = "editBatch1";
         // 查询旧数据
@@ -375,10 +380,14 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
         // 区分待删除的（查询到的 - 当前的，编辑失败的记录除外）
         if (!skipDelete && CollUtil.isNotEmpty(oldList)) {
-            willDel.addAll(oldList.stream().map(this::refGetId).collect(Collectors.toSet()));
-            willDel.removeAll(willEdit.stream().map(this::refGetId).collect(Collectors.toSet()));
-            willDel.removeAll(willClearEntity.keySet());
-            willDel.removeAll(errorIds);
+            // 待保留的ID集合（待编辑 + 待置空 + 编辑失败）一次算齐再统一排除
+            Set<Long> keepIds = new HashSet<>();
+            willEdit.forEach(e -> keepIds.add(refGetId(e)));
+            keepIds.addAll(willClearEntity.keySet());
+            keepIds.addAll(errorIds);
+            oldList.stream().filter(Objects::nonNull).map(this::refGetId)
+                    .filter(Objects::nonNull).forEach(willDel::add);
+            willDel.removeAll(keepIds);
         }
         // 进行批量增加、批量编辑和批量删除
         if (!skipDelete && CollUtil.isNotEmpty(willDel)) {
@@ -415,8 +424,9 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         notEmpty(values, recordIdNotNull);
         // 查询数据（存在性检查与更新条件用同一个字段，已经配置逻辑删除了）
         List<T> oldList = list(Wrappers.lambdaQuery(getEntityClass()).in(field, values));
-        // 传入的每一个值都必须能查到记录（field 语义上是唯一标识，数量对得上即全部存在）
-        isTrue(oldList.size() >= new HashSet<>(values).size(), recordNotExist);
+        // 传入的每一个值都必须能查到记录（按查询结果的 field 值集合比对，field 非唯一时多行同值也不会误判）
+        Set<Object> foundValues = oldList.stream().map(field).collect(Collectors.toSet());
+        isTrue(foundValues.containsAll(values), recordNotExist);
         // 已经是预期状态（查出的记录全部达标才跳过，部分达标则统一拉齐）
         if (oldList.stream().allMatch(item -> ObjUtil.equal(enabled.apply(item), enabledVal))) { return; }
         // 更新状态
@@ -611,8 +621,8 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         // 查询
         List<T> list = list(queryWrapper);
         // 判空+结果处理（空结果也走统一组装：data 为空集合而非 null，分页场景保留 total = 0）
-        if (CollUtil.isEmpty(list)) { return PageUtil.handleResult(list, getResultClass()); }
         Page<R> result = PageUtil.handleResult(list, getResultClass());
+        if (CollUtil.isEmpty(list)) { return result; }
         // 添加序号
         if (query.isPaged()) {
             PageUtil.fillSerialNumber(result.getData(), result.getPageNum(), result.getPageSize());
@@ -658,17 +668,16 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
         }
         List<T> list = list(queryWrapper);
         // 判空+结果处理
+        if (CollUtil.isEmpty(list)) {
+            // 当前滚动ID查不到数据（滚动到底），data 兜底为空集合，继续传入当前滚动ID
+            return Page.of(scrollId, pageSize, emptyList());
+        }
         Page<R> result = Page.of();
         result.setPageSize(pageSize);
-        if (CollUtil.isEmpty(list)) {
-            // 当前滚动ID查不到数据，继续传入当前滚动ID
-            result.setScrollId(scrollId);
-            return result;
-        }
-        // 有数据的情况下，提取新的滚动ID（注意：ID不能为空）
-        Long lastId = refGetId(CollUtil.getLast(list));
-        notNull(lastId, "数据异常！");
-        result.setScrollId(String.valueOf(lastId));
+        // 有数据的情况下，提取新的滚动游标（与排序字段同源，注意：游标值不能为空）
+        Object lastCursor = idField.apply(CollUtil.getLast(list));
+        notNull(lastCursor, "数据异常！");
+        result.setScrollId(String.valueOf(lastCursor));
         // 将查询到的数据填充进去
         result.setData(BeanUtil.beanToBeanInList(list, getResultClass()));
         // 处理数据
@@ -702,7 +711,7 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
                 .map(List::stream)
                 .orElseGet(Stream::empty)
                 .filter(Objects::nonNull)
-                .collect(Collectors.groupingBy(keyMapper));
+                .collect(Collectors.groupingBy(keyMapper, LinkedHashMap::new, Collectors.toList()));
     }
     // endregion
 
@@ -722,19 +731,17 @@ public abstract class BaseServiceImpl<M extends MPJBaseMapper<T>, T, A, E, Q ext
      * 补充"字段名 → 列名/列表达式"映射（经约定 key {@code MyBatisPlusSorter.OPTION_COLUMN_MAPPING} 传入），例如：
      * <pre>{@code
      * private static final Map<String, String> SORT_EXPR_MAP = new HashMap<>();
-     * static {
-     *     SORT_EXPR_MAP.put("unpaidAmount", "(total_amount - paid_amount)");  // 虚拟排序键：算出来的列
-     *     SORT_EXPR_MAP.put("name", "t.name");                               // 重名消歧：明确用主表
-     * }
+     * // 虚拟排序键：算出来的列（库里不存在这一列）
+     * SORT_EXPR_MAP.put("unpaidAmount", "(total_amount - paid_amount)");
+     * // 跨表重名消歧：明确用主表
+     * SORT_EXPR_MAP.put("name", "t.name");
      *
-     * @Override
+     * // 覆写 applySort（签名同父类，示意代码省略方法体花括号）：
      * protected boolean applySort(MPJLambdaWrapper<PaymentRecord> wrapper, Class<?> entityClass,
-     *         List<SortField> sortFields, Map<String, Object> options) {
-     *     if (CollUtil.isEmpty(options)) {
+     *         List<SortField> sortFields, Map<String, Object> options) ...
+     *     if (CollUtil.isEmpty(options))
      *         options = Dict.of(MyBatisPlusSorter.OPTION_COLUMN_MAPPING, SORT_EXPR_MAP);
-     *     }
      *     return super.applySort(wrapper, entityClass, sortFields, options);
-     * }
      * }</pre>
      *
      * @param wrapper 查询条件（排序目标）
